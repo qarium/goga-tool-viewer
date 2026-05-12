@@ -59,7 +59,7 @@ Annotations: |
 
 ---
 
-Author: goga-tool-viewer
+Author: Goga
 CreatedAt: 09/05/26
 Description: |
   Модели данных для представления структуры cell из JSON.

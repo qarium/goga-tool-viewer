@@ -22,7 +22,7 @@ Annotations: |
 
 ---
 
-Author: goga-tool-viewer
+Author: Goga
 CreatedAt: 09/05/26
 Description: |
   Поиск свободного TCP-порта для запуска HTTP-сервера.

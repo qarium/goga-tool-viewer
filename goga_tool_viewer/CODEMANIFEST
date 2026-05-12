@@ -19,6 +19,7 @@ Usages:
 
 Annotations: |
   Используй `conventions` для правил написания кода и тестов.
+
   Tool для экосистемы goga — визуализация графа зависимостей cells.
 
   Используй `cli_args` для разбора аргументов argv.
@@ -32,18 +33,19 @@ Annotations: |
   location: cli.py
   annotations: |
     Фасадная функция tool для goga ecosystem.
+
     Вызывается goga tool как: goga tool viewer data.json → main(["data.json"])
     Или через pipe: cat data.json | goga tool viewer → main([])
 
     `argv`: аргументы командной строки без имени команды.
-    argv[0] — путь к JSON-файлу или отсутствует.
+            argv[0] — путь к JSON-файлу или отсутствует.
 
     Используй `cli_args` для разбора argv.
     Используй `run_server` для запуска сервера. См. `running`.
 
 ---
 
-Author: goga-tool-viewer
+Author: Goga
 CreatedAt: 12/05/26
 Description: |
   Tool goga-tool-viewer — визуализация графа зависимостей cells для экосистемы goga.

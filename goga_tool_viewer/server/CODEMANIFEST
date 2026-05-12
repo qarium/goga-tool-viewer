@@ -68,7 +68,7 @@ Annotations: |
 
 ---
 
-Author: goga-tool-viewer
+Author: Goga
 CreatedAt: 09/05/26
 Description: |
   HTTP-сервер для обслуживания SPA и API данных графа cells.

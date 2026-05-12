@@ -52,7 +52,7 @@ Annotations: |
 
 ---
 
-Author: goga-tool-viewer
+Author: Goga
 CreatedAt: 09/05/26
 Description: |
   Парсер JSON-файлов со структурой cell в граф моделей данных.
