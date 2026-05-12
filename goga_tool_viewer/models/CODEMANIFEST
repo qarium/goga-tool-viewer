@@ -1,0 +1,65 @@
+Usages:
+  conventions: .usages/conventions.md
+  dataclasses: |
+    Использовать dataclasses для определения моделей данных.
+    Каждое поле должно иметь type annotation.
+    Использовать frozen=True для иммутабельности где возможно.
+
+Annotations: |
+  Используй `conventions` для правил написания кода и тестов.
+
+  Модели данных для представления структуры cell из JSON.
+
+  Используй `dataclasses` для реализации всех типов.
+
+---
+
+"DependencyInfo()":
+  location: model.py
+  annotations: |
+    Описание одной зависимости между двумя cells.
+  properties:
+    from_cell -> str: |
+      Путь к cell-источнику зависимости.
+    to_cell -> str: |
+      Путь к cell, от которой зависит текущая cell.
+    types -> list[str]: |
+      Список типов, которые текущая cell импортирует из целевой.
+    usages -> list[str]: |
+      Список практик, которые текущая cell импортирует из целевой.
+
+"CellData()":
+  location: model.py
+  annotations: |
+    Полное представление одной cell из JSON.
+  properties:
+    name -> str: |
+      Имя cell (значение поля "cell" в JSON).
+    description -> str: |
+      Описание cell.
+    types -> list[str]: |
+      Типы, которые cell предоставляет.
+    usages -> list[str]: |
+      Usages, которые cell предоставляет.
+    children -> list[CellData]: |
+      Вложенные cell-ы (дочерние).
+    dependencies -> list[DependencyInfo]: |
+      Зависимости от других cells.
+
+"CellGraph()":
+  location: model.py
+  annotations: |
+    Полный граф проекта — все cells и все рёбра зависимостей между ними.
+    Строится рекурсивным обходом дерева CellData.
+  properties:
+    cells -> list[CellData]: |
+      Плоский список всех cells (включая вложенные).
+    edges -> list[DependencyInfo]: |
+      Плоский список всех рёбер зависимостей.
+
+---
+
+Author: goga-tool-viewer
+CreatedAt: 09/05/26
+Description: |
+  Модели данных для представления структуры cell из JSON.

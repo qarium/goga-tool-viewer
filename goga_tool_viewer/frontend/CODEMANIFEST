@@ -1,0 +1,62 @@
+Usages:
+  conventions: .usages/conventions.md
+  spa_structure: |
+    SPA состоит из одного HTML-файла с встроенными CSS и JS.
+    Без сборки — JS-библиотеки встроены inline из static/.
+    Структура: левая часть — граф (80%), правая — панель информации (20%).
+  cytoscape: |
+    Cytoscape.js — библиотека визуализации графов.
+    Библиотека встроена inline в HTML из static/cytoscape.min.js.
+    Использовать layout dagre для иерархического отображения.
+    Подключить через <script> тег в HTML.
+  js_rendering: |
+    Требования к JS-функциям, встроенным inline в HTML.
+
+    Структура данных graph (получена из API /api/graph):
+    - graph.cells[] — массив объектов: {name, description, types[], usages[], children[],
+      dependencies[{from_cell, to_cell, types[], usages[]}]}
+    - graph.edges[] — массив объектов: {from_cell, to_cell, types[], usages[]}
+
+    Функции:
+    - render_graph(container_id, graph) — инициализирует Cytoscape.js в контейнере,
+      создаёт узлы из graph.cells (name — label, description — tooltip),
+      создаёт рёбра из graph.edges (from_cell → to_cell), возвращает cy_instance.
+      Использовать layout dagre для иерархического отображения.
+    - highlight_cell(cell_name) — подсвечивает cell и все её связи,
+      остальные узлы затемняются.
+    - show_cell_info(cell_name, graph) — показывает панель с информацией о cell:
+      типы (cell.types), потребители (edges где to_cell === cell_name),
+      зависимости (cell.dependencies).
+
+Annotations: |
+  Используй `conventions` для правил написания кода и тестов.
+
+  SPA-приложение для отображения графа зависимостей cells.
+  Один HTML-файл с CSS и JS, Cytoscape.js встроен inline.
+
+  Используй `spa_structure` для общей структуры страницы.
+  Используй `cytoscape` для визуализации графа.
+
+---
+
+"index_page(graph_json_url: str) -> html:str":
+  location: pages.py
+  annotations: |
+    Генерирует HTML-страницу SPA.
+    Включает: стили, разметку с контейнером для графа и панелью информации,
+    JS-скрипт для загрузки данных из `graph_json_url` и инициализации Cytoscape.
+
+    `graph_json_url`: URL API-эндпоинта для загрузки данных графа
+
+    `html`: полная HTML-страница как строка
+
+    Используй `spa_structure` для структуры страницы.
+    Используй `cytoscape` для подключения библиотеки.
+    Используй `js_rendering` для требований к inline JS-функциям.
+
+---
+
+Author: goga-tool-viewer
+CreatedAt: 09/05/26
+Description: |
+  SPA-приложение — один HTML-файл с графом зависимостей cells.

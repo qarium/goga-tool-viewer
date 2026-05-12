@@ -1,0 +1,74 @@
+Imports:
+  - Types:
+      - CellGraph
+    From: goga_tool_viewer/models
+  - Types:
+      - load_json_file
+      - load_json_stdin
+    Usages:
+      - loading
+    From: goga_tool_viewer/parser
+  - Types:
+      - index_page
+    Usages:
+      - serving
+    From: goga_tool_viewer/frontend
+  - Types:
+      - find_free_port
+    Usages:
+      - finding
+    From: goga_tool_viewer/server/port_finder
+
+Usages:
+  conventions: .usages/conventions.md
+  stdlib_http: |
+    Использовать http.server из стандартной библиотеки Python.
+    Custom handler наследуется от http.server.BaseHTTPRequestHandler.
+    MIME-типы: text/html для HTML, application/json для JSON.
+
+Annotations: |
+  Используй `conventions` для правил написания кода и тестов.
+
+  HTTP-сервер для обслуживания SPA и API графа.
+
+  Используй `stdlib_http` для реализации сервера.
+  Используй `load_json_file` и `load_json_stdin` для загрузки JSON-данных. См. `loading`.
+  Используй `index_page` для генерации SPA-страницы. См. `serving`.
+  Используй `find_free_port` для поиска свободного порта. См. `finding`.
+
+---
+
+"GraphServer(graph: CellGraph, port: int)":
+  location: server.py
+  annotations: |
+    HTTP-сервер, обслуживающий SPA и API.
+    Роуты: / — SPA-страница, /api/graph — JSON с данными графа.
+
+    `graph`: граф проекта для отдачи через API
+    `port`: номер порта для запуска
+
+    Используй `stdlib_http` для реализации.
+    Используй `index_page` для генерации SPA-страницы. См. `serving`.
+  methods:
+    "start() -> void:null": |
+      Запускает HTTP-сервер. Блокирующий вызов.
+    "url() -> address:str": |
+      Возвращает полный URL сервера.
+
+"run_server(json_path: str | None) -> void:null":
+  location: server.py
+  annotations: |
+    Точка входа сервера: загружает JSON, находит порт, запускает `GraphServer`.
+    Если `json_path` is None — читает из stdin.
+
+    `json_path`: путь к JSON-файлу или None для чтения из stdin
+
+    Используй `find_free_port` для поиска порта. См. `finding`.
+    Используй `load_json_file` и `load_json_stdin` для загрузки JSON. См. `loading`.
+
+---
+
+Author: goga-tool-viewer
+CreatedAt: 09/05/26
+Description: |
+  HTTP-сервер для обслуживания SPA и API данных графа cells.

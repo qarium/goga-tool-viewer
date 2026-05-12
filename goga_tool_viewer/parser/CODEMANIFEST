@@ -1,0 +1,58 @@
+Imports:
+  - Types:
+      - CellGraph
+    Usages:
+      - reading
+    From: goga_tool_viewer/models
+
+Usages:
+  conventions: .usages/conventions.md
+
+Annotations: |
+  Используй `conventions` для правил написания кода и тестов.
+
+  Парсер JSON-файла в структуру CellGraph.
+
+  Используй `CellGraph` для правил преобразования JSON → модели. См. `reading`.
+
+---
+
+"parse_json(json_str: str) -> graph:CellGraph":
+  location: parser.py
+  annotations: |
+    Парсит JSON-строку в CellGraph.
+    JSON — массив корневых cells на верхнем уровне.
+
+    `json_str`: содержимое JSON-файла как строка
+    `graph`: полный граф проекта со всеми cells и зависимостями
+
+    Используй `CellGraph` для правил преобразования JSON → модели. См. `reading`.
+
+"load_json_file(path: str) -> graph:CellGraph":
+  location: parser.py
+  annotations: |
+    Читает JSON-файл по пути и передаёт его содержимое в `parse_json`.
+
+    `path`: путь к JSON-файлу
+    `graph`: полный граф проекта
+
+    Используй `CellGraph` для правил преобразования. См. `reading`.
+    Использует `parse_json` для парсинга содержимого файла.
+
+"load_json_stdin() -> graph:CellGraph":
+  location: parser.py
+  annotations: |
+    Читает JSON из stdin и передаёт его содержимое в `parse_json`.
+    Используется при pipe: cat data.json | goga tool viewer.
+
+    `graph`: полный граф проекта
+
+    Используй `CellGraph` для правил преобразования. См. `reading`.
+    Использует `parse_json` для парсинга содержимого stdin.
+
+---
+
+Author: goga-tool-viewer
+CreatedAt: 09/05/26
+Description: |
+  Парсер JSON-файлов со структурой cell в граф моделей данных.

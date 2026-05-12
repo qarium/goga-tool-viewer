@@ -1,0 +1,28 @@
+Usages:
+  conventions: .usages/conventions.md
+
+Annotations: |
+  Поиск свободного TCP-порта на localhost.
+  Используй `conventions` для правил написания кода и тестов.
+  Использовать socket из стандартной библиотеки Python.
+
+---
+
+"find_free_port(min_port: int, max_port: int) -> port:int":
+  location: port_finder.py
+  annotations: |
+    Ищет свободный TCP-порт в диапазоне [`min_port`, `max_port`].
+    Выбирает случайный порт из диапазона, проверяет доступность.
+    Если все порты заняты — вызывает OSError.
+
+    `min_port`: нижняя граница диапазона (default 49152)
+    `max_port`: верхняя граница диапазона (default 65535)
+
+    `port`: свободный номер порта
+
+---
+
+Author: goga-tool-viewer
+CreatedAt: 09/05/26
+Description: |
+  Поиск свободного TCP-порта для запуска HTTP-сервера.
