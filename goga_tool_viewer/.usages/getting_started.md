@@ -5,7 +5,7 @@
 ## Запуск с файлом
 
 ```bash
-goga tool viewer path/to/data.json
+goga tool viewer path/to/schema.json
 ```
 
 Выведет URL: http://localhost:PORT
