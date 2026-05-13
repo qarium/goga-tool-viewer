@@ -32,12 +32,12 @@ jobs:
           install-cmd: pip install strictacode
           working-directory: goga_tool_viewer
         env:
-          STRICTACODE_SCORE: 40
-          STRICTACODE_RP: 40
-          STRICTACODE_SCORE_DIFF: 3
+          STRICTACODE_SCORE: 20
+          STRICTACODE_RP: 20
+          STRICTACODE_OP: 10
+          STRICTACODE_IMB: 15
+          STRICTACODE_DENSITY: 20
           STRICTACODE_RP_DIFF: 5
-          STRICTACODE_OP: 40
-          STRICTACODE_IMB: 35
-          STRICTACODE_DENSITY: 30
           STRICTACODE_OP_DIFF: 5
-          STRICTACODE_DENSITY_DIFF: 3
+          STRICTACODE_DENSITY_DIFF: 5
+          STRICTACODE_SCORE_DIFF: 3
