@@ -1,0 +1,35 @@
+docs/index.md: []
+
+docs/getting-started.md:
+  - goga_tool_viewer
+
+docs/architecture.md:
+  - goga_tool_viewer
+  - goga_tool_viewer/models
+  - goga_tool_viewer/parser
+  - goga_tool_viewer/frontend
+  - goga_tool_viewer/server
+  - goga_tool_viewer/server/port_finder
+
+docs/cells/index.md:
+  - goga_tool_viewer
+
+docs/cells/models.md:
+  - goga_tool_viewer/models
+
+docs/cells/parser.md:
+  - goga_tool_viewer/parser
+  - goga_tool_viewer/models
+
+docs/cells/frontend.md:
+  - goga_tool_viewer/frontend
+
+docs/cells/server.md:
+  - goga_tool_viewer/server
+  - goga_tool_viewer/models
+  - goga_tool_viewer/parser
+  - goga_tool_viewer/frontend
+  - goga_tool_viewer/server/port_finder
+
+docs/cells/port-finder.md:
+  - goga_tool_viewer/server/port_finder
