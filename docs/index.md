@@ -19,7 +19,7 @@ Visualizes cell dependency graphs as a single-page web application with hierarch
 goga tool viewer path/to/schema.json
 
 # Via pipe
-cat data.json | goga tool viewer
+goga schema | goga tool viewer
 ```
 
 After launch, an HTTP server starts with a web interface. The URL is printed to the console.
