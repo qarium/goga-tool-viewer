@@ -20,7 +20,7 @@ Imports:
     From: goga_tool_viewer/server/port_finder
 
 Usages:
-  conventions: .usages/conventions.md
+  conventions: .goga/usages/conventions.md
   stdlib_http: |
     Использовать http.server из стандартной библиотеки Python.
     Custom handler наследуется от http.server.BaseHTTPRequestHandler.

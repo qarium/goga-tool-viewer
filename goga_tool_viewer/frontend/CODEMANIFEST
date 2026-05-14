@@ -1,5 +1,5 @@
 Usages:
-  conventions: .usages/conventions.md
+  conventions: .goga/usages/conventions.md
   spa_structure: |
     SPA состоит из одного HTML-файла с встроенными CSS и JS.
     Без сборки — JS-библиотеки встроены inline из static/.

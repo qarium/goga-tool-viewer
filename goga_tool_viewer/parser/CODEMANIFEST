@@ -6,7 +6,7 @@ Imports:
     From: goga_tool_viewer/models
 
 Usages:
-  conventions: .usages/conventions.md
+  conventions: .goga/usages/conventions.md
 
 Annotations: |
   Используй `conventions` для правил написания кода и тестов.

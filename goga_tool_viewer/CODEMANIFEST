@@ -10,7 +10,7 @@ Imports:
     From: goga_tool_viewer/frontend
 
 Usages:
-  conventions: .usages/conventions.md
+  conventions: .goga/usages/conventions.md
   cli_args: |
     argv — список аргументов без имени команды.
     argv[0] — путь к JSON-файлу (необязательный).
