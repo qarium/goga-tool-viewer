@@ -11,6 +11,6 @@ build:
 
 codemanifest:
   usages:
-    conventions: .usages/conventions.md
+    conventions: .goga/usages/conventions.md
   annotations: |
     Используй `conventions` для правил написания кода и тестов.
