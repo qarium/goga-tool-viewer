@@ -9,7 +9,7 @@ Usages:
   conventions: .goga/usages/conventions.md
 
 Annotations: |
-  Используй `conventions` для правил написания кода и тестов.
+  Использовать `conventions` для правил написания кода и тестов.
 
   Парсер JSON-файла в структуру CellGraph.
 

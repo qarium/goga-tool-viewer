@@ -29,7 +29,7 @@ Usages:
       зависимости (cell.dependencies).
 
 Annotations: |
-  Используй `conventions` для правил написания кода и тестов.
+  Использовать `conventions` для правил написания кода и тестов.
 
   SPA-приложение для отображения графа зависимостей cells.
   Один HTML-файл с CSS и JS, Cytoscape.js встроен inline.

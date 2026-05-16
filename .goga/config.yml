@@ -13,4 +13,4 @@ codemanifest:
   usages:
     conventions: .goga/usages/conventions.md
   annotations: |
-    Используй `conventions` для правил написания кода и тестов.
+    Использовать `conventions` для правил написания кода и тестов.

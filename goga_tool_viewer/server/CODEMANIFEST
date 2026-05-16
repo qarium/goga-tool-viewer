@@ -27,7 +27,7 @@ Usages:
     MIME-типы: text/html для HTML, application/json для JSON.
 
 Annotations: |
-  Используй `conventions` для правил написания кода и тестов.
+  Использовать `conventions` для правил написания кода и тестов.
 
   HTTP-сервер для обслуживания SPA и API графа.
 

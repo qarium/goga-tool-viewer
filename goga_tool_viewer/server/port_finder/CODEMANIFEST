@@ -2,8 +2,9 @@ Usages:
   conventions: .goga/usages/conventions.md
 
 Annotations: |
+  Использовать `conventions` для правил написания кода и тестов.
+
   Поиск свободного TCP-порта на localhost.
-  Используй `conventions` для правил написания кода и тестов.
   Использовать socket из стандартной библиотеки Python.
 
 ---
