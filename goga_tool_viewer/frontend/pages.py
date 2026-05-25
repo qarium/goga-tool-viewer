@@ -1,3 +1,5 @@
+"""HTML page generators for the graph visualization frontend."""
+
 import json
 from pathlib import Path
 
@@ -9,6 +11,14 @@ def _read_static(filename: str) -> str:
 
 
 def index_page(graph_json_url: str) -> str:
+    """Generate the main HTML page with embedded graph visualization.
+
+    Args:
+        graph_json_url: URL path to the graph JSON API endpoint.
+
+    Returns:
+        Complete HTML document as a string with embedded JavaScript and CSS.
+    """
     cytoscape_js = _read_static("cytoscape.min.js")
     dagre_js = _read_static("dagre.min.js")
     cytoscape_dagre_js = _read_static("cytoscape-dagre.min.js")

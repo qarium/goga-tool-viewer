@@ -10,14 +10,21 @@ from ..models import CellData, CellGraph, DependencyInfo
 
 
 def _parse_cell(item: dict) -> tuple[CellData, list[CellData], list[DependencyInfo]]:
-    """Parse a single cell dict into (CellData, all_descendant_cells, all_edges).
+    """Parse a single cell dict into its data, descendants, and edges.
 
     Recursively parses children, returning this cell, all descendant cells, and all edges.
+
+    Args:
+        item: Raw cell dictionary from JSON input.
+
+    Returns:
+        A tuple of (CellData, list of all descendant CellData, list of all DependencyInfo).
     """
     if "cell" not in item:
         raise ValueError("Each cell item must have a 'cell' key")
 
     deps = []
+
     for target, info in item.get("dependencies", {}).items():
         deps.append(
             DependencyInfo(
@@ -31,6 +38,7 @@ def _parse_cell(item: dict) -> tuple[CellData, list[CellData], list[DependencyIn
     children: list[CellData] = []
     all_descendants: list[CellData] = []
     all_edges: list[DependencyInfo] = list(deps)
+
     for child_item in item.get("children", []):
         child_cell, child_descendants, child_edges = _parse_cell(child_item)
         children.append(child_cell)
@@ -50,7 +58,13 @@ def _parse_cell(item: dict) -> tuple[CellData, list[CellData], list[DependencyIn
 
 
 def _collect_all(item: dict, cells: list[CellData], edges: list[DependencyInfo]) -> None:
-    """Recursively collect all cells and edges from a cell dict tree."""
+    """Recursively collect all cells and edges from a cell dict tree.
+
+    Args:
+        item: Raw cell dictionary from JSON input.
+        cells: Accumulator list for all parsed CellData instances.
+        edges: Accumulator list for all parsed DependencyInfo instances.
+    """
     cell_data, descendants, cell_edges = _parse_cell(item)
     cells.append(cell_data)
     cells.extend(descendants)
@@ -60,12 +74,16 @@ def _collect_all(item: dict, cells: list[CellData], edges: list[DependencyInfo])
 def parse_json(json_str: str) -> CellGraph:
     """Parse JSON string into CellGraph."""
     data = json.loads(json_str)
+
     if not isinstance(data, list):
         raise ValueError("Expected a JSON array at the top level")
+
     cells: list[CellData] = []
     edges: list[DependencyInfo] = []
+
     for item in data:
         _collect_all(item, cells, edges)
+
     return CellGraph(cells=cells, edges=edges)
 
 
