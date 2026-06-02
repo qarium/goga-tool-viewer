@@ -50,8 +50,8 @@ Usages:
       создаёт узлы из graph.cells (name — label, description — tooltip),
       создаёт рёбра из graph.edges (from_cell → to_cell), возвращает cy_instance.
       Использовать layout dagre для иерархического отображения.
-    - highlight_cell(cell_name) — подсвечивает cell и все её связи,
-      остальные узлы затемняются.
+    - highlight_cell(cell_name, cy_instance) — подсвечивает cell и все её связи,
+      остальные узлы затемняются. cy_instance — экземпляр Cytoscape.
     - show_cell_info(cell_name, graph) — показывает панель с информацией о cell:
       типы (cell.types), потребители (edges где to_cell === cell_name),
       зависимости (cell.dependencies).
