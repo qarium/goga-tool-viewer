@@ -106,6 +106,7 @@ def index_page(graph_json_url: str) -> str:
       right: 0;
       bottom: 0;
       background: var(--color-brand-bg);
+      animation: fadeIn 0.6s ease-out;
     }}
     #info-wrapper {{
       position: absolute;
@@ -174,8 +175,12 @@ def index_page(graph_json_url: str) -> str:
     }}
     footer img {{ height: 20px; }}
     footer .copyright {{ margin-left: auto; }}
-    .dimmed {{ opacity: 0.2; }}
+    .dimmed {{ opacity: 0.15; transition: opacity 0.3s ease, transform 0.3s ease; }}
     .highlight {{ background-color: #20d4bf; }}
+    @keyframes fadeIn {{
+      from {{ opacity: 0; }}
+      to {{ opacity: 1; }}
+    }}
   </style>
   <script>{cytoscape_js}</script>
   <script>{dagre_js}</script>
@@ -258,7 +263,9 @@ def index_page(graph_json_url: str) -> str:
               'text-valign': 'center',
               'text-halign': 'center',
               'shape': 'round-rectangle',
-              'background-color': '#0f172a',
+              'background-fill': 'linear-gradient',
+              'background-gradient-direction': 'to bottom',
+              'background-gradient-stop-colors': '#0f172a #162040',
               'border-color': '#20d4bf',
               'border-width': 1,
               'color': '#fff',
@@ -267,7 +274,13 @@ def index_page(graph_json_url: str) -> str:
               'width': 120,
               'padding': '12px',
               'font-size': 10,
-              'text-outline-width': 0
+              'text-outline-width': 0,
+              'shadow-blur': 8,
+              'shadow-color': 'rgba(32, 212, 191, 0.15)',
+              'shadow-offset-x': 0,
+              'shadow-offset-y': 2,
+              'transition-property': 'shadow-blur, border-width, border-color',
+              'transition-duration': '0.3s'
             }}
           }},
           {{
@@ -277,7 +290,31 @@ def index_page(graph_json_url: str) -> str:
               'line-color': 'rgba(32, 212, 191, 0.5)',
               'target-arrow-color': '#20d4bf',
               'target-arrow-shape': 'triangle',
-              'width': 0.8
+              'width': 0.8,
+              'transition-property': 'line-color, width',
+              'transition-duration': '0.3s'
+            }}
+          }},
+          {{
+            selector: 'edge.highlighted',
+            style: {{
+              'line-color': '#20d4bf',
+              'width': 1.5
+            }}
+          }},
+          {{
+            selector: '.dimmed',
+            style: {{
+              'opacity': 0.15
+            }}
+          }},
+          {{
+            selector: '.highlight',
+            style: {{
+              'shadow-blur': 20,
+              'shadow-color': 'rgba(32, 212, 191, 0.4)',
+              'border-width': 2,
+              'border-color': '#20d4bf'
             }}
           }}
         ],
@@ -287,11 +324,11 @@ def index_page(graph_json_url: str) -> str:
     }}
 
     function highlight_cell(cell_name, cy) {{
-      cy.elements().addClass('dimmed');
+      cy.elements().removeClass('highlight highlighted').addClass('dimmed');
       const node = cy.getElementById(cell_name);
       node.removeClass('dimmed').addClass('highlight');
+      node.connectedEdges().removeClass('dimmed').addClass('highlighted');
       node.connectedEdges().connectedNodes().removeClass('dimmed');
-      node.connectedEdges().removeClass('dimmed');
     }}
 
     function _esc(s) {{

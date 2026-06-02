@@ -267,3 +267,47 @@ class TestIndexPageVisualUpdates:
     def test_info_panel_opens_on_node_tap(self):
         html = index_page(graph_json_url="/api/graph")
         assert 'classList.remove("hidden")' in html
+
+
+class TestIndexPageVisualEffects:
+    """Tests for visual effects: gradients, shadows, animations."""
+
+    def test_node_gradient_fill(self):
+        html = index_page(graph_json_url="/api/graph")
+        assert "linear-gradient" in html
+        assert "background-gradient-direction" in html
+        assert "background-gradient-stop-colors" in html
+
+    def test_node_shadow_glow(self):
+        html = index_page(graph_json_url="/api/graph")
+        assert "shadow-blur" in html
+        assert "shadow-color" in html
+        assert "rgba(32, 212, 191, 0.15)" in html
+
+    def test_node_transition_properties(self):
+        html = index_page(graph_json_url="/api/graph")
+        assert "transition-property" in html
+        assert "transition-duration" in html
+
+    def test_fade_in_animation(self):
+        html = index_page(graph_json_url="/api/graph")
+        assert "@keyframes fadeIn" in html
+        assert "fadeIn" in html
+        assert "animation:" in html
+
+    def test_edge_highlighted_style(self):
+        html = index_page(graph_json_url="/api/graph")
+        assert "edge.highlighted" in html
+
+    def test_dimmed_style_class(self):
+        html = index_page(graph_json_url="/api/graph")
+        assert "'.dimmed'" in html
+
+    def test_highlight_enhanced_glow(self):
+        html = index_page(graph_json_url="/api/graph")
+        assert "'.highlight'" in html
+        assert "rgba(32, 212, 191, 0.4)" in html
+
+    def test_highlight_cell_clears_previous_state(self):
+        html = index_page(graph_json_url="/api/graph")
+        assert "removeClass('highlight highlighted')" in html

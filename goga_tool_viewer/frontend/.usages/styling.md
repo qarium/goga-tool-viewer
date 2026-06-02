@@ -36,7 +36,10 @@
 
 ## Граф (Cytoscape)
 
-- Узлы: скруглённые прямоугольники, фон #0f172a, бордер #20d4bf (2px), текст #fff
-- Узлы: тень shadow-blur 8px, shadow-color rgba(32, 212, 191, 0.15)
-- Рёбра: цвет rgba(32, 212, 191, 0.5), directed arrows, ширина 1.5
-- Подсветка: teal для выбранного узла, затемнение остальных
+- Узлы: скруглённые прямоугольники, градиентный фон #0f172a → #162040 (направление to bottom), бордер #20d4bf (1px), текст #fff
+- Узлы: тень shadow-blur 8px, shadow-color rgba(32, 212, 191, 0.15), shadow-offset-y 2px
+- Узлы: transition 0.3s на shadow-blur, border-width, border-color
+- Рёбра: цвет rgba(32, 212, 191, 0.5), directed arrows, ширина 0.8, transition 0.3s
+- Рёбра при подсветке (класс highlighted): цвет #20d4bf, ширина 1.5
+- Подсветка: узел с классом highlight получает усиленный glow (shadow-blur 20px, shadow-color rgba(32, 212, 191, 0.4)), бордер 2px; остальные затемняются (opacity 0.15)
+- Fade-in анимация: @keyframes fadeIn 0.6s ease-out при загрузке графа
