@@ -1,7 +1,6 @@
 import inspect
 
 import pytest
-
 from goga_tool_viewer.frontend import index_page
 from goga_tool_viewer.frontend.pages import _read_static_bytes
 
@@ -125,6 +124,60 @@ class TestIndexPage:
         from goga_tool_viewer.frontend import index_page as facade_index_page  # noqa: PLC0415
 
         assert facade_index_page is index_page
+
+
+class TestIndexPageIntegration:
+    """Integration tests for full HTML page generation."""
+
+    def test_index_page_full_html_structure(self):
+        html = index_page(graph_json_url="/api/graph")
+        # All sections present
+        assert "<!DOCTYPE html>" in html
+        assert "<html>" in html
+        assert "<head>" in html
+        assert "<body>" in html
+        assert "<header" in html
+        assert "<main>" in html
+        assert "<footer" in html
+        # Correct order
+        head_pos = html.index("<head>")
+        header_pos = html.index("<header")
+        main_pos = html.index("<main>")
+        footer_pos = html.index("<footer")
+        close_body = html.index("</body>")
+        assert head_pos < header_pos < main_pos < footer_pos < close_body
+
+    def test_index_page_css_variables_used_in_inline_styles(self):
+        html = index_page(graph_json_url="/api/graph")
+        # Variables declared in :root
+        assert ":root" in html
+        for var in [
+            "--color-brand-bg",
+            "--color-brand-card",
+            "--color-brand-teal",
+            "--color-brand-blue",
+            "--color-brand-text",
+            "--color-brand-muted",
+        ]:
+            assert var in html
+        # Variables used via var() in styles
+        assert "var(--color-brand-bg)" in html
+        assert "var(--color-brand-card)" in html
+        assert "var(--color-brand-teal)" in html
+        assert "var(--color-brand-muted)" in html
+
+    def test_index_page_embeds_all_js_libraries(self, static_with_assets):
+        html = index_page(graph_json_url="/api/graph")
+        # Each library is embedded in a <script> tag within <head>
+        head_end = html.index("</head>")
+        head_section = html[:head_end]
+        assert "/* cytoscape */" in head_section
+        assert "/* dagre */" in head_section
+        assert "/* cyto-dagre */" in head_section
+        # Verify they are inside <script> tags
+        assert "<script>/* cytoscape */</script>" in head_section
+        assert "<script>/* dagre */</script>" in head_section
+        assert "<script>/* cyto-dagre */</script>" in head_section
 
 
 class TestIndexPageLogical:

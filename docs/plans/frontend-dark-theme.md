@@ -217,15 +217,15 @@
 - `cytoscape`: dagre layout, тёмные стили
 - `js_rendering`: структура данных graph, функции render_graph/highlight_cell/show_cell_info
 
-- [ ] **ШАГ 0 (ОБЪЯВЛЕНИЕ)**: Объявить работу над Task 3 — интеграционные тесты для `index_page`
-- [ ] **ШАГ 1 (ТЕСТЫ)**: Создать/обновить файл тестов `tests/frontend/test_index_page.py` — добавить класс `TestIndexPageIntegration`:
+- [x] **ШАГ 0 (ОБЪЯВЛЕНИЕ)**: Объявить работу над Task 3 — интеграционные тесты для `index_page`
+- [x] **ШАГ 1 (ТЕСТЫ)**: Создать/обновить файл тестов `tests/frontend/test_index_page.py` — добавить класс `TestIndexPageIntegration`:
   - `test_index_page_full_html_structure` — `<!DOCTYPE html>`, `<html>`, `<head>`, `<body>`, `<header>`, `<main>`, `<footer>` — все секции присутствуют в правильном порядке
   - `test_index_page_css_variables_used_in_inline_styles` — CSS-переменные объявлены в `:root` и используются через `var()` в стилях body/header/main/info/footer
   - `test_index_page_embeds_all_js_libraries` — содержимое файлов cytoscape.min.js, dagre.min.js, cytoscape-dagre.min.js встроено в `<script>` теги
-- [ ] **ШАГ 2 (ОТЛАДКА)**: Запустить тесты: `pytest tests/frontend/test_index_page.py -v` — исправлять тесты и/или код реализации, пока все не пройдут
-- [ ] **ШАГ 3 (ЛИНТ)**: `ruff check tests/frontend/` — исправить форматирование
-- [ ] **ШАГ 4 (ЗАВЕРШЕНИЕ)**: Отметить чекбоксы как выполненные
-- [ ] **→ РЕВЬЮ → ОДОБРЕНИЕ → СЛЕДУЮЩАЯ ЗАДАЧА**
+- [x] **ШАГ 2 (ОТЛАДКА)**: Запустить тесты: `pytest tests/frontend/test_index_page.py -v` — исправлять тесты и/или код реализации, пока все не пройдут
+- [x] **ШАГ 3 (ЛИНТ)**: `ruff check tests/frontend/` — исправить форматирование
+- [x] **ШАГ 4 (ЗАВЕРШЕНИЕ)**: Отметить чекбоксы как выполненные
+- [x] **→ РЕВЬЮ → ОДОБРЕНИЕ → СЛЕДУЮЩАЯ ЗАДАЧА**
 
 ---
 
@@ -253,6 +253,6 @@
 - [x] Ассеты logo.png, favicon.png, goga.svg присутствуют в static/
 - [x] Каждая задача кодирования следовала рабочему процессу TDD
 - [x] Контрактные и логические тесты покрывают фасад, API и поведение
-- [ ] Интеграционные тесты покрывают сквозные сценарии
+- [x] Интеграционные тесты покрывают сквозные сценарии
 - [x] Файлы `CODEMANIFEST` не были изменены
 - [x] Все команды валидации проходят
