@@ -20,7 +20,7 @@
   - Иконки контактов справа: Telegram (t.me/QAriumCommunity), GitHub (github.com/qarium), Email (info@qarium.ru)
   - Иконки — inline SVG с opacity 0.6, hover — 1.0
 - Основная область: граф (flex: 1, занимает всё свободное пространство) + информационная панель справа
-- Футер: логотип QArium слева, копирайт "© 2026 QArium. All rights reserved." по центру
+- Футер: логотип QArium слева, копирайт "© 2026 QArium. All rights reserved." справа
 - Шрифты: ui-sans-serif, system-ui, sans-serif; antialiased
 - Панель info — моноширинный шрифт: ui-monospace, SFMono-Regular, monospace
 
