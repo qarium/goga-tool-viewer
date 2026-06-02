@@ -6,7 +6,6 @@ Imports:
     From: goga_tool_viewer/server
   - Usages:
       - serving
-      - styling
     From: goga_tool_viewer/frontend
 
 Usages:
@@ -25,7 +24,6 @@ Annotations: |
   Используй `cli_args` для разбора аргументов argv.
   Используй `run_server` для запуска сервера. См. `running`.
   Используй `serving` для понимания SPA-части.
-  Используй `styling` для визуальных требований SPA.
 
 ---
 

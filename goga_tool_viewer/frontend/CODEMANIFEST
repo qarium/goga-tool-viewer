@@ -1,42 +1,6 @@
 Usages:
   conventions: .goga/usages/conventions.md
-  spa_structure: |
-    SPA состоит из одного HTML-файла с встроенными CSS и JS.
-    Без сборки — JS-библиотеки встроены inline из static/.
-
-    Дизайн-токены (тёмная тема qarium.ru/goga):
-    - --color-brand-bg: #0a0e1a (основной фон)
-    - --color-brand-card: #121830 (карточки, панели)
-    - --color-brand-teal: #20d4bf (акценты, подсветка)
-    - --color-brand-blue: #3882f6 (вторичный акцент)
-    - --color-brand-text: #fff (основной текст)
-    - --color-brand-muted: #a0aec0 (приглушённый текст)
-    - Шрифты: ui-sans-serif, system-ui, sans-serif; antialiased
-
-    Структура страницы:
-    - Хедер: логотип (logo.png), текст "QArium", backdrop-blur эффект
-    - Основная область: граф (80%) и панель информации (20%)
-    - Футер: копирайт "© 2026 QArium. All rights reserved."
-    - Информационная панель: карточка с бордером white/5%
-
-    Статические ассеты в static/:
-    - logo.png, favicon.png, goga.svg — брендированные ресурсы
-  cytoscape: |
-    Cytoscape.js — библиотека визуализации графов.
-    Библиотека встроена inline в HTML из static/cytoscape.min.js.
-    Использовать layout dagre для иерархического отображения.
-    Подключить через <script> тег в HTML.
-
-    Стили узлов (тёмная тема):
-    - Фон: --color-brand-card (#121830)
-    - Бордер: --color-brand-teal (#20d4bf)
-    - Текст: --color-brand-text (#fff)
-    - Форма: скруглённый прямоугольник (round-rectangle)
-    - Подсветка: teal для выбранного, затемнение остальных
-
-    Стили рёбер:
-    - Цвет: --color-brand-teal (#20d4bf)
-    - Направленные стрелки
+  frontend_styling: .goga/usages/frontend_styling.md
   js_rendering: |
     Требования к JS-функциям, встроенным inline в HTML.
 
@@ -63,8 +27,11 @@ Annotations: |
   Один HTML-файл с CSS и JS, Cytoscape.js встроен inline.
   Тёмная тема в стиле qarium.ru/goga с фирменными цветами.
 
-  Используй `spa_structure` для структуры страницы и дизайн-токенов.
-  Используй `cytoscape` для визуализации графа и стилизации узлов/рёбер.
+  Используй `frontend_styling` для требований к визуальному оформлению:
+  - дизайн-токены
+  - layout
+  - стили графа и информационной панели
+
   Используй `js_rendering` для требований к inline JS-функциям.
 
 ---
@@ -81,8 +48,6 @@ Annotations: |
 
     `html`: полная HTML-страница как строка
 
-    Используй `spa_structure` для структуры страницы и дизайн-токенов.
-    Используй `cytoscape` для подключения библиотеки и стилизации графа.
     Используй `js_rendering` для требований к inline JS-функциям.
 
     Все CSS стили inline (в теге <style>). Favicon подключается через <link>.

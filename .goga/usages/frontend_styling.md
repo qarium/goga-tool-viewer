@@ -1,6 +1,18 @@
 # Стили SPA — тёмная тема qarium.ru/goga
 
-Для потребителей frontend — визуальные характеристики SPA.
+Требования к визуальному оформлению SPA.
+
+## Структура SPA
+
+SPA состоит из одного HTML-файла с встроенными CSS и JS.
+Без сборки — JS-библиотеки встроены inline из static/.
+
+Статические ассеты в static/:
+- logo.png, favicon.png — брендированные ресурсы. Референс: qarium.ru/goga. Скачать с сайта: логотип из хедера, favicon из вкладки браузера.
+- icon-telegram.svg, icon-github.svg, icon-email.svg — иконки контактов. Inline SVG, соответствующие иконкам из qarium.ru/goga.
+- cytoscape.min.js — скачать с https://js.cytoscape.org/ (раздел Download)
+- dagre.min.js — скачать с https://github.com/dagrejs/dagre (npm: dagre)
+- cytoscape-dagre.min.js — скачать с https://github.com/cytoscape/cytoscape.js-dagre (npm: cytoscape-dagre)
 
 ## Дизайн-токены
 
@@ -36,10 +48,24 @@
 
 ## Граф (Cytoscape)
 
-- Узлы: скруглённые прямоугольники, градиентный фон #0f172a → #162040 (направление to bottom), бордер #20d4bf (1px), текст #fff
-- Узлы: тень shadow-blur 8px, shadow-color rgba(32, 212, 191, 0.15), shadow-offset-y 2px
-- Узлы: transition 0.3s на shadow-blur, border-width, border-color
-- Рёбра: цвет rgba(32, 212, 191, 0.5), directed arrows, ширина 0.8, transition 0.3s
-- Рёбра при подсветке (класс highlighted): цвет #20d4bf, ширина 1.5
-- Подсветка: узел с классом highlight получает усиленный glow (shadow-blur 20px, shadow-color rgba(32, 212, 191, 0.4)), бордер 2px; остальные затемняются (opacity 0.15)
-- Fade-in анимация: @keyframes fadeIn 0.6s ease-out при загрузке графа
+Cytoscape.js — библиотека визуализации графов.
+Встроена inline в HTML из static/cytoscape.min.js. Подключить через <script> тег.
+Использовать layout dagre для иерархического отображения.
+
+Стили узлов:
+- Скруглённые прямоугольники, форма: round-rectangle
+- Градиентный фон #0f172a → #162040 (направление to bottom)
+- Бордер #20d4bf (1px), текст #fff
+- Тень shadow-blur 8px, shadow-color rgba(32, 212, 191, 0.15), shadow-offset-y 2px
+- Transition 0.3s на shadow-blur, border-width, border-color
+- Подсветка: teal для выбранного, затемнение остальных
+
+Стили рёбер:
+- Цвет rgba(32, 212, 191, 0.5), directed arrows, ширина 0.8, transition 0.3s
+- При подсветке (класс highlighted): цвет #20d4bf, ширина 1.5
+
+Подсветка узла (класс highlight):
+- Усиленный glow: shadow-blur 20px, shadow-color rgba(32, 212, 191, 0.4), бордер 2px
+- Остальные узлы затемняются (opacity 0.15)
+
+Fade-in анимация: @keyframes fadeIn 0.6s ease-out при загрузке графа.
