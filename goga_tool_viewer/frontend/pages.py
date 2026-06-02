@@ -192,7 +192,7 @@ def index_page(graph_json_url: str) -> str:
       const depList = (cell.dependencies || []).map(d => d.to_cell);
       document.getElementById("info").innerHTML =
         "<h3>" + _esc(cell.name) + "</h3>" +
-        "<p>" + _esc(cell.description) + "</p>" +
+        "<p>" + _esc(cell.description || "") + "</p>" +
         "<h4>Types</h4><ul>" +
         (cell.types || []).map(t => "<li>" + _esc(t) + "</li>").join("") +
         "</ul>" +
