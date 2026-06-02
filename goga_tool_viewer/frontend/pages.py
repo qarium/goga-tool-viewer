@@ -131,20 +131,6 @@ def index_page(graph_json_url: str) -> str:
       background: #1e293b;
       border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     }}
-    #info-titlebar .dots {{
-      display: flex;
-      gap: 6px;
-      margin-right: 10px;
-    }}
-    #info-titlebar .dots span {{
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      display: inline-block;
-    }}
-    #info-titlebar .dots .dot-red {{ background: #ef4444; }}
-    #info-titlebar .dots .dot-yellow {{ background: #eab308; }}
-    #info-titlebar .dots .dot-green {{ background: #22c55e; }}
     #info-titlebar .title {{
       flex: 1;
       text-align: center;
@@ -211,11 +197,6 @@ def index_page(graph_json_url: str) -> str:
     <div id="cy"></div>
     <div id="info-wrapper" class="hidden">
       <div id="info-titlebar">
-        <div class="dots">
-          <span class="dot-red"></span>
-          <span class="dot-yellow"></span>
-          <span class="dot-green"></span>
-        </div>
         <span class="title" id="info-title">cell info</span>
         <button id="info-close">&times;</button>
       </div>

@@ -241,9 +241,6 @@ class TestIndexPageVisualUpdates:
         assert "info-wrapper" in html
         assert "info-titlebar" in html
         assert "info-close" in html
-        assert "dot-red" in html
-        assert "dot-yellow" in html
-        assert "dot-green" in html
 
     def test_info_panel_hidden_by_default(self):
         html = index_page(graph_json_url="/api/graph")
