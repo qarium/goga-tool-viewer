@@ -137,6 +137,10 @@ def index_page(graph_json_url: str) -> str:
       font-size: 12px;
       color: var(--color-brand-muted);
       font-family: ui-monospace, SFMono-Regular, monospace;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      min-width: 0;
     }}
     #info-close {{
       background: none;
