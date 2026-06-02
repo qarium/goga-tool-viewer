@@ -104,8 +104,8 @@ class TestIndexPage:
 
     def test_contains_layout_styles(self):
         html = index_page(graph_json_url="/api/graph")
-        assert "80%" in html
         assert "flex" in html
+        assert "flex: 1" in html
 
     def test_uses_graph_json_url(self):
         html = index_page(graph_json_url="/api/graph")
@@ -162,8 +162,8 @@ class TestIndexPageIntegration:
             assert var in html
         # Variables used via var() in styles
         assert "var(--color-brand-bg)" in html
-        assert "var(--color-brand-card)" in html
         assert "var(--color-brand-teal)" in html
+        assert "var(--color-brand-text)" in html
         assert "var(--color-brand-muted)" in html
 
     def test_index_page_embeds_all_js_libraries(self, static_with_assets):
@@ -211,3 +211,62 @@ class TestIndexPageLogical:
         monkeypatch.setattr("goga_tool_viewer.frontend.pages._STATIC", empty_static)
         with pytest.raises(FileNotFoundError):
             _read_static_bytes("logo.png")
+
+
+class TestIndexPageVisualUpdates:
+    """Tests for visual updates matching qarium.ru/goga reference."""
+
+    def test_header_two_color_text(self):
+        html = index_page(graph_json_url="/api/graph")
+        assert '<span class="teal">QA</span>' in html
+        assert '<span class="white">rium</span>' in html
+
+    def test_header_contact_icons_present(self):
+        html = index_page(graph_json_url="/api/graph")
+        assert "t.me/QAriumCommunity" in html
+        assert "github.com" in html
+        assert "info@qarium.ru" in html
+        assert "contact-icons" in html
+
+    def test_footer_has_logo_and_centered_copyright(self):
+        html = index_page(graph_json_url="/api/graph")
+        assert '<span class="copyright">' in html
+        footer_start = html.index("<footer")
+        footer_end = html.index("</footer>") + len("</footer>")
+        footer = html[footer_start:footer_end]
+        assert "data:image/png;base64" in footer
+
+    def test_info_panel_os_window_structure(self):
+        html = index_page(graph_json_url="/api/graph")
+        assert "info-wrapper" in html
+        assert "info-titlebar" in html
+        assert "info-close" in html
+        assert "dot-red" in html
+        assert "dot-yellow" in html
+        assert "dot-green" in html
+
+    def test_info_panel_hidden_by_default(self):
+        html = index_page(graph_json_url="/api/graph")
+        assert 'class="hidden"' in html
+
+    def test_info_panel_close_handler(self):
+        html = index_page(graph_json_url="/api/graph")
+        assert 'addEventListener("click"' in html
+
+    def test_yaml_formatting_in_show_cell_info(self):
+        html = index_page(graph_json_url="/api/graph")
+        assert "yaml-key" in html
+        assert "yaml-string" in html
+        assert "yaml-null" in html
+        assert "_yamlList" in html
+        assert "_yamlValue" in html
+
+    def test_node_styling_with_border(self):
+        html = index_page(graph_json_url="/api/graph")
+        assert "#0f172a" in html
+        assert "border-width" in html
+        assert "text-wrap" in html
+
+    def test_info_panel_opens_on_node_tap(self):
+        html = index_page(graph_json_url="/api/graph")
+        assert 'classList.remove("hidden")' in html

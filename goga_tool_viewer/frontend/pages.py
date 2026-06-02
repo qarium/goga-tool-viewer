@@ -15,6 +15,11 @@ def _read_static_bytes(filename: str) -> bytes:
     return (_STATIC / filename).read_bytes()
 
 
+_SVG_TELEGRAM = _read_static("icon-telegram.svg")
+_SVG_GITHUB = _read_static("icon-github.svg")
+_SVG_EMAIL = _read_static("icon-email.svg")
+
+
 def index_page(graph_json_url: str) -> str:
     """Generate the main HTML page with embedded graph visualization.
 
@@ -60,39 +65,125 @@ def index_page(graph_json_url: str) -> str:
       top: 0;
       left: 0;
       right: 0;
-      z-index: 100;
+      z-index: 1000;
       display: flex;
       align-items: center;
       gap: 10px;
       padding: 10px 20px;
-      background: rgba(10, 14, 26, 0.8);
+      background: rgba(10, 14, 26, 0.92);
       backdrop-filter: blur(12px);
       border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     }}
     header img {{ height: 28px; }}
-    header span {{ font-size: 18px; font-weight: 600; color: var(--color-brand-teal); }}
-    main {{
+    header .logo-text {{ font-size: 18px; font-weight: 600; }}
+    header .logo-text .teal {{ color: var(--color-brand-teal); }}
+    header .logo-text .white {{ color: var(--color-brand-text); }}
+    header .contact-icons {{
+      margin-left: auto;
       display: flex;
+      gap: 12px;
+      align-items: center;
+    }}
+    header .contact-icons a {{
+      opacity: 0.6;
+      transition: opacity 0.2s;
+      display: flex;
+      align-items: center;
+    }}
+    header .contact-icons a:hover {{ opacity: 1; }}
+    header .contact-icons svg {{ width: 20px; height: 20px; fill: var(--color-brand-text); }}
+    main {{
+      position: relative;
       flex: 1;
+      min-height: 0;
       margin-top: 50px;
       overflow: hidden;
     }}
-    #cy {{ width: 80%; height: 100%; background: var(--color-brand-bg); }}
+    #cy {{
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: var(--color-brand-bg);
+    }}
+    #info-wrapper {{
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      bottom: 8px;
+      width: 25%;
+      min-width: 280px;
+      max-width: 420px;
+      display: flex;
+      flex-direction: column;
+      background: #0f172a;
+      border-radius: 8px;
+      overflow: hidden;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+      z-index: 10;
+    }}
+    #info-wrapper.hidden {{ display: none !important; }}
+    #info-titlebar {{
+      display: flex;
+      align-items: center;
+      padding: 8px 12px;
+      background: #1e293b;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }}
+    #info-titlebar .dots {{
+      display: flex;
+      gap: 6px;
+      margin-right: 10px;
+    }}
+    #info-titlebar .dots span {{
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      display: inline-block;
+    }}
+    #info-titlebar .dots .dot-red {{ background: #ef4444; }}
+    #info-titlebar .dots .dot-yellow {{ background: #eab308; }}
+    #info-titlebar .dots .dot-green {{ background: #22c55e; }}
+    #info-titlebar .title {{
+      flex: 1;
+      text-align: center;
+      font-size: 12px;
+      color: var(--color-brand-muted);
+      font-family: ui-monospace, SFMono-Regular, monospace;
+    }}
+    #info-close {{
+      background: none;
+      border: none;
+      color: var(--color-brand-muted);
+      font-size: 16px;
+      cursor: pointer;
+      padding: 0 4px;
+      line-height: 1;
+    }}
+    #info-close:hover {{ color: var(--color-brand-text); }}
     #info {{
-      width: 20%;
       overflow-y: auto;
       padding: 16px;
-      background: var(--color-brand-card);
-      border-left: 1px solid rgba(255, 255, 255, 0.05);
-      border-radius: 8px;
+      font-family: ui-monospace, SFMono-Regular, monospace;
+      font-size: 13px;
+      line-height: 1.6;
+      color: #94a3b8;
+      flex: 1;
     }}
+    #info .yaml-key {{ color: var(--color-brand-teal); }}
+    #info .yaml-string {{ color: #a5f3fc; }}
+    #info .yaml-null {{ color: var(--color-brand-muted); font-style: italic; }}
     footer {{
       padding: 10px 20px;
-      text-align: center;
+      display: flex;
+      align-items: center;
       color: var(--color-brand-muted);
       font-size: 12px;
       border-top: 1px solid rgba(255, 255, 255, 0.05);
     }}
+    footer img {{ height: 20px; }}
+    footer .copyright {{ margin-left: auto; }}
     .dimmed {{ opacity: 0.2; }}
     .highlight {{ background-color: #20d4bf; }}
   </style>
@@ -103,32 +194,68 @@ def index_page(graph_json_url: str) -> str:
 <body>
   <header>
     <img src="data:image/png;base64,{logo_b64}" alt="QArium">
-    <span>QArium</span>
+    <span class="logo-text"><span class="teal">QA</span><span class="white">rium</span></span>
+    <div class="contact-icons">
+      <a href="https://t.me/QAriumCommunity" target="_blank" rel="noopener" title="Telegram">
+        {_SVG_TELEGRAM}
+      </a>
+      <a href="https://github.com/qarium" target="_blank" rel="noopener" title="GitHub">
+        {_SVG_GITHUB}
+      </a>
+      <a href="mailto:info@qarium.ru" title="Email">
+        {_SVG_EMAIL}
+      </a>
+    </div>
   </header>
   <main>
     <div id="cy"></div>
-    <div id="info"></div>
+    <div id="info-wrapper" class="hidden">
+      <div id="info-titlebar">
+        <div class="dots">
+          <span class="dot-red"></span>
+          <span class="dot-yellow"></span>
+          <span class="dot-green"></span>
+        </div>
+        <span class="title" id="info-title">cell info</span>
+        <button id="info-close">&times;</button>
+      </div>
+      <div id="info"></div>
+    </div>
   </main>
   <footer>
-    © 2026 QArium. All rights reserved.
+    <img src="data:image/png;base64,{logo_b64}" alt="QArium">
+    <span class="copyright">© 2026 QArium. All rights reserved.</span>
   </footer>
   <script>
     fetch({json.dumps(graph_json_url)})
       .then(r => r.json())
       .then(graph => {{
-        const cy = render_graph("cy", graph);
-        cy.on('tap', 'node', e => show_cell_info(e.target.id(), graph));
-        cy.on('mouseover', 'node', e => highlight_cell(e.target.id(), cy));
-        cy.on('mouseout', 'node', () => cy.elements().removeClass('dimmed highlight'));
+        requestAnimationFrame(function() {{
+          const cy = render_graph("cy", graph);
+          cy.on('tap', 'node', function(e) {{
+            show_cell_info(e.target.id(), graph);
+            document.getElementById("info-wrapper").classList.remove("hidden");
+          }});
+          cy.on('mouseover', 'node', function(e) {{
+            highlight_cell(e.target.id(), cy);
+          }});
+          cy.on('mouseout', 'node', function() {{
+            cy.elements().removeClass('dimmed highlight');
+          }});
+        }});
       }})
-      .catch(() => {{
+      .catch(function() {{
         document.getElementById("cy").innerHTML =
           "<p style='padding:20px;color:#a0aec0'>Failed to load graph data.</p>";
       }});
 
+    document.getElementById("info-close").addEventListener("click", function() {{
+      document.getElementById("info-wrapper").classList.add("hidden");
+    }});
+
     function render_graph(container_id, graph) {{
       const nodes = graph.cells.map(c => ({{
-        data: {{ id: c.name, label: c.name, description: c.description }}
+        data: {{ id: c.name, label: c.name.replace(/\\//g, '/\\n'), description: c.description }}
       }}));
       const edges = graph.edges.map(e => ({{
         data: {{ source: e.from_cell, target: e.to_cell }}
@@ -136,6 +263,8 @@ def index_page(graph_json_url: str) -> str:
       const cy = cytoscape({{
         container: document.getElementById(container_id),
         elements: nodes.concat(edges),
+        autoungrabify: true,
+        autounselectify: true,
         style: [
           {{
             selector: 'node',
@@ -144,20 +273,26 @@ def index_page(graph_json_url: str) -> str:
               'text-valign': 'center',
               'text-halign': 'center',
               'shape': 'round-rectangle',
-              'background-color': '#121830',
+              'background-color': '#0f172a',
               'border-color': '#20d4bf',
+              'border-width': 1,
               'color': '#fff',
-              'width': 'label',
-              'padding': '10px'
+              'text-wrap': 'wrap',
+              'text-max-width': '320px',
+              'width': 120,
+              'padding': '12px',
+              'font-size': 10,
+              'text-outline-width': 0
             }}
           }},
           {{
             selector: 'edge',
             style: {{
               'curve-style': 'bezier',
-              'line-color': '#20d4bf',
+              'line-color': 'rgba(32, 212, 191, 0.5)',
               'target-arrow-color': '#20d4bf',
-              'target-arrow-shape': 'triangle'
+              'target-arrow-shape': 'triangle',
+              'width': 0.8
             }}
           }}
         ],
@@ -180,28 +315,37 @@ def index_page(graph_json_url: str) -> str:
       return d.innerHTML;
     }}
 
+    function _yamlValue(v) {{
+      if (v === null || v === undefined) return '<span class="yaml-null">null</span>';
+      return '<span class="yaml-string">' + _esc(String(v)) + '</span>';
+    }}
+
+    function _yamlList(items) {{
+      if (!items || items.length === 0) return '<span class="yaml-null">[]</span>';
+      return items.map(i => '  - ' + _yamlValue(i)).join('<br>');
+    }}
+
     function show_cell_info(cell_name, graph) {{
       const cell = graph.cells.find(c => c.name === cell_name);
       if (!cell) {{
         document.getElementById("info").innerHTML = "<p>Cell not found</p>";
+        document.getElementById("info-title").textContent = "cell info";
         return;
       }}
+      document.getElementById("info-title").textContent = cell.name;
       const consumers = graph.edges
         .filter(e => e.to_cell === cell_name)
         .map(e => e.from_cell);
-      const depList = (cell.dependencies || []).map(d => d.to_cell);
+      const deps = (cell.dependencies || []).map(d => d.to_cell);
       document.getElementById("info").innerHTML =
-        "<h3>" + _esc(cell.name) + "</h3>" +
-        "<p>" + _esc(cell.description || "") + "</p>" +
-        "<h4>Types</h4><ul>" +
-        (cell.types || []).map(t => "<li>" + _esc(t) + "</li>").join("") +
-        "</ul>" +
-        "<h4>Consumers</h4><ul>" +
-        consumers.map(c => "<li>" + _esc(c) + "</li>").join("") +
-        "</ul>" +
-        "<h4>Dependencies</h4><ul>" +
-        depList.map(d => "<li>" + _esc(d) + "</li>").join("") +
-        "</ul>";
+        '<span class="yaml-key">name:</span> ' + _yamlValue(cell.name) + '<br>' +
+        '<span class="yaml-key">description:</span> ' + _yamlValue(cell.description || null) + '<br>' +
+        '<br>' +
+        '<span class="yaml-key">types:</span><br>' + _yamlList(cell.types || []) + '<br>' +
+        '<br>' +
+        '<span class="yaml-key">consumers:</span><br>' + _yamlList(consumers) + '<br>' +
+        '<br>' +
+        '<span class="yaml-key">dependencies:</span><br>' + _yamlList(deps);
     }}
   </script>
 </body>
