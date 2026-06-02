@@ -94,7 +94,7 @@ def index_page(graph_json_url: str) -> str:
       border-top: 1px solid rgba(255, 255, 255, 0.05);
     }}
     .dimmed {{ opacity: 0.2; }}
-    .highlight {{ background-color: yellow; }}
+    .highlight {{ background-color: #20d4bf; }}
   </style>
   <script>{cytoscape_js}</script>
   <script>{dagre_js}</script>
@@ -118,8 +118,12 @@ def index_page(graph_json_url: str) -> str:
       .then(graph => {{
         const cy = render_graph("cy", graph);
         cy.on('tap', 'node', e => show_cell_info(e.target.id(), graph));
-        cy.on('mouseover', 'node', e => highlight_cell(e.target.id()));
+        cy.on('mouseover', 'node', e => highlight_cell(e.target.id(), cy));
         cy.on('mouseout', 'node', () => cy.elements().removeClass('dimmed highlight'));
+      }})
+      .catch(() => {{
+        document.getElementById("cy").innerHTML =
+          "<p style='padding:20px;color:#a0aec0'>Failed to load graph data.</p>";
       }});
 
     function render_graph(container_id, graph) {{
@@ -162,7 +166,7 @@ def index_page(graph_json_url: str) -> str:
       return cy;
     }}
 
-    function highlight_cell(cell_name) {{
+    function highlight_cell(cell_name, cy) {{
       cy.elements().addClass('dimmed');
       const node = cy.getElementById(cell_name);
       node.removeClass('dimmed').addClass('highlight');

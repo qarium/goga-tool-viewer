@@ -200,7 +200,7 @@ class TestIndexPageLogical:
         assert isinstance(html, str)
         assert html.startswith("<!DOCTYPE html>")
 
-    def test_read_static_bytes_returns_bytes_for_png(self):
+    def test_read_static_bytes_returns_bytes_for_png(self, static_with_assets):
         result = _read_static_bytes("logo.png")
         assert isinstance(result, bytes)
         assert result[:4] == b"\x89PNG"
