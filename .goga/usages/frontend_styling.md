@@ -72,17 +72,21 @@ Fade-in анимация: @keyframes fadeIn 0.6s ease-out при загрузк�
 
 ## Sidebar с деревом вложенности
 
-Sidebar фиксированной ширины (260px) слева от графа.
-- Фон: var(--color-brand-card) (#121830)
-- Граница справа: 1px solid rgba(255, 255, 255, 0.05)
-- Высота: заполняет основную область (ниже хедера, выше футера)
+Sidebar фиксированной ширины (260px) слева от графа, стилизован как OS-окно (единый стиль с информационной панелью справа).
+- Фон: #0f172a
+- Скругление углов: border-radius 8px
+- Тень: box-shadow 0 4px 24px rgba(0, 0, 0, 0.4)
+- Отступы от краёв основной области: 8px со всех сторон
+- Overflow: hidden для корректного скругления
 - Содержимое: дерево вложенности cells + кнопка «показать все»
 - z-index: 5 (ниже info-wrapper, выше cy)
 
-Заголовок sidebar:
+Заголовок sidebar (titlebar-стиль):
 - Текст "Cells" — моноширинный шрифт, font-size 11px, font-weight 600
 - Цвет var(--color-brand-muted), text-transform uppercase, letter-spacing 0.05em
-- Padding: 12px 16px
+- Центрирование: text-align center
+- Фон: #1e293b
+- Padding: 8px 12px
 - Border-bottom: 1px solid rgba(255, 255, 255, 0.05)
 
 Дерево вложенности (контейнер #sidebar-tree):
@@ -112,4 +116,4 @@ Sidebar фиксированной ширины (260px) слева от граф
 - Hover: цвет var(--color-brand-teal)
 - При клике сбрасывает подсветку в графе и убирает active класс у узлов дерева
 
-Граф (#cy) смещён: left: 260px (ширина sidebar).
+Граф (#cy) смещён: left: 276px (8px отступ sidebar + 260px ширина sidebar + 8px gap).

@@ -101,24 +101,28 @@ def index_page(graph_json_url: str) -> str:
     }}
     #sidebar {{
       position: absolute;
-      top: 0;
-      left: 0;
-      bottom: 0;
+      top: 8px;
+      left: 8px;
+      bottom: 8px;
       width: 260px;
-      background: var(--color-brand-card);
-      border-right: 1px solid rgba(255, 255, 255, 0.05);
+      background: #0f172a;
+      border-radius: 8px;
       display: flex;
       flex-direction: column;
+      overflow: hidden;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
       z-index: 5;
     }}
     #sidebar-title {{
-      padding: 12px 16px;
+      padding: 8px 12px;
       font-family: ui-monospace, SFMono-Regular, monospace;
       font-size: 11px;
       font-weight: 600;
       color: var(--color-brand-muted);
       text-transform: uppercase;
       letter-spacing: 0.05em;
+      text-align: center;
+      background: #1e293b;
       border-bottom: 1px solid rgba(255, 255, 255, 0.05);
     }}
     #sidebar-tree {{
@@ -172,7 +176,7 @@ def index_page(graph_json_url: str) -> str:
     #cy {{
       position: absolute;
       top: 0;
-      left: 260px;
+      left: 276px;
       right: 0;
       bottom: 0;
       background: var(--color-brand-bg);
