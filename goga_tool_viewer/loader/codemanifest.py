@@ -25,7 +25,7 @@ def load_codemanifest(cell_path: str) -> str:
             or if the resolved path escapes the project root.
         FileNotFoundError: If the CODEMANIFEST file does not exist.
     """
-    if ".." in cell_path:
+    if any(part == ".." for part in cell_path.split("/")):
         raise ValueError("path traversal detected")
 
     if cell_path.startswith("/"):

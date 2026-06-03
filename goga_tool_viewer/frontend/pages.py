@@ -778,8 +778,7 @@ def index_page(graph_json_url: str) -> str:
         html += '<div class="section"><h2 data-icon="dependencies">Dependencies</h2><ul>' +
           deps.map(d => '<li>' + _esc(d) + '</li>').join('') + '</ul></div>';
       }}
-      html += '<div class="section"><span class="codemanifest-link" data-cell="'
-        + _esc(cell.name) + '">CODEMANIFEST</span></div>';
+      html += '<div class="section"><span class="codemanifest-link">CODEMANIFEST</span></div>';
       document.getElementById("info").innerHTML = html;
       const cmLink = document.querySelector('.codemanifest-link');
       if (cmLink) {{
@@ -789,14 +788,14 @@ def index_page(graph_json_url: str) -> str:
       }}
     }}
 
-    function _show_cm_panel(content) {{
+    function _show_cm_panel(rawContent) {{
       var existing = document.getElementById('codemanifest-panel');
       if (existing) existing.remove();
       var panel = document.createElement('div');
       panel.id = 'codemanifest-panel';
       panel.innerHTML = '<div class="titlebar"><span class="title">CODEMANIFEST</span>'
         + '<button class="close">&times;</button></div>'
-        + '<pre><code>' + content + '</code></pre>';
+        + '<pre><code>' + _esc(rawContent) + '</code></pre>';
       document.querySelector('main').appendChild(panel);
       panel.querySelector('.close').addEventListener('click', function() {{
         panel.remove();
@@ -806,14 +805,14 @@ def index_page(graph_json_url: str) -> str:
     function show_codemanifest(cell_name, graph) {{
       const cell = graph.cells.find(c => c.name === cell_name);
       if (!cell) return;
-      fetch('/api/codemanifest?cell=' + encodeURIComponent(cell.name))
+      fetch('/api/codemanifest?cell=' + encodeURIComponent(cell.name), {{cache: 'no-store'}})
         .then(function(response) {{
           if (response.status === 404) return 'CODEMANIFEST not found';
           if (response.ok) return response.text();
           return 'Failed to load CODEMANIFEST';
         }})
         .then(function(content) {{
-          _show_cm_panel(_esc(content));
+          _show_cm_panel(content);
         }})
         .catch(function() {{
           _show_cm_panel('Failed to load CODEMANIFEST');

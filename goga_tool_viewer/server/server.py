@@ -40,8 +40,7 @@ def _make_handler(graph: CellGraph) -> type[BaseHTTPRequestHandler]:
                 self.send_header("Content-Type", "application/json; charset=utf-8")
                 self.end_headers()
                 self.wfile.write(data.encode("utf-8"))
-            elif urlparse(self.path).path == "/api/codemanifest":
-                parsed = urlparse(self.path)
+            elif (parsed := urlparse(self.path)).path == "/api/codemanifest":
                 params = parse_qs(parsed.query)
                 cell_path = params.get("cell", [None])[0]
                 if cell_path is None or cell_path == "":
