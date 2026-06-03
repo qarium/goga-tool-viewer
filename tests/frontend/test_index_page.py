@@ -449,3 +449,47 @@ class TestIndexPageCodemanifestIntegration:
         assert "codemanifest-link" in html
         assert "/api/codemanifest" in html
         assert "CODEMANIFEST not found" in html
+
+
+class TestIndexPageInfoFooter:
+    """Tests for info panel footer with pinned CODEMANIFEST link."""
+
+    def test_info_footer_html_element(self):
+        html = index_page(graph_json_url="/api/graph")
+        assert 'id="info-footer"' in html
+
+    def test_info_footer_after_info_div(self):
+        html = index_page(graph_json_url="/api/graph")
+        info_pos = html.index('id="info"')
+        footer_pos = html.index('id="info-footer"')
+        assert footer_pos > info_pos, "info-footer must come after info div"
+
+    def test_info_footer_css_exists(self):
+        html = index_page(graph_json_url="/api/graph")
+        assert "#info-footer" in html
+        assert "flex-shrink: 0" in html
+
+    def test_info_footer_has_border_top(self):
+        html = index_page(graph_json_url="/api/graph")
+        footer_start = html.index("#info-footer")
+        footer_end = html.index("}", footer_start) + 1
+        footer_css = html[footer_start:footer_end]
+        assert "border-top" in footer_css
+
+    def test_codemanifest_link_rendered_in_footer_js(self):
+        html = index_page(graph_json_url="/api/graph")
+        assert 'getElementById("info-footer")' in html
+
+    def test_codemanifest_panel_fills_space_css(self):
+        html = index_page(graph_json_url="/api/graph")
+        panel_start = html.index("#codemanifest-panel")
+        panel_end = html.index("}", panel_start) + 1
+        panel_css = html[panel_start:panel_end]
+        assert "left: 276px" in panel_css
+        assert "right: 8px" in panel_css
+        assert "max-width" not in panel_css
+
+    def test_codemanifest_panel_adjusts_right_for_info_wrapper(self):
+        html = index_page(graph_json_url="/api/graph")
+        assert "getBoundingClientRect" in html
+        assert "panel.style.right" in html

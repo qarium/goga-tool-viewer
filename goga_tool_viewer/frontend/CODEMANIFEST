@@ -29,12 +29,17 @@ Usages:
       Каждый h2 имеет SVG-иконку через data-icon атрибут и ::before pseudo-element.
       Description отображается как blockquote (.description класс).
       Секции: Name, Description, Types, Consumers (если есть), Dependencies (если есть).
-      Внизу info panel — ссылка «CODEMANIFEST» (аналог «Show all» в sidebar).
+      Ссылка «CODEMANIFEST» (.codemanifest-link) рендерится в фиксированном footer
+      (#info-footer) внизу info-wrapper — аналогично «Show all» в #sidebar-footer.
+      Footer не скроллируется, всегда видима.
     - show_codemanifest(cell_name, graph) — открывает центральную панель с содержимым CODEMANIFEST.
       Определяет путь cell по имени из graph.cells.
       Fetch-запрос к /api/codemanifest?cell=<path>.
       Каждый клик выполняет новый fetch-запрос, без кеширования предыдущего результата.
       Открывает панель между sidebar и info panel с <pre><code> содержимым.
+      Панель заполняет всё пространство между sidebar и info-wrapper:
+      left: 276px, right: 8px (если info-wrapper скрыт) или right вычисляется JS
+      динамически по позиции info-wrapper + 8px gap.
       При 404 показывает «CODEMANIFEST not found».
       При сетевой ошибке показывает сообщение об ошибке.
       Панель закрывается крестиком.

@@ -53,6 +53,9 @@ SPA состоит из одного HTML-файла с встроенными C
 - Секции разделены .section div'ами с border-top разделителем
 - Секции: Name (иконка tag), Description (иконка document), Types (иконка cube),
   Consumers (иконка download, если есть), Dependencies (иконка upload, если есть)
+- Footer (#info-footer): фиксированная зона внизу панели, прибит к низу (аналог #sidebar-footer).
+  Padding: 8px 16px, border-top разделитель. Содержит ссылку CODEMANIFEST (.codemanifest-link).
+  Не скроллируется — всегда видима.
 
 ## Граф (Cytoscape)
 
@@ -129,3 +132,15 @@ Sidebar фиксированной ширины (260px) слева от граф
 - При клике сбрасывает фильтрацию графа, показывает все элементы, убирает active класс у узлов дерева
 
 Граф (#cy) смещён: left: 276px (8px отступ sidebar + 260px ширина sidebar + 8px gap).
+
+## Панель CODEMANIFEST (#codemanifest-panel)
+
+Панель между левым sidebar и правой info panel:
+- Фон: #0f172a, border-radius 8px, box-shadow
+- Position: absolute, top/bottom: 8px (просветы как у sidebar и info-wrapper)
+- Left: 276px (8px offset sidebar + 260px sidebar + 8px gap = выравнено с #cy)
+- Right: 8px от правого края main; если info-wrapper видим — right устанавливается JS динамически
+  с учётом позиции info-wrapper + 8px gap
+- z-index: 8 (выше cy, ниже info-wrapper)
+- Содержимое: titlebar (аналог info-titlebar) + <pre><code> с yaml-контентом
+- Overflow-y: auto — скроллинг при переполнении

@@ -404,6 +404,11 @@ def index_page(graph_json_url: str) -> str:
       color: #a5f3fc;
     }}
     #info .empty {{ color: var(--color-brand-muted); font-style: italic; }}
+    #info-footer {{
+      padding: 8px 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+      flex-shrink: 0;
+    }}
     footer {{
       padding: 10px 20px;
       display: flex;
@@ -424,8 +429,8 @@ def index_page(graph_json_url: str) -> str:
       position: absolute;
       top: 8px;
       bottom: 8px;
-      left: 284px;
-      max-width: 50%;
+      left: 276px;
+      right: 8px;
       background: #0f172a;
       border-radius: 8px;
       box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
@@ -512,6 +517,7 @@ def index_page(graph_json_url: str) -> str:
         <button id="info-close">&times;</button>
       </div>
       <div id="info"></div>
+      <div id="info-footer"></div>
     </div>
   </main>
   <footer>
@@ -778,14 +784,12 @@ def index_page(graph_json_url: str) -> str:
         html += '<div class="section"><h2 data-icon="dependencies">Dependencies</h2><ul>' +
           deps.map(d => '<li>' + _esc(d) + '</li>').join('') + '</ul></div>';
       }}
-      html += '<div class="section"><span class="codemanifest-link">CODEMANIFEST</span></div>';
       document.getElementById("info").innerHTML = html;
-      const cmLink = document.querySelector('.codemanifest-link');
-      if (cmLink) {{
-        cmLink.addEventListener('click', function() {{
-          show_codemanifest(cell_name, graph);
-        }});
-      }}
+      var infoFooter = document.getElementById("info-footer");
+      infoFooter.innerHTML = '<span class="codemanifest-link">CODEMANIFEST</span>';
+      infoFooter.querySelector('.codemanifest-link').addEventListener('click', function() {{
+        show_codemanifest(cell_name, graph);
+      }});
     }}
 
     function _show_cm_panel(rawContent) {{
@@ -797,6 +801,11 @@ def index_page(graph_json_url: str) -> str:
         + '<button class="close">&times;</button></div>'
         + '<pre><code>' + _esc(rawContent) + '</code></pre>';
       document.querySelector('main').appendChild(panel);
+      var infoWrapper = document.getElementById('info-wrapper');
+      if (!infoWrapper.classList.contains('hidden')) {{
+        var infoRect = infoWrapper.getBoundingClientRect();
+        panel.style.right = (window.innerWidth - infoRect.left + 8) + 'px';
+      }}
       panel.querySelector('.close').addEventListener('click', function() {{
         panel.remove();
       }});
