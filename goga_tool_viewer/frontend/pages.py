@@ -474,6 +474,13 @@ def index_page(graph_json_url: str) -> str:
       padding: 16px;
       display: block;
     }}
+    .yaml-key {{ color: #20d4bf; }}
+    .yaml-comment {{ color: #64748b; }}
+    .yaml-delim {{ color: #64748b; }}
+    .yaml-literal {{ color: #94a3b8; }}
+    .yaml-bool {{ color: #f59e0b; }}
+    .yaml-number {{ color: #a78bfa; }}
+    .yaml-code {{ color: #a5f3fc; }}
     .codemanifest-link {{
       cursor: pointer;
       color: var(--color-brand-muted);
@@ -792,6 +799,63 @@ def index_page(graph_json_url: str) -> str:
       }});
     }}
 
+    function _highlight_yaml(text) {{
+      var s = _esc(text);
+      var lines = s.split('\\n');
+      var literalIndent = -1;
+      for (var i = 0; i < lines.length; i++) {{
+        var line = lines[i];
+        var lineIndent = line.search(/\\S/);
+        if (line.trim() === '') lineIndent = 0;
+        if (literalIndent >= 0) {{
+          if (lineIndent > literalIndent || line.trim() === '') {{
+            continue;
+          }}
+          literalIndent = -1;
+        }}
+        var commentIdx = line.indexOf('#');
+        var delimMatch = line.match(/^(---)(\\s*)$/);
+        if (delimMatch) {{
+          lines[i] = '<span class="yaml-delim">' + delimMatch[1] + '</span>' + delimMatch[2];
+          continue;
+        }}
+        if (commentIdx === 0) {{
+          lines[i] = '<span class="yaml-comment">' + line + '</span>';
+          continue;
+        }}
+        var keyMatch = line.match(/^(\\s*(?:-\\s*)?)("[^"]*"|[\\w][\\w.-]*)(:)(.*)$/);
+        if (keyMatch) {{
+          var indent = keyMatch[1];
+          var key = keyMatch[2];
+          var colon = keyMatch[3];
+          var rest = keyMatch[4];
+          var keyIndent = indent.length;
+          var highlighted = indent + '<span class="yaml-key">' + key + '</span>' + colon;
+          if (rest) {{
+            var litMatch = rest.match(/^\\s*(\\||>)/);
+            if (litMatch) {{
+              rest = '<span class="yaml-literal">' + rest.trim() + '</span>';
+              literalIndent = keyIndent;
+            }} else {{
+              rest = rest.replace(/\\b(true|false|null)\\b/g, '<span class="yaml-bool">$1</span>');
+              rest = rest.replace(/\\b(\\d+)\\b/g, '<span class="yaml-number">$1</span>');
+              if (rest.indexOf('#') !== -1) {{
+                var ci = rest.indexOf('#');
+                rest = rest.substring(0, ci) + '<span class="yaml-comment">' + rest.substring(ci) + '</span>';
+              }}
+            }}
+          }}
+          lines[i] = highlighted + rest;
+          continue;
+        }}
+        if (commentIdx > 0) {{
+          lines[i] = line.substring(0, commentIdx) + '<span class="yaml-comment">' + line.substring(commentIdx) + '</span>';
+          continue;
+        }}
+      }}
+      return lines.join('\\n').replace(/`([^`]+)`/g, '<span class="yaml-code">`$1`</span>');
+    }}
+
     function _show_cm_panel(rawContent) {{
       var existing = document.getElementById('codemanifest-panel');
       if (existing) existing.remove();
@@ -799,7 +863,7 @@ def index_page(graph_json_url: str) -> str:
       panel.id = 'codemanifest-panel';
       panel.innerHTML = '<div class="titlebar"><span class="title">CODEMANIFEST</span>'
         + '<button class="close">&times;</button></div>'
-        + '<pre><code>' + _esc(rawContent) + '</code></pre>';
+        + '<pre><code>' + _highlight_yaml(rawContent) + '</code></pre>';
       document.querySelector('main').appendChild(panel);
       var infoWrapper = document.getElementById('info-wrapper');
       if (!infoWrapper.classList.contains('hidden')) {{

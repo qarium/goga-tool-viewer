@@ -493,3 +493,126 @@ class TestIndexPageInfoFooter:
         html = index_page(graph_json_url="/api/graph")
         assert "getBoundingClientRect" in html
         assert "panel.style.right" in html
+
+
+class TestYamlHighlighting:
+    """Tests for YAML syntax highlighting in CODEMANIFEST panel."""
+
+    def test_highlight_yaml_function_exists(self):
+        html = index_page(graph_json_url="/api/graph")
+        assert "function _highlight_yaml" in html
+
+    def test_yaml_key_css(self):
+        html = index_page(graph_json_url="/api/graph")
+        assert ".yaml-key" in html
+        assert "#20d4bf" in html
+
+    def test_yaml_comment_css(self):
+        html = index_page(graph_json_url="/api/graph")
+        assert ".yaml-comment" in html
+
+    def test_yaml_delimiter_css(self):
+        html = index_page(graph_json_url="/api/graph")
+        assert ".yaml-delim" in html
+
+    def test_yaml_bool_css(self):
+        html = index_page(graph_json_url="/api/graph")
+        assert ".yaml-bool" in html
+
+    def test_yaml_number_css(self):
+        html = index_page(graph_json_url="/api/graph")
+        assert ".yaml-number" in html
+
+    def test_yaml_literal_css(self):
+        html = index_page(graph_json_url="/api/graph")
+        assert ".yaml-literal" in html
+
+    def test_show_cm_panel_uses_highlight(self):
+        html = index_page(graph_json_url="/api/graph")
+        assert "_highlight_yaml(rawContent)" in html
+
+
+class TestYamlHighlightingQuotedKeys:
+    """Tests for YAML highlighting of keys in double quotes."""
+
+    def test_regex_captures_quoted_keys(self):
+        html = index_page(graph_json_url="/api/graph")
+        assert '"[^"]*"' in html
+
+    def test_regex_allows_quoted_and_plain_keys(self):
+        html = index_page(graph_json_url="/api/graph")
+        script_start = html.index("<script>", html.index("</head>"))
+        script_end = html.index("</script>", script_start)
+        script = html[script_start:script_end]
+        regex_line = None
+        for line in script.split("\n"):
+            if "keyMatch" in line and "match" in line:
+                regex_line = line
+                break
+        assert regex_line is not None
+        assert "[\\w][\\w.-]*" in regex_line or "[\\\\w][\\\\w.-]*" in regex_line
+
+
+class TestYamlHighlightingLiteralBlock:
+    """Tests for YAML highlighting respecting literal blocks (|, >)."""
+
+    def test_literal_indent_tracking_variable(self):
+        html = index_page(graph_json_url="/api/graph")
+        assert "literalIndent" in html
+
+    def test_literal_indent_resets_to_negative(self):
+        html = index_page(graph_json_url="/api/graph")
+        assert "literalIndent = -1" in html
+
+    def test_literal_indent_set_from_key_indent(self):
+        html = index_page(graph_json_url="/api/graph")
+        assert "literalIndent = keyIndent" in html
+
+    def test_literal_block_continuation_skip(self):
+        html = index_page(graph_json_url="/api/graph")
+        assert "lineIndent > literalIndent" in html
+
+    def test_literal_operator_match(self):
+        html = index_page(graph_json_url="/api/graph")
+        assert "litMatch" in html
+
+
+class TestYamlHighlightingListKeys:
+    """Tests for YAML highlighting of keys inside list items (- Key:)."""
+
+    def test_regex_captures_dash_prefix(self):
+        html = index_page(graph_json_url="/api/graph")
+        assert "-\\\\s*" in html or "-\\s*" in html
+
+    def test_list_key_regex_in_keymatch(self):
+        html = index_page(graph_json_url="/api/graph")
+        script_start = html.index("<script>", html.index("</head>"))
+        script_end = html.index("</script>", script_start)
+        script = html[script_start:script_end]
+        regex_line = None
+        for line in script.split("\n"):
+            if "keyMatch" in line and "match" in line:
+                regex_line = line
+                break
+        assert regex_line is not None
+        assert "-\\s*" in regex_line or "-\\\\s*" in regex_line
+
+
+class TestYamlHighlightingInlineCode:
+    """Tests for YAML highlighting of inline code in backticks."""
+
+    def test_yaml_code_css_class(self):
+        html = index_page(graph_json_url="/api/graph")
+        assert ".yaml-code" in html
+
+    def test_yaml_code_css_color(self):
+        html = index_page(graph_json_url="/api/graph")
+        code_start = html.index(".yaml-code")
+        code_end = html.index("}", code_start) + 1
+        code_css = html[code_start:code_end]
+        assert "#a5f3fc" in code_css
+
+    def test_backtick_replace_in_highlight(self):
+        html = index_page(graph_json_url="/api/graph")
+        assert "yaml-code" in html
+        assert "`$1`" in html
