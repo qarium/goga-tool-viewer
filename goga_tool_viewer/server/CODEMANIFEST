@@ -18,6 +18,9 @@ Imports:
     Usages:
       - finding
     From: goga_tool_viewer/server/port_finder
+  - Usages:
+      - codemanifest
+    From: goga_tool_viewer/loader
 
 Usages:
   conventions: .goga/usages/conventions.md
@@ -42,7 +45,8 @@ Annotations: |
   location: server.py
   annotations: |
     HTTP-сервер, обслуживающий SPA и API.
-    Роуты: / — SPA-страница, /api/graph — JSON с данными графа.
+    Роуты: / — SPA-страница, /api/graph — JSON с данными графа,
+    /api/codemanifest?cell=<path> — содержимое CODEMANIFEST.
 
     `graph`: граф проекта для отдачи через API
     `port`: номер порта для запуска
@@ -54,6 +58,14 @@ Annotations: |
       Запускает HTTP-сервер. Блокирующий вызов.
     "url() -> address:str": |
       Возвращает полный URL сервера.
+    "get_codemanifest(cell_path: str) -> content:str": |
+      Возвращает содержимое CODEMANIFEST для указанного cell.
+      Если cell или CODEMANIFEST не найден — возвращает 404.
+
+      `cell_path`: путь к cell из параметра запроса
+      `content`: yaml-содержимое CODEMANIFEST
+
+      Используй `codemanifest` для чтения файла.
 
 "run_server(json_path: str | None) -> void:null":
   location: server.py

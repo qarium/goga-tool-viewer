@@ -29,6 +29,15 @@ Usages:
       Каждый h2 имеет SVG-иконку через data-icon атрибут и ::before pseudo-element.
       Description отображается как blockquote (.description класс).
       Секции: Name, Description, Types, Consumers (если есть), Dependencies (если есть).
+      Внизу info panel — ссылка «CODEMANIFEST» (аналог «Show all» в sidebar).
+    - show_codemanifest(cell_name, graph) — открывает центральную панель с содержимым CODEMANIFEST.
+      Определяет путь cell по имени из graph.cells.
+      Fetch-запрос к /api/codemanifest?cell=<path>.
+      Каждый клик выполняет новый fetch-запрос, без кеширования предыдущего результата.
+      Открывает панель между sidebar и info panel с <pre><code> содержимым.
+      При 404 показывает «CODEMANIFEST not found».
+      При сетевой ошибке показывает сообщение об ошибке.
+      Панель закрывается крестиком.
     - render_tree(container_id, graph, cy_instance) — строит дерево вложенности cells
       в sidebar из graph.cells с учётом children[]. Корневые cells определяются как те,
       чьё имя отсутствует в children других cells. Каждый узел показывает:
@@ -64,6 +73,13 @@ Annotations: |
     вложенности cells, стилизованный граф справа от sidebar,
     информационную панель как карточку справа,
     JS-скрипт для загрузки данных из `graph_json_url` и инициализации Cytoscape.
+
+    В info panel внизу — ссылка «CODEMANIFEST» (аналог «Show all» в sidebar).
+    При клике открывается центральная панель между sidebar и info panel.
+    Центральная панель показывает содержимое CODEMANIFEST как yaml-код (<pre><code>).
+    Содержимое загружается без кеширования — каждый клик инициирует новый запрос.
+    Панель закрывается крестиком. При переполнении — скроллинг.
+    При 404 — «CODEMANIFEST not found». При сетевой ошибке — сообщение об ошибке.
 
     Sidebar содержит полностью раскрытое дерево вложенности cells.
     Дерево строится рекурсивно из children[] в graph.cells.

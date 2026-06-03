@@ -1,0 +1,29 @@
+Usages:
+  conventions: .goga/usages/conventions.md
+
+Annotations: |
+  Использовать `conventions` для правил написания кода и тестов.
+
+  Загрузчик файлов проекта.
+
+---
+
+"load_codemanifest(cell_path: str) -> content:str":
+  location: codemanifest.py
+  annotations: |
+    Читает файл CODEMANIFEST по пути cell.
+    Возвращает содержимое файла как строку.
+    Если файл не найден — выбрасывает FileNotFoundError.
+    Если путь содержит ".." или начинается с "/" — выбрасывает ValueError.
+
+    Защита от path traversal: путь не должен содержать ".." и не должен начинаться с "/".
+
+    `cell_path`: относительный путь к cell (например "goga_tool_viewer/parser")
+    `content`: текстовое содержимое CODEMANIFEST
+
+---
+
+Author: Goga
+CreatedAt: 03/06/26
+Description: |
+  Загрузчик файлов проекта — чтение артефактов из файловой системы.
