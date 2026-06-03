@@ -303,8 +303,7 @@ def index_page(graph_json_url: str) -> str:
           const cy = render_graph("cy", graph);
           render_tree("sidebar-tree", graph, cy);
           document.querySelector('.tree-show-all').addEventListener('click', function() {{
-            cy.elements().removeClass('dimmed highlight highlighted');
-            document.querySelectorAll('.tree-node.active').forEach(function(n) {{ n.classList.remove('active'); }});
+            reset_filter(cy);
           }});
           cy.on('tap', 'node', function(e) {{
             show_cell_info(e.target.id(), graph);
@@ -314,7 +313,7 @@ def index_page(graph_json_url: str) -> str:
             highlight_cell(e.target.id(), cy);
           }});
           cy.on('mouseout', 'node', function() {{
-            cy.elements().removeClass('dimmed highlight');
+            cy.elements().removeClass('dimmed highlight highlighted');
           }});
         }});
       }})
@@ -415,6 +414,34 @@ def index_page(graph_json_url: str) -> str:
       node.connectedEdges().connectedNodes().removeClass('dimmed');
     }}
 
+    function filter_cell(cell_name, cy) {{
+      const node = cy.getElementById(cell_name);
+      if (node.length === 0) return;
+      const connected = node.connectedEdges().connectedNodes();
+      const visibleIds = new Set();
+      visibleIds.add(cell_name);
+      connected.forEach(function(n) {{ visibleIds.add(n.id()); }});
+      cy.elements().removeClass('highlight highlighted dimmed').show();
+      cy.nodes().forEach(function(n) {{
+        if (!visibleIds.has(n.id())) n.hide();
+      }});
+      cy.edges().forEach(function(e) {{
+        const src = e.source().id();
+        const tgt = e.target().id();
+        if (!visibleIds.has(src) || !visibleIds.has(tgt)) e.hide();
+      }});
+      node.addClass('highlight');
+      node.connectedEdges().addClass('highlighted');
+      cy.layout({{ name: 'dagre', spacingFactor: 1.5, rankDir: 'LR' }}).run();
+    }}
+
+    function reset_filter(cy) {{
+      cy.elements().show();
+      cy.elements().removeClass('highlight highlighted dimmed');
+      document.querySelectorAll('.tree-node.active').forEach(function(n) {{ n.classList.remove('active'); }});
+      cy.layout({{ name: 'dagre', spacingFactor: 1.5, rankDir: 'LR' }}).run();
+    }}
+
     function _esc(s) {{
       const d = document.createElement("div");
       d.textContent = s;
@@ -451,7 +478,7 @@ def index_page(graph_json_url: str) -> str:
         div.addEventListener('click', function() {{
           document.querySelectorAll('.tree-node.active').forEach(function(n) {{ n.classList.remove('active'); }});
           div.classList.add('active');
-          highlight_cell(cell.name, cy_instance);
+          filter_cell(cell.name, cy_instance);
         }});
         container.appendChild(div);
         if (cell.children && cell.children.length > 0) {{

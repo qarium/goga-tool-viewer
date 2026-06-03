@@ -15,7 +15,15 @@ Usages:
       создаёт рёбра из graph.edges (from_cell → to_cell), возвращает cy_instance.
       Использовать layout dagre для иерархического отображения.
     - highlight_cell(cell_name, cy_instance) — подсвечивает cell и все её связи,
-      остальные узлы затемняются. cy_instance — экземпляр Cytoscape.
+      остальные узлы затемняются. Используется при hover на node в графе.
+      cy_instance — экземпляр Cytoscape.
+    - filter_cell(cell_name, cy_instance) — фильтрует граф: скрывает все nodes и edges,
+      не связанные с cell_name. Целевая cell и все связанные nodes остаются видимыми.
+      Применяет класс highlight к целевой cell, highlighted к её edges.
+      Перерисовывает layout dagre после фильтрации.
+    - reset_filter(cy_instance) — сбрасывает фильтрацию: показывает все элементы,
+      снимает классы highlight/highlighted/dimmed, снимает active с узлов дерева,
+      перерисовывает layout dagre.
     - show_cell_info(cell_name, graph) — показывает панель с информацией о cell:
       типы (cell.types), потребители (edges где to_cell === cell_name),
       зависимости (cell.dependencies).
@@ -23,8 +31,8 @@ Usages:
       в sidebar из graph.cells с учётом children[]. Корневые cells определяются как те,
       чьё имя отсутствует в children других cells. Каждый узел показывает короткое имя cell
       (последний сегмент пути). Дерево полностью раскрыто. Клик по узлу дерева вызывает
-      highlight_cell(cell_name, cy_instance) и fade-out остальных узлов. Кнопка «показать все»
-      сбрасывает подсветку — все узлы видимы.
+      filter_cell(cell_name, cy_instance) — фильтрует граф до выбранной cell и её связей.
+      Кнопка «показать все» вызывает reset_filter(cy_instance) — показывает весь граф.
 
 Annotations: |
   Использовать `conventions` для правил написания кода и тестов.
@@ -54,8 +62,9 @@ Annotations: |
 
     Sidebar содержит полностью раскрытое дерево вложенности cells.
     Дерево строится рекурсивно из children[] в graph.cells.
-    Клик по узлу дерева вызывает подсветку cell + fade-out остальных узлов.
-    Кнопка «показать все» сбрасывает подсветку — все узлы видимы.
+    Клик по узлу дерева фильтрует граф — видны только выбранная cell и её связи.
+    Hover на node в графе подсвечивает cell и затемняет остальные.
+    Кнопка «показать все» сбрасывает фильтр — все узлы видимы.
     Активный узел дерева подсвечивается бордером слева teal.
 
     `graph_json_url`: URL API-эндпоинта для загрузки данных графа
