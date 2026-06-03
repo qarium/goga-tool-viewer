@@ -435,7 +435,7 @@ def index_page(graph_json_url: str) -> str:
       border-radius: 8px;
       box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
       z-index: 8;
-      overflow-y: auto;
+      overflow: hidden;
       display: flex;
       flex-direction: column;
     }}
@@ -469,6 +469,8 @@ def index_page(graph_json_url: str) -> str:
     #codemanifest-panel pre {{
       margin: 0;
       display: flex;
+      flex: 1;
+      overflow-y: auto;
     }}
     #codemanifest-panel .line-numbers {{
       font-family: ui-monospace, SFMono-Regular, monospace;

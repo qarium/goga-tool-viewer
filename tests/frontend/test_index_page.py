@@ -654,3 +654,35 @@ class TestLineNumbers:
         html = index_page(graph_json_url="/api/graph")
         assert 'class="line-numbers"' in html
         assert 'class="code-content"' in html
+
+
+class TestCodemanifestFixedTitlebar:
+    """Tests for fixed titlebar in CODEMANIFEST panel."""
+
+    def test_panel_no_overflow_y_auto(self):
+        html = index_page(graph_json_url="/api/graph")
+        panel_start = html.index("#codemanifest-panel {")
+        panel_end = html.index("}", panel_start) + 1
+        panel_css = html[panel_start:panel_end]
+        assert "overflow-y: auto" not in panel_css
+
+    def test_panel_has_overflow_hidden(self):
+        html = index_page(graph_json_url="/api/graph")
+        panel_start = html.index("#codemanifest-panel {")
+        panel_end = html.index("}", panel_start) + 1
+        panel_css = html[panel_start:panel_end]
+        assert "overflow: hidden" in panel_css
+
+    def test_pre_has_overflow_y_auto(self):
+        html = index_page(graph_json_url="/api/graph")
+        pre_start = html.index("#codemanifest-panel pre {")
+        pre_end = html.index("}", pre_start) + 1
+        pre_css = html[pre_start:pre_end]
+        assert "overflow-y: auto" in pre_css
+
+    def test_pre_has_flex_one(self):
+        html = index_page(graph_json_url="/api/graph")
+        pre_start = html.index("#codemanifest-panel pre {")
+        pre_end = html.index("}", pre_start) + 1
+        pre_css = html[pre_start:pre_end]
+        assert "flex: 1" in pre_css
