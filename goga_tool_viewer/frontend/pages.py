@@ -3,6 +3,7 @@
 import base64
 import json
 from pathlib import Path
+from urllib.parse import quote as urlquote
 
 _STATIC = Path(__file__).parent / "static"
 
@@ -18,6 +19,18 @@ def _read_static_bytes(filename: str) -> bytes:
 _SVG_TELEGRAM = _read_static("icon-telegram.svg")
 _SVG_GITHUB = _read_static("icon-github.svg")
 _SVG_EMAIL = _read_static("icon-email.svg")
+
+
+def _svg_data_uri(filename: str) -> str:
+    svg = _read_static(filename).strip()
+    return f'data:image/svg+xml,{urlquote(svg, safe="")}'
+
+
+_ICON_NAME = _svg_data_uri("icon-name.svg")
+_ICON_DESCRIPTION = _svg_data_uri("icon-description.svg")
+_ICON_TYPES = _svg_data_uri("icon-types.svg")
+_ICON_CONSUMERS = _svg_data_uri("icon-consumers.svg")
+_ICON_DEPENDENCIES = _svg_data_uri("icon-dependencies.svg")
 
 
 def index_page(graph_json_url: str) -> str:
@@ -236,9 +249,77 @@ def index_page(graph_json_url: str) -> str:
       color: #94a3b8;
       flex: 1;
     }}
-    #info .yaml-key {{ color: var(--color-brand-teal); }}
-    #info .yaml-string {{ color: #a5f3fc; }}
-    #info .yaml-null {{ color: var(--color-brand-muted); font-style: italic; }}
+    #info .section {{
+      margin-top: 16px;
+      padding-top: 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+    }}
+    #info .section:first-child {{
+      margin-top: 0;
+      padding-top: 0;
+      border-top: none;
+    }}
+    #info h2 {{
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--color-brand-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin: 0 0 6px 0;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }}
+    #info h2::before {{
+      content: '';
+      width: 14px;
+      height: 14px;
+      display: inline-block;
+      flex-shrink: 0;
+      background-size: contain;
+      background-repeat: no-repeat;
+    }}
+    #info h2[data-icon="name"]::before {{
+      background-image: url("{_ICON_NAME}");
+    }}
+    #info h2[data-icon="description"]::before {{
+      background-image: url("{_ICON_DESCRIPTION}");
+    }}
+    #info h2[data-icon="types"]::before {{
+      background-image: url("{_ICON_TYPES}");
+    }}
+    #info h2[data-icon="consumers"]::before {{
+      background-image: url("{_ICON_CONSUMERS}");
+    }}
+    #info h2[data-icon="dependencies"]::before {{
+      background-image: url("{_ICON_DEPENDENCIES}");
+    }}
+    #info p {{
+      margin: 4px 0;
+      color: var(--color-brand-text);
+      line-height: 1.5;
+    }}
+    #info .description {{
+      margin: 4px 0;
+      padding: 8px 12px;
+      border-left: 3px solid var(--color-brand-teal);
+      background: rgba(32, 212, 191, 0.05);
+      color: var(--color-brand-text);
+      line-height: 1.5;
+      font-style: italic;
+    }}
+    #info ul {{
+      margin: 4px 0;
+      padding-left: 20px;
+    }}
+    #info li {{
+      color: var(--color-brand-text);
+      line-height: 1.6;
+    }}
+    #info li .label {{
+      color: #a5f3fc;
+    }}
+    #info .empty {{ color: var(--color-brand-muted); font-style: italic; }}
     footer {{
       padding: 10px 20px;
       display: flex;
@@ -448,16 +529,6 @@ def index_page(graph_json_url: str) -> str:
       return d.innerHTML;
     }}
 
-    function _yamlValue(v) {{
-      if (v === null || v === undefined) return '<span class="yaml-null">null</span>';
-      return '<span class="yaml-string">' + _esc(String(v)) + '</span>';
-    }}
-
-    function _yamlList(items) {{
-      if (!items || items.length === 0) return '<span class="yaml-null">[]</span>';
-      return items.map(i => '  - ' + _yamlValue(i)).join('<br>');
-    }}
-
     function render_tree(container_id, graph, cy_instance) {{
       const container = document.getElementById(container_id);
       container.innerHTML = '';
@@ -500,15 +571,27 @@ def index_page(graph_json_url: str) -> str:
         .filter(e => e.to_cell === cell_name)
         .map(e => e.from_cell);
       const deps = (cell.dependencies || []).map(d => d.to_cell);
-      document.getElementById("info").innerHTML =
-        '<span class="yaml-key">name:</span> ' + _yamlValue(cell.name) + '<br>' +
-        '<span class="yaml-key">description:</span> ' + _yamlValue(cell.description || null) + '<br>' +
-        '<br>' +
-        '<span class="yaml-key">types:</span><br>' + _yamlList(cell.types || []) + '<br>' +
-        '<br>' +
-        '<span class="yaml-key">consumers:</span><br>' + _yamlList(consumers) + '<br>' +
-        '<br>' +
-        '<span class="yaml-key">dependencies:</span><br>' + _yamlList(deps);
+      const types = cell.types || [];
+      let html = '<div class="section"><h2 data-icon="name">Name</h2><p>' + _esc(cell.name) + '</p></div>';
+      html += '<div class="section"><h2 data-icon="description">Description</h2>';
+      html += cell.description
+        ? '<div class="description">' + _esc(cell.description) + '</div>'
+        : '<p class="empty">No description</p>';
+      html += '</div>';
+      html += '<div class="section"><h2 data-icon="types">Types</h2>';
+      html += types.length > 0
+        ? '<ul>' + types.map(t => '<li><span class="label">' + _esc(t) + '</span></li>').join('') + '</ul>'
+        : '<p class="empty">No types</p>';
+      html += '</div>';
+      if (consumers.length > 0) {{
+        html += '<div class="section"><h2 data-icon="consumers">Consumers</h2><ul>' +
+          consumers.map(c => '<li>' + _esc(c) + '</li>').join('') + '</ul></div>';
+      }}
+      if (deps.length > 0) {{
+        html += '<div class="section"><h2 data-icon="dependencies">Dependencies</h2><ul>' +
+          deps.map(d => '<li>' + _esc(d) + '</li>').join('') + '</ul></div>';
+      }}
+      document.getElementById("info").innerHTML = html;
     }}
   </script>
 </body>

@@ -24,9 +24,11 @@ Usages:
     - reset_filter(cy_instance) — сбрасывает фильтрацию: показывает все элементы,
       снимает классы highlight/highlighted/dimmed, снимает active с узлов дерева,
       перерисовывает layout dagre.
-    - show_cell_info(cell_name, graph) — показывает панель с информацией о cell:
-      типы (cell.types), потребители (edges где to_cell === cell_name),
-      зависимости (cell.dependencies).
+    - show_cell_info(cell_name, graph) — показывает панель с информацией о cell
+      в формате markdown-рендеринга. Секции разделены .section div'ами с border-top.
+      Каждый h2 имеет SVG-иконку через data-icon атрибут и ::before pseudo-element.
+      Description отображается как blockquote (.description класс).
+      Секции: Name, Description, Types, Consumers (если есть), Dependencies (если есть).
     - render_tree(container_id, graph, cy_instance) — строит дерево вложенности cells
       в sidebar из graph.cells с учётом children[]. Корневые cells определяются как те,
       чьё имя отсутствует в children других cells. Каждый узел показывает короткое имя cell

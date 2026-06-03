@@ -67,6 +67,11 @@ class TestIndexPageDarkTheme:
         html = index_page(graph_json_url="/api/graph")
         assert "#info" in html
         assert "rgba(255, 255, 255, 0.05)" in html
+        assert "#info h2" in html
+        assert "#info p" in html
+        assert "#info ul" in html
+        assert "#info .section" in html
+        assert "#info .description" in html
 
     def test_index_page_curly_brace_escaping(self):
         html = index_page(graph_json_url="/api/graph")
@@ -250,13 +255,17 @@ class TestIndexPageVisualUpdates:
         html = index_page(graph_json_url="/api/graph")
         assert 'addEventListener("click"' in html
 
-    def test_yaml_formatting_in_show_cell_info(self):
+    def test_markdown_formatting_in_show_cell_info(self):
         html = index_page(graph_json_url="/api/graph")
-        assert "yaml-key" in html
-        assert "yaml-string" in html
-        assert "yaml-null" in html
-        assert "_yamlList" in html
-        assert "_yamlValue" in html
+        assert "function show_cell_info" in html
+        assert '<h2 data-icon="name">Name</h2>' in html
+        assert '<h2 data-icon="description">Description</h2>' in html
+        assert '<h2 data-icon="types">Types</h2>' in html
+        assert '<h2 data-icon="consumers">Consumers</h2>' in html
+        assert '<h2 data-icon="dependencies">Dependencies</h2>' in html
+        assert "section" in html
+        assert "description" in html
+        assert "_esc" in html
 
     def test_node_styling_with_border(self):
         html = index_page(graph_json_url="/api/graph")

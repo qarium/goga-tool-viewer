@@ -43,8 +43,16 @@ SPA состоит из одного HTML-файла с встроенными C
 - Фон панели: #0f172a, тень box-shadow
 - По умолчанию скрыта (class="hidden"), открывается при клике на узел графа
 - Закрывается по клику на кнопку ×
-- Содержимое форматируется как YAML: ключи (yaml-key) — цвет teal, строки (yaml-string) — #a5f3fc, null (yaml-null) — muted italic
-- Поля: name, description, types, consumers, dependencies
+- Содержимое форматируется как markdown:
+  - h2 — заголовки секций: uppercase, muted цвет, с SVG-иконкой через ::before (атрибут data-icon)
+  - p — параграфы с текстом, белый цвет
+  - .description — blockquote-стиль: левый teal бордер, полупрозрачный teal фон, курсив
+  - ul/li — списки consumers и dependencies
+  - .label — подсвеченные значения типов (#a5f3fc)
+  - .empty — placeholder для пустых значений (muted italic)
+- Секции разделены .section div'ами с border-top разделителем
+- Секции: Name (иконка tag), Description (иконка document), Types (иконка cube),
+  Consumers (иконка download, если есть), Dependencies (иконка upload, если есть)
 
 ## Граф (Cytoscape)
 
