@@ -439,3 +439,16 @@ class TestIndexPageCodemanifestLogical:
     def test_show_codemanifest_no_cache_per_click(self):
         html = index_page(graph_json_url="/api/graph")
         assert "show_codemanifest" in html
+
+
+class TestIndexPageCodemanifestIntegration:
+    """Integration test for full CODEMANIFEST viewer markup."""
+
+    def test_index_page_codemanifest_full_markup(self):
+        """Verify all CODEMANIFEST viewer components are present in HTML."""
+        html = index_page(graph_json_url="/api/graph")
+        assert "function show_codemanifest" in html
+        assert "#codemanifest-panel" in html
+        assert "codemanifest-link" in html
+        assert "/api/codemanifest" in html
+        assert "CODEMANIFEST not found" in html

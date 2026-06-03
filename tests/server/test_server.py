@@ -145,6 +145,28 @@ class TestCodemanifestRoute:
             thread.join(timeout=2)
 
 
+class TestCodemanifestIntegration:
+    """Integration tests for the full codemanifest HTTP flow."""
+
+    def test_server_codemanifest_full_flow(self, running_server):
+        """GET /api/codemanifest?cell=goga_tool_viewer/models returns real content."""
+        server, url, thread = running_server(CellGraph())
+        try:
+            req = urllib.request.Request(
+                url + "/api/codemanifest?cell=goga_tool_viewer/models"
+            )
+            with urllib.request.urlopen(req, timeout=2) as resp:
+                assert resp.status == 200
+                assert "text/plain" in resp.headers.get_content_type()
+                body = resp.read().decode("utf-8")
+                assert isinstance(body, str)
+                assert len(body) > 0
+                assert "Usages:" in body or "Annotations:" in body
+        finally:
+            server.stop()
+            thread.join(timeout=2)
+
+
 class TestRunServer:
     def test_signature(self):
         sig = inspect.signature(run_server)

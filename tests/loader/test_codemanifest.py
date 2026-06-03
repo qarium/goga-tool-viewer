@@ -86,3 +86,14 @@ class TestLoadCodemanifestLogic:
                 load_codemanifest("cell/..%2F..%2Fsecret")
         finally:
             codemanifest_mod.__file__ = original
+
+
+class TestLoadCodemanifestIntegration:
+    """Integration tests using the real project filesystem."""
+
+    def test_load_codemanifest_real_project_file(self):
+        """Load a real CODEMANIFEST from the project and verify content."""
+        result = load_codemanifest("goga_tool_viewer/models")
+        assert isinstance(result, str)
+        assert len(result) > 0
+        assert "Usages:" in result or "Annotations:" in result
