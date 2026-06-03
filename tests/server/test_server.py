@@ -144,6 +144,42 @@ class TestCodemanifestRoute:
             server.stop()
             thread.join(timeout=2)
 
+    def test_server_get_codemanifest_returns_400_for_traversal(
+        self, running_server
+    ):
+        """GET /api/codemanifest?cell=../../etc/passwd returns 400."""
+        server, url, thread = running_server(CellGraph())
+        try:
+            with pytest.raises(urllib.error.HTTPError) as exc_info:
+                urllib.request.urlopen(
+                    urllib.request.Request(
+                        url + "/api/codemanifest?cell=../../etc/passwd"
+                    ),
+                    timeout=2,
+                )
+            assert exc_info.value.code == 400
+        finally:
+            server.stop()
+            thread.join(timeout=2)
+
+    def test_server_get_codemanifest_rejects_prefix_collision(
+        self, running_server
+    ):
+        """GET /api/codemanifest_evil returns 404, not 400."""
+        server, url, thread = running_server(CellGraph())
+        try:
+            with pytest.raises(urllib.error.HTTPError) as exc_info:
+                urllib.request.urlopen(
+                    urllib.request.Request(
+                        url + "/api/codemanifest_evil"
+                    ),
+                    timeout=2,
+                )
+            assert exc_info.value.code == 404
+        finally:
+            server.stop()
+            thread.join(timeout=2)
+
 
 class TestCodemanifestIntegration:
     """Integration tests for the full codemanifest HTTP flow."""

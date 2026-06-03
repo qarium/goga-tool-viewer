@@ -547,6 +547,8 @@ def index_page(graph_json_url: str) -> str:
 
     document.getElementById("info-close").addEventListener("click", function() {{
       document.getElementById("info-wrapper").classList.add("hidden");
+      var cm = document.getElementById('codemanifest-panel');
+      if (cm) cm.remove();
     }});
 
     function render_graph(container_id, graph) {{
@@ -743,6 +745,8 @@ def index_page(graph_json_url: str) -> str:
     }}
 
     function show_cell_info(cell_name, graph) {{
+      var cmPanel = document.getElementById('codemanifest-panel');
+      if (cmPanel) cmPanel.remove();
       const cell = graph.cells.find(c => c.name === cell_name);
       if (!cell) {{
         document.getElementById("info").innerHTML = "<p>Cell not found</p>";
@@ -785,6 +789,20 @@ def index_page(graph_json_url: str) -> str:
       }}
     }}
 
+    function _show_cm_panel(content) {{
+      var existing = document.getElementById('codemanifest-panel');
+      if (existing) existing.remove();
+      var panel = document.createElement('div');
+      panel.id = 'codemanifest-panel';
+      panel.innerHTML = '<div class="titlebar"><span class="title">CODEMANIFEST</span>'
+        + '<button class="close">&times;</button></div>'
+        + '<pre><code>' + content + '</code></pre>';
+      document.querySelector('main').appendChild(panel);
+      panel.querySelector('.close').addEventListener('click', function() {{
+        panel.remove();
+      }});
+    }}
+
     function show_codemanifest(cell_name, graph) {{
       const cell = graph.cells.find(c => c.name === cell_name);
       if (!cell) return;
@@ -795,30 +813,10 @@ def index_page(graph_json_url: str) -> str:
           return 'Failed to load CODEMANIFEST';
         }})
         .then(function(content) {{
-          const existing = document.getElementById('codemanifest-panel');
-          if (existing) existing.remove();
-          const panel = document.createElement('div');
-          panel.id = 'codemanifest-panel';
-          panel.innerHTML = '<div class="titlebar"><span class="title">CODEMANIFEST</span>'
-            + '<button class="close">&times;</button></div>'
-            + '<pre><code>' + _esc(content) + '</code></pre>';
-          document.querySelector('main').appendChild(panel);
-          panel.querySelector('.close').addEventListener('click', function() {{
-            panel.remove();
-          }});
+          _show_cm_panel(_esc(content));
         }})
         .catch(function() {{
-          const existing = document.getElementById('codemanifest-panel');
-          if (existing) existing.remove();
-          const panel = document.createElement('div');
-          panel.id = 'codemanifest-panel';
-          panel.innerHTML = '<div class="titlebar"><span class="title">CODEMANIFEST</span>'
-            + '<button class="close">&times;</button></div>'
-            + '<pre><code>Failed to load CODEMANIFEST</code></pre>';
-          document.querySelector('main').appendChild(panel);
-          panel.querySelector('.close').addEventListener('click', function() {{
-            panel.remove();
-          }});
+          _show_cm_panel('Failed to load CODEMANIFEST');
         }});
     }}
   </script>

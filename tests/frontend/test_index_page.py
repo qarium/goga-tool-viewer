@@ -436,9 +436,6 @@ class TestIndexPageCodemanifestLogical:
         assert "CODEMANIFEST not found" in html
         assert "Failed to load CODEMANIFEST" in html
 
-    def test_show_codemanifest_no_cache_per_click(self):
-        html = index_page(graph_json_url="/api/graph")
-        assert "show_codemanifest" in html
 
 
 class TestIndexPageCodemanifestIntegration:

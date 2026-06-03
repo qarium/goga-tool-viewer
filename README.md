@@ -2,7 +2,7 @@
 
 Interactive dependency graph viewer for the [goga](https://github.com/qarium/goga) ecosystem.
 
-Visualizes cell dependency graphs as a single-page web application with hierarchical layout and click-to-inspect details.
+Visualizes cell dependency graphs as a single-page web application with hierarchical layout and click-to-inspect details. Includes a CODEMANIFEST viewer — click the "CODEMANIFEST" link in the info panel to view the raw YAML manifest for any cell.
 
 ## Installation
 
@@ -32,10 +32,11 @@ The tool prints a URL (e.g. `http://localhost:PORT`). Open it in a browser to se
 
 Once started, the HTTP server exposes:
 
-| Endpoint         | Description                                   |
-|------------------|-----------------------------------------------|
-| `GET /`          | Single-page application with the graph viewer |
-| `GET /api/graph` | JSON data for the dependency graph            |
+| Endpoint                          | Description                                                      |
+|-----------------------------------|------------------------------------------------------------------|
+| `GET /`                           | Single-page application with the graph viewer                    |
+| `GET /api/graph`                  | JSON data for the dependency graph                               |
+| `GET /api/codemanifest?cell=<path>` | CODEMANIFEST file content for a cell (text/plain, 200/400/404) |
 
 ## Integration
 
