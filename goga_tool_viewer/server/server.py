@@ -7,8 +7,10 @@ import json
 import logging
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from typing import Any
+from urllib.parse import parse_qs, urlparse
 
 from ..frontend import index_page
+from ..loader import load_codemanifest
 from ..models import CellGraph
 from ..parser import load_json_file, load_json_stdin
 from .port_finder import find_free_port
@@ -38,6 +40,40 @@ def _make_handler(graph: CellGraph) -> type[BaseHTTPRequestHandler]:
                 self.send_header("Content-Type", "application/json; charset=utf-8")
                 self.end_headers()
                 self.wfile.write(data.encode("utf-8"))
+            elif self.path.startswith("/api/codemanifest"):
+                parsed = urlparse(self.path)
+                params = parse_qs(parsed.query)
+                cell_path = params.get("cell", [None])[0]
+                if cell_path is None or cell_path == "":
+                    self.send_response(400)
+                    self.send_header(
+                        "Content-Type", "text/plain; charset=utf-8"
+                    )
+                    self.end_headers()
+                    self.wfile.write(b"Missing 'cell' parameter")
+                else:
+                    try:
+                        content = load_codemanifest(cell_path)
+                        self.send_response(200)
+                        self.send_header(
+                            "Content-Type", "text/plain; charset=utf-8"
+                        )
+                        self.end_headers()
+                        self.wfile.write(content.encode("utf-8"))
+                    except FileNotFoundError:
+                        self.send_response(404)
+                        self.send_header(
+                            "Content-Type", "text/plain; charset=utf-8"
+                        )
+                        self.end_headers()
+                        self.wfile.write(b"CODEMANIFEST not found")
+                    except ValueError:
+                        self.send_response(400)
+                        self.send_header(
+                            "Content-Type", "text/plain; charset=utf-8"
+                        )
+                        self.end_headers()
+                        self.wfile.write(b"Invalid cell path")
             else:
                 self.send_response(404)
                 self.end_headers()
@@ -68,6 +104,25 @@ class GraphServer:
         self.graph = graph
         self.port = port
         self._server: HTTPServer | None = None
+
+    def get_codemanifest(self, cell_path: str) -> str:
+        """Load CODEMANIFEST content for the given cell path.
+
+        Delegates to load_codemanifest for safe file reading with
+        path traversal protection.
+
+        Args:
+            cell_path: Relative path to a cell directory
+                (e.g. "goga_tool_viewer/parser").
+
+        Returns:
+            Text content of the CODEMANIFEST file as a string.
+
+        Raises:
+            FileNotFoundError: If the CODEMANIFEST file does not exist.
+            ValueError: If the cell path is invalid or attempts traversal.
+        """
+        return load_codemanifest(cell_path)
 
     def start(self) -> None:
         """Start the HTTP server (blocking).

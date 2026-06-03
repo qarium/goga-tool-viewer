@@ -174,12 +174,12 @@
 
 **КРИТИЧЕСКИ: файлы `CODEMANIFEST` — определения контракта только для чтения. НЕ изменяйте их. Если реализация не соответствует контракту, исправляйте реализацию — никогда не исправляйте контракт.**
 
-- [ ] **ШАГ 0 (ОБЪЯВЛЕНИЕ)**: Объявить, что работа ведётся над Task 3 — добавление роута `/api/codemanifest` в GraphServer
-- [ ] **Контрактные тесты**: добавить тесты в `tests/server/test_server.py`
+- [x] **ШАГ 0 (ОБЪЯВЛЕНИЕ)**: Объявить, что работа ведётся над Task 3 — добавление роута `/api/codemanifest` в GraphServer
+- [x] **Контрактные тесты**: добавить тесты в `tests/server/test_server.py`
   - `test_graphserver_has_get_codemanifest` — проверить что экземпляр GraphServer имеет метод `get_codemanifest`, callable
   - `test_server_codemanifest_route_returns_content` — GET `/api/codemanifest?cell=goga_tool_viewer/models` → 200, Content-Type text/plain, body содержит yaml
   - Все контрактные тесты ожидаемо падают (роут ещё не реализован)
-- [ ] **Код**: обновить `goga_tool_viewer/server/server.py`:
+- [x] **Код**: обновить `goga_tool_viewer/server/server.py`:
   - Добавить импорт: `from goga_tool_viewer.loader import load_codemanifest`
   - Добавить метод `get_codemanifest(self, cell_path: str) -> str` — делегирует `load_codemanifest(cell_path)`, возвращает content
   - В `do_GET`: добавить ветку для `self.path.startswith("/api/codemanifest")`:
@@ -188,15 +188,15 @@
     - Если `cell_path is None or cell_path == ""` → send_response(400), `"Missing 'cell' parameter"`
     - Обёртка в try/except: вызов `self.get_codemanifest(cell_path)` → 200 text/plain; `FileNotFoundError` → 404; `ValueError` → 400 `"Invalid cell path"`
   - Google-style docstring для нового метода
-- [ ] **Верификация интерфейсов**: запустить `python -m pytest tests/server/test_server.py -k "test_graphserver_has_get_codemanifest or test_server_codemanifest_route_returns_content" -x` — контрактные тесты должны пройти
-- [ ] **Логические тесты** (добавить в `tests/server/test_server.py`):
+- [x] **Верификация интерфейсов**: запустить `python -m pytest tests/server/test_server.py -k "test_graphserver_has_get_codemanifest or test_server_codemanifest_route_returns_content" -x` — контрактные тесты должны пройти
+- [x] **Логические тесты** (добавить в `tests/server/test_server.py`):
   - `test_server_get_codemanifest_returns_404_for_missing` — GET `/api/codemanifest?cell=nonexistent/cell` → assert status == 404
   - `test_server_get_codemanifest_returns_400_without_cell_param` — GET `/api/codemanifest` → assert status == 400
   - `test_server_get_codemanifest_empty_cell_param` — GET `/api/codemanifest?cell=` → assert status == 400
-- [ ] **Отладка**: запустить `python -m pytest tests/server/test_server.py -x` — исправлять код реализации, пока все тесты не пройдут
-- [ ] **Перепроверка контракта**: проверить что `GraphServer` имеет метод `get_codemanifest`, роут `/api/codemanifest` обрабатывается, возвращаемые статусы корректны (200/400/404)
-- [ ] **Линт**: запустить `python -m ruff check goga_tool_viewer/server/server.py tests/server/test_server.py` — исправить форматирование
-- [ ] **ЗАВЕРШЕНИЕ**: отметить чекбоксы как выполненные
+- [x] **Отладка**: запустить `python -m pytest tests/server/test_server.py -x` — исправлять код реализации, пока все тесты не пройдут
+- [x] **Перепроверка контракта**: проверить что `GraphServer` имеет метод `get_codemanifest`, роут `/api/codemanifest` обрабатывается, возвращаемые статусы корректны (200/400/404)
+- [x] **Линт**: запустить `python -m ruff check goga_tool_viewer/server/server.py tests/server/test_server.py` — исправить форматирование
+- [x] **ЗАВЕРШЕНИЕ**: отметить чекбоксы как выполненные
 
 ### Task 4: Обновление frontend — `show_codemanifest` и центральная панель (TDD кодирование)
 

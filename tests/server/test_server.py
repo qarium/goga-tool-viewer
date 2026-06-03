@@ -69,6 +69,82 @@ class TestGraphServer:
             thread.join(timeout=2)
 
 
+class TestCodemanifestRoute:
+    """Contract and logical tests for /api/codemanifest route."""
+
+    def test_graphserver_has_get_codemanifest(self):
+        """GraphServer must have a callable get_codemanifest method."""
+        assert hasattr(GraphServer, "get_codemanifest")
+        assert callable(GraphServer.get_codemanifest)
+
+    def test_server_codemanifest_route_returns_content(self, running_server):
+        """GET /api/codemanifest?cell=<path> returns 200 text/plain with yaml."""
+        server, url, thread = running_server(CellGraph())
+        try:
+            req = urllib.request.Request(
+                url + "/api/codemanifest?cell=goga_tool_viewer/models"
+            )
+            with urllib.request.urlopen(req, timeout=2) as resp:
+                assert resp.status == 200
+                assert "text/plain" in resp.headers.get_content_type()
+                body = resp.read().decode("utf-8")
+                assert isinstance(body, str)
+                assert len(body) > 0
+        finally:
+            server.stop()
+            thread.join(timeout=2)
+
+    def test_server_get_codemanifest_returns_404_for_missing(
+        self, running_server
+    ):
+        """GET /api/codemanifest?cell=nonexistent returns 404."""
+        server, url, thread = running_server(CellGraph())
+        try:
+            with pytest.raises(urllib.error.HTTPError) as exc_info:
+                urllib.request.urlopen(
+                    urllib.request.Request(
+                        url + "/api/codemanifest?cell=nonexistent/cell"
+                    ),
+                    timeout=2,
+                )
+            assert exc_info.value.code == 404
+        finally:
+            server.stop()
+            thread.join(timeout=2)
+
+    def test_server_get_codemanifest_returns_400_without_cell_param(
+        self, running_server
+    ):
+        """GET /api/codemanifest without cell param returns 400."""
+        server, url, thread = running_server(CellGraph())
+        try:
+            with pytest.raises(urllib.error.HTTPError) as exc_info:
+                urllib.request.urlopen(
+                    urllib.request.Request(url + "/api/codemanifest"),
+                    timeout=2,
+                )
+            assert exc_info.value.code == 400
+        finally:
+            server.stop()
+            thread.join(timeout=2)
+
+    def test_server_get_codemanifest_empty_cell_param(self, running_server):
+        """GET /api/codemanifest?cell= returns 400."""
+        server, url, thread = running_server(CellGraph())
+        try:
+            with pytest.raises(urllib.error.HTTPError) as exc_info:
+                urllib.request.urlopen(
+                    urllib.request.Request(
+                        url + "/api/codemanifest?cell="
+                    ),
+                    timeout=2,
+                )
+            assert exc_info.value.code == 400
+        finally:
+            server.stop()
+            thread.join(timeout=2)
+
+
 class TestRunServer:
     def test_signature(self):
         sig = inspect.signature(run_server)
