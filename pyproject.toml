@@ -96,6 +96,9 @@ line-ending = "lf"
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 addopts = "-v --tb=short"
+filterwarnings = [
+    "ignore::ResourceWarning",
+]
 
 [tool.coverage.run]
 source = ["goga_tool_viewer"]
