@@ -58,6 +58,7 @@ def _make_handler(graph: CellGraph) -> type[BaseHTTPRequestHandler]:
                         self.send_header(
                             "Content-Type", "text/plain; charset=utf-8"
                         )
+                        self.send_header("Cache-Control", "no-store")
                         self.end_headers()
                         self.wfile.write(content.encode("utf-8"))
                     except FileNotFoundError:
@@ -74,6 +75,14 @@ def _make_handler(graph: CellGraph) -> type[BaseHTTPRequestHandler]:
                         )
                         self.end_headers()
                         self.wfile.write(b"Invalid cell path")
+                    except Exception:
+                        logger.exception("codemanifest read error")
+                        self.send_response(500)
+                        self.send_header(
+                            "Content-Type", "text/plain; charset=utf-8"
+                        )
+                        self.end_headers()
+                        self.wfile.write(b"Internal server error")
             else:
                 self.send_response(404)
                 self.end_headers()
