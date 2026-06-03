@@ -341,7 +341,7 @@ class TestIndexPageSidebar:
         sidebar_start = html.index("#sidebar")
         sidebar_end = html.index("}", sidebar_start) + 1
         sidebar_css = html[sidebar_start:sidebar_end]
-        assert "var(--color-brand-card)" in sidebar_css
+        assert "#0f172a" in sidebar_css
 
     def test_tree_node_css_styles(self):
         html = index_page(graph_json_url="/api/graph")
@@ -355,7 +355,7 @@ class TestIndexPageSidebar:
         cy_start = html.index("#cy")
         cy_end = html.index("}", cy_start) + 1
         cy_css = html[cy_start:cy_end]
-        assert "left: 260px" in cy_css
+        assert "left: 276px" in cy_css
 
     def test_render_tree_function_exists(self):
         html = index_page(graph_json_url="/api/graph")

@@ -88,8 +88,7 @@ def _start_server(graph: CellGraph):
 
 
 def _stop_server(server, thread):
-    if server._server:
-        server._server.shutdown()
+    server.stop()
     thread.join(timeout=2)
 
 

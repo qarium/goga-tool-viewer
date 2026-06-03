@@ -40,8 +40,7 @@ class TestGraphServer:
                 assert "render_graph" in html
                 assert resp.headers.get_content_type() == "text/html"
         finally:
-            if server._server:
-                server._server.shutdown()
+            server.stop()
             thread.join(timeout=2)
 
     def test_serves_json_at_api_graph(self, test_graph, running_server):
@@ -56,8 +55,7 @@ class TestGraphServer:
                 assert len(data["edges"]) == 1
                 assert resp.headers.get_content_type() == "application/json"
         finally:
-            if server._server:
-                server._server.shutdown()
+            server.stop()
             thread.join(timeout=2)
 
     def test_returns_404_for_unknown(self, running_server):
@@ -67,8 +65,7 @@ class TestGraphServer:
                 urllib.request.urlopen(urllib.request.Request(url + "/unknown"), timeout=2)
             assert exc_info.value.code == 404
         finally:
-            if server._server:
-                server._server.shutdown()
+            server.stop()
             thread.join(timeout=2)
 
 

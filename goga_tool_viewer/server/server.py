@@ -80,6 +80,12 @@ class GraphServer:
         self._server = HTTPServer(("", self.port), handler)
         self._server.serve_forever()
 
+    def stop(self) -> None:
+        """Shut down the HTTP server and close the socket."""
+        if self._server:
+            self._server.shutdown()
+            self._server.server_close()
+
     def url(self) -> str:
         """Return the server URL.
 
