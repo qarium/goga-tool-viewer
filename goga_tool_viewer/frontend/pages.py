@@ -31,6 +31,8 @@ _ICON_DESCRIPTION = _svg_data_uri("icon-description.svg")
 _ICON_TYPES = _svg_data_uri("icon-types.svg")
 _ICON_CONSUMERS = _svg_data_uri("icon-consumers.svg")
 _ICON_DEPENDENCIES = _svg_data_uri("icon-dependencies.svg")
+_ICON_FOLDER = _svg_data_uri("icon-folder.svg")
+_ICON_LAYERS = _svg_data_uri("icon-layers.svg")
 
 
 def index_page(graph_json_url: str) -> str:
@@ -154,16 +156,98 @@ def index_page(graph_json_url: str) -> str:
       border-radius: 2px;
     }}
     .tree-node {{
-      padding: 5px 16px;
+      position: relative;
+      padding: 5px 12px 5px 8px;
       font-family: ui-monospace, SFMono-Regular, monospace;
       font-size: 12px;
       color: var(--color-brand-text);
       cursor: pointer;
       border-left: 3px solid transparent;
       transition: background 0.15s, border-color 0.15s;
-      white-space: nowrap;
+      display: flex;
+      align-items: center;
+    }}
+    .tree-guides {{
+      display: flex;
+      flex-shrink: 0;
+    }}
+    .tree-guide {{
+      width: 16px;
+      height: 28px;
+      position: relative;
+      flex-shrink: 0;
+    }}
+    .tree-guide.pipe::before {{
+      content: '';
+      position: absolute;
+      left: 7px;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: rgba(255, 255, 255, 0.08);
+    }}
+    .tree-guide.tee::before {{
+      content: '';
+      position: absolute;
+      left: 7px;
+      top: 0;
+      bottom: 0;
+      width: 1px;
+      background: rgba(255, 255, 255, 0.08);
+    }}
+    .tree-guide.tee::after {{
+      content: '';
+      position: absolute;
+      left: 7px;
+      top: 50%;
+      width: 9px;
+      height: 1px;
+      background: rgba(255, 255, 255, 0.08);
+    }}
+    .tree-guide.elbow::before {{
+      content: '';
+      position: absolute;
+      left: 7px;
+      top: 0;
+      height: 50%;
+      width: 1px;
+      background: rgba(255, 255, 255, 0.08);
+    }}
+    .tree-guide.elbow::after {{
+      content: '';
+      position: absolute;
+      left: 7px;
+      top: 50%;
+      width: 9px;
+      height: 1px;
+      background: rgba(255, 255, 255, 0.08);
+    }}
+    .tree-guide.empty {{
+      /* no lines — placeholder for spacing */
+    }}
+    .tree-icon {{
+      display: inline-block;
+      width: 14px;
+      height: 14px;
+      background-size: contain;
+      background-repeat: no-repeat;
+      margin-right: 6px;
+      flex-shrink: 0;
+    }}
+    .tree-name {{
+      flex: 1;
       overflow: hidden;
       text-overflow: ellipsis;
+      white-space: nowrap;
+    }}
+    .tree-badge {{
+      font-size: 10px;
+      color: var(--color-brand-muted);
+      background: rgba(255, 255, 255, 0.06);
+      padding: 0 5px;
+      border-radius: 8px;
+      margin-left: 6px;
+      flex-shrink: 0;
     }}
     .tree-node:hover {{
       background: rgba(32, 212, 191, 0.08);
@@ -540,23 +624,64 @@ def index_page(graph_json_url: str) -> str:
         }}
       }});
       const roots = graph.cells.filter(function(c) {{ return !childNames.has(c.name); }});
-      function build_node(cell, depth) {{
+      const folderIcon = '{_ICON_FOLDER}';
+      const cubeIcon = '{_ICON_LAYERS}';
+      function build_guides(ancestorPipes) {{
+        let html = '<span class="tree-guides">';
+        for (let i = 0; i < ancestorPipes.length; i++) {{
+          html += '<span class="tree-guide '
+            + (ancestorPipes[i] ? 'pipe' : 'empty') + '"></span>';
+        }}
+        html += '</span>';
+        return html;
+      }}
+      function build_node(cell, depth, isLast, ancestorPipes) {{
         const div = document.createElement('div');
         div.className = 'tree-node';
-        div.style.paddingLeft = (16 + depth * 16) + 'px';
-        div.textContent = cell.name.split('/').pop();
         div.setAttribute('data-cell-name', cell.name);
+        div.setAttribute('data-depth', depth);
+        const hasChildren = cell.children && cell.children.length > 0;
+        const icon = hasChildren ? folderIcon : cubeIcon;
+        const depCount = (cell.dependencies || []).length;
+        let guides = '';
+        if (depth > 0) {{
+          guides = '<span class="tree-guides">';
+          for (let i = 0; i < ancestorPipes.length; i++) {{
+            guides += '<span class="tree-guide '
+              + (ancestorPipes[i] ? 'pipe' : 'empty') + '"></span>';
+          }}
+          guides += '<span class="tree-guide '
+            + (isLast ? 'elbow' : 'tee') + '"></span>';
+          guides += '</span>';
+        }}
+        let inner = guides;
+        inner += '<span class="tree-icon" style="background-image:url('
+          + icon + ')"></span>';
+        inner += '<span class="tree-name">' + _esc(cell.name.split('/').pop())
+          + '</span>';
+        if (depCount > 0) {{
+          inner += '<span class="tree-badge">' + depCount + '</span>';
+        }}
+        div.innerHTML = inner;
         div.addEventListener('click', function() {{
-          document.querySelectorAll('.tree-node.active').forEach(function(n) {{ n.classList.remove('active'); }});
+          document.querySelectorAll('.tree-node.active').forEach(function(n) {{
+            n.classList.remove('active');
+          }});
           div.classList.add('active');
           filter_cell(cell.name, cy_instance);
         }});
         container.appendChild(div);
-        if (cell.children && cell.children.length > 0) {{
-          cell.children.forEach(function(child) {{ build_node(child, depth + 1); }});
+        if (hasChildren) {{
+          const childPipes = ancestorPipes.concat([!isLast]);
+          cell.children.forEach(function(child, i) {{
+            build_node(child, depth + 1, i === cell.children.length - 1,
+              childPipes);
+          }});
         }}
       }}
-      roots.forEach(function(root) {{ build_node(root, 0); }});
+      roots.forEach(function(root, i) {{
+        build_node(root, 0, i === roots.length - 1, []);
+      }});
     }}
 
     function show_cell_info(cell_name, graph) {{

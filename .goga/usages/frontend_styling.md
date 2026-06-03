@@ -104,14 +104,18 @@ Sidebar фиксированной ширины (260px) слева от граф
 - Полностью раскрыто — все узлы видны
 
 Узлы дерева (.tree-node):
-- Вложенность показана через padding-left (16px + 16px за уровень)
-- Имя cell: короткое (последний сегмент пути), моноширинный шрифт, font-size 12px
+- Вложенность показана через tree lines (::before — вертикальная линия, ::after — горизонтальный коннектор)
+  с использованием CSS переменной --depth. Корневые узлы (data-depth="0") без линий.
+- Иконка (.tree-icon): folder для cells с children, layers (перекрывающиеся прямоугольники) для leaf cells. SVG через data URI.
+- Имя cell (.tree-name): короткое (последний сегмент пути), моноширинный шрифт, font-size 12px
 - Цвет: var(--color-brand-text)
 - White-space: nowrap, overflow: hidden, text-overflow: ellipsis
+- Бейдж (.tree-badge): количество зависимостей, показывается только если > 0
 - Border-left: 3px solid transparent
 - Cursor: pointer
 - Hover: фон rgba(32, 212, 191, 0.08)
 - Активный узел (.tree-node.active): border-left-color teal, фон rgba(32, 212, 191, 0.12)
+- .last-child: вертикальная линия обрезается на середине узла
 - Transition: background 0.15s, border-color 0.15s
 
 Подвал sidebar (#sidebar-footer):

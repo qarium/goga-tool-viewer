@@ -358,6 +358,10 @@ class TestIndexPageSidebar:
         assert ".tree-node.active" in html
         assert "border-left-color" in html
         assert "cursor: pointer" in html
+        assert ".tree-icon" in html
+        assert ".tree-name" in html
+        assert ".tree-badge" in html
+        assert ".tree-guide" in html
 
     def test_graph_offset_by_sidebar(self):
         html = index_page(graph_json_url="/api/graph")
@@ -370,6 +374,20 @@ class TestIndexPageSidebar:
         html = index_page(graph_json_url="/api/graph")
         assert "function render_tree(" in html
         assert "build_node" in html
+        assert "ancestorPipes" in html
+
+    def test_tree_node_has_icons(self):
+        html = index_page(graph_json_url="/api/graph")
+        assert "folderIcon" in html
+        assert "cubeIcon" in html
+        assert "tree-icon" in html
+        assert "icon-layers" not in html
+        assert "icon-folder" not in html
+
+    def test_tree_node_has_deps_badge(self):
+        html = index_page(graph_json_url="/api/graph")
+        assert "tree-badge" in html
+        assert "depCount" in html
 
     def test_render_tree_uses_children(self):
         html = index_page(graph_json_url="/api/graph")

@@ -31,8 +31,11 @@ Usages:
       Секции: Name, Description, Types, Consumers (если есть), Dependencies (если есть).
     - render_tree(container_id, graph, cy_instance) — строит дерево вложенности cells
       в sidebar из graph.cells с учётом children[]. Корневые cells определяются как те,
-      чьё имя отсутствует в children других cells. Каждый узел показывает короткое имя cell
-      (последний сегмент пути). Дерево полностью раскрыто. Клик по узлу дерева вызывает
+      чьё имя отсутствует в children других cells. Каждый узел показывает:
+      иконку (folder для cells с children, layers для leaf), короткое имя cell
+      (последний сегмент пути), бейдж с количеством зависимостей.
+      Дерево визуализируется tree lines (::before/::after) с CSS переменной --depth.
+      Дерево полностью раскрыто. Клик по узлу дерева вызывает
       filter_cell(cell_name, cy_instance) — фильтрует граф до выбранной cell и её связей.
       Кнопка «показать все» вызывает reset_filter(cy_instance) — показывает весь граф.
 
