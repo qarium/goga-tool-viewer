@@ -311,3 +311,72 @@ class TestIndexPageVisualEffects:
     def test_highlight_cell_clears_previous_state(self):
         html = index_page(graph_json_url="/api/graph")
         assert "removeClass('highlight highlighted')" in html
+
+
+class TestIndexPageSidebar:
+    """Tests for sidebar with cell hierarchy tree."""
+
+    def test_sidebar_html_structure(self):
+        html = index_page(graph_json_url="/api/graph")
+        assert 'id="sidebar"' in html
+        assert 'id="sidebar-title"' in html
+        assert 'id="sidebar-tree"' in html
+        assert 'id="sidebar-footer"' in html
+
+    def test_sidebar_title_text(self):
+        html = index_page(graph_json_url="/api/graph")
+        assert ">Cells<" in html
+
+    def test_sidebar_show_all_button(self):
+        html = index_page(graph_json_url="/api/graph")
+        assert "tree-show-all" in html
+        assert "Show all" in html
+
+    def test_sidebar_css_width(self):
+        html = index_page(graph_json_url="/api/graph")
+        assert "width: 260px" in html
+
+    def test_sidebar_css_background(self):
+        html = index_page(graph_json_url="/api/graph")
+        sidebar_start = html.index("#sidebar")
+        sidebar_end = html.index("}", sidebar_start) + 1
+        sidebar_css = html[sidebar_start:sidebar_end]
+        assert "var(--color-brand-card)" in sidebar_css
+
+    def test_tree_node_css_styles(self):
+        html = index_page(graph_json_url="/api/graph")
+        assert ".tree-node" in html
+        assert ".tree-node.active" in html
+        assert "border-left-color" in html
+        assert "cursor: pointer" in html
+
+    def test_graph_offset_by_sidebar(self):
+        html = index_page(graph_json_url="/api/graph")
+        cy_start = html.index("#cy")
+        cy_end = html.index("}", cy_start) + 1
+        cy_css = html[cy_start:cy_end]
+        assert "left: 260px" in cy_css
+
+    def test_render_tree_function_exists(self):
+        html = index_page(graph_json_url="/api/graph")
+        assert "function render_tree(" in html
+        assert "build_node" in html
+
+    def test_render_tree_uses_children(self):
+        html = index_page(graph_json_url="/api/graph")
+        assert "cell.children" in html
+
+    def test_render_tree_called_on_init(self):
+        html = index_page(graph_json_url="/api/graph")
+        assert 'render_tree("sidebar-tree", graph, cy)' in html
+
+    def test_show_all_resets_highlight(self):
+        html = index_page(graph_json_url="/api/graph")
+        assert ".tree-show-all" in html
+        assert "removeClass('dimmed highlight highlighted')" in html
+        assert ".tree-node.active" in html
+
+    def test_sidebar_scrollbar_styles(self):
+        html = index_page(graph_json_url="/api/graph")
+        assert "::-webkit-scrollbar" in html
+        assert "4px" in html

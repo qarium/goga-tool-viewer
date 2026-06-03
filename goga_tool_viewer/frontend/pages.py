@@ -99,10 +99,80 @@ def index_page(graph_json_url: str) -> str:
       margin-top: 50px;
       overflow: hidden;
     }}
-    #cy {{
+    #sidebar {{
       position: absolute;
       top: 0;
       left: 0;
+      bottom: 0;
+      width: 260px;
+      background: var(--color-brand-card);
+      border-right: 1px solid rgba(255, 255, 255, 0.05);
+      display: flex;
+      flex-direction: column;
+      z-index: 5;
+    }}
+    #sidebar-title {{
+      padding: 12px 16px;
+      font-family: ui-monospace, SFMono-Regular, monospace;
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--color-brand-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }}
+    #sidebar-tree {{
+      flex: 1;
+      overflow-y: auto;
+      padding: 4px 0;
+    }}
+    #sidebar-tree::-webkit-scrollbar {{
+      width: 4px;
+    }}
+    #sidebar-tree::-webkit-scrollbar-track {{
+      background: transparent;
+    }}
+    #sidebar-tree::-webkit-scrollbar-thumb {{
+      background: rgba(255, 255, 255, 0.1);
+      border-radius: 2px;
+    }}
+    .tree-node {{
+      padding: 5px 16px;
+      font-family: ui-monospace, SFMono-Regular, monospace;
+      font-size: 12px;
+      color: var(--color-brand-text);
+      cursor: pointer;
+      border-left: 3px solid transparent;
+      transition: background 0.15s, border-color 0.15s;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }}
+    .tree-node:hover {{
+      background: rgba(32, 212, 191, 0.08);
+    }}
+    .tree-node.active {{
+      border-left-color: var(--color-brand-teal);
+      background: rgba(32, 212, 191, 0.12);
+    }}
+    #sidebar-footer {{
+      padding: 8px 16px;
+      border-top: 1px solid rgba(255, 255, 255, 0.05);
+    }}
+    .tree-show-all {{
+      font-family: ui-monospace, SFMono-Regular, monospace;
+      font-size: 11px;
+      color: var(--color-brand-muted);
+      cursor: pointer;
+      transition: color 0.15s;
+    }}
+    .tree-show-all:hover {{
+      color: var(--color-brand-teal);
+    }}
+    #cy {{
+      position: absolute;
+      top: 0;
+      left: 260px;
       right: 0;
       bottom: 0;
       background: var(--color-brand-bg);
@@ -203,6 +273,11 @@ def index_page(graph_json_url: str) -> str:
     </div>
   </header>
   <main>
+    <div id="sidebar">
+      <div id="sidebar-title">Cells</div>
+      <div id="sidebar-tree"></div>
+      <div id="sidebar-footer"><span class="tree-show-all">Show all</span></div>
+    </div>
     <div id="cy"></div>
     <div id="info-wrapper" class="hidden">
       <div id="info-titlebar">
@@ -222,6 +297,11 @@ def index_page(graph_json_url: str) -> str:
       .then(graph => {{
         requestAnimationFrame(function() {{
           const cy = render_graph("cy", graph);
+          render_tree("sidebar-tree", graph, cy);
+          document.querySelector('.tree-show-all').addEventListener('click', function() {{
+            cy.elements().removeClass('dimmed highlight highlighted');
+            document.querySelectorAll('.tree-node.active').forEach(function(n) {{ n.classList.remove('active'); }});
+          }});
           cy.on('tap', 'node', function(e) {{
             show_cell_info(e.target.id(), graph);
             document.getElementById("info-wrapper").classList.remove("hidden");
@@ -345,6 +425,36 @@ def index_page(graph_json_url: str) -> str:
     function _yamlList(items) {{
       if (!items || items.length === 0) return '<span class="yaml-null">[]</span>';
       return items.map(i => '  - ' + _yamlValue(i)).join('<br>');
+    }}
+
+    function render_tree(container_id, graph, cy_instance) {{
+      const container = document.getElementById(container_id);
+      container.innerHTML = '';
+      const allNames = new Set(graph.cells.map(function(c) {{ return c.name; }}));
+      const childNames = new Set();
+      graph.cells.forEach(function(cell) {{
+        if (cell.children) {{
+          cell.children.forEach(function(ch) {{ childNames.add(ch.name); }});
+        }}
+      }});
+      const roots = graph.cells.filter(function(c) {{ return !childNames.has(c.name); }});
+      function build_node(cell, depth) {{
+        const div = document.createElement('div');
+        div.className = 'tree-node';
+        div.style.paddingLeft = (16 + depth * 16) + 'px';
+        div.textContent = cell.name.split('/').pop();
+        div.setAttribute('data-cell-name', cell.name);
+        div.addEventListener('click', function() {{
+          document.querySelectorAll('.tree-node.active').forEach(function(n) {{ n.classList.remove('active'); }});
+          div.classList.add('active');
+          highlight_cell(cell.name, cy_instance);
+        }});
+        container.appendChild(div);
+        if (cell.children && cell.children.length > 0) {{
+          cell.children.forEach(function(child) {{ build_node(child, depth + 1); }});
+        }}
+      }}
+      roots.forEach(function(root) {{ build_node(root, 0); }});
     }}
 
     function show_cell_info(cell_name, graph) {{

@@ -69,3 +69,47 @@ Cytoscape.js — библиотека визуализации графов.
 - Остальные узлы затемняются (opacity 0.15)
 
 Fade-in анимация: @keyframes fadeIn 0.6s ease-out при загрузке графа.
+
+## Sidebar с деревом вложенности
+
+Sidebar фиксированной ширины (260px) слева от графа.
+- Фон: var(--color-brand-card) (#121830)
+- Граница справа: 1px solid rgba(255, 255, 255, 0.05)
+- Высота: заполняет основную область (ниже хедера, выше футера)
+- Содержимое: дерево вложенности cells + кнопка «показать все»
+- z-index: 5 (ниже info-wrapper, выше cy)
+
+Заголовок sidebar:
+- Текст "Cells" — моноширинный шрифт, font-size 11px, font-weight 600
+- Цвет var(--color-brand-muted), text-transform uppercase, letter-spacing 0.05em
+- Padding: 12px 16px
+- Border-bottom: 1px solid rgba(255, 255, 255, 0.05)
+
+Дерево вложенности (контейнер #sidebar-tree):
+- Flex: 1 (занимает всё доступное пространство)
+- Overflow-y: auto — скроллируется при переполнении
+- Scrollbar: тонкий (4px), цвет rgba(255, 255, 255, 0.1), border-radius 2px
+- Полностью раскрыто — все узлы видны
+
+Узлы дерева (.tree-node):
+- Вложенность показана через padding-left (16px + 16px за уровень)
+- Имя cell: короткое (последний сегмент пути), моноширинный шрифт, font-size 12px
+- Цвет: var(--color-brand-text)
+- White-space: nowrap, overflow: hidden, text-overflow: ellipsis
+- Border-left: 3px solid transparent
+- Cursor: pointer
+- Hover: фон rgba(32, 212, 191, 0.08)
+- Активный узел (.tree-node.active): border-left-color teal, фон rgba(32, 212, 191, 0.12)
+- Transition: background 0.15s, border-color 0.15s
+
+Подвал sidebar (#sidebar-footer):
+- Padding: 8px 16px
+- Border-top: 1px solid rgba(255, 255, 255, 0.05)
+
+Кнопка «Show all» (.tree-show-all):
+- Моноширинный шрифт, font-size 11px
+- Цвет: var(--color-brand-muted)
+- Hover: цвет var(--color-brand-teal)
+- При клике сбрасывает подсветку в графе и убирает active класс у узлов дерева
+
+Граф (#cy) смещён: left: 260px (ширина sidebar).
