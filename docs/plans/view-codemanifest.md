@@ -134,12 +134,12 @@
 
 **КРИТИЧЕСКИ: файлы `CODEMANIFEST` — определения контракта только для чтения. НЕ изменяйте их. Если реализация не соответствует контракту, исправляйте реализацию — никогда не исправляйте контракт.**
 
-- [ ] **ШАГ 0 (ОБЪЯВЛЕНИЕ)**: Объявить, что работа ведётся над Task 2 — реализация `load_codemanifest`
-- [ ] **Контрактные тесты**: создать файл `tests/loader/test_codemanifest.py`
+- [x] **ШАГ 0 (ОБЪЯВЛЕНИЕ)**: Объявить, что работа ведётся над Task 2 — реализация `load_codemanifest`
+- [x] **Контрактные тесты**: создать файл `tests/loader/test_codemanifest.py`
   - `test_load_codemanifest_callable` — функция доступна из фасада `goga_tool_viewer.loader`, callable, принимает один позиционный аргумент
   - `test_load_codemanifest_signature` — возвращает str при корректном пути (создать tmp CODEMANIFEST, вызвать, проверить isinstance(result, str))
   - Все контрактные тесты ожидаемо падают (файл codemanifest.py пуст)
-- [ ] **Код**: реализовать `load_codemanifest(cell_path: str) -> str` в `goga_tool_viewer/loader/codemanifest.py`:
+- [x] **Код**: реализовать `load_codemanifest(cell_path: str) -> str` в `goga_tool_viewer/loader/codemanifest.py`:
   - Валидация: если `".."` в `cell_path` → raise ValueError("path traversal detected")
   - Валидация: если `cell_path.startswith("/")` → raise ValueError("absolute path not allowed")
   - Построение пути: `Path(__file__).resolve().parent.parent.parent / cell_path / "CODEMANIFEST"`, затем `resolve()`
@@ -147,8 +147,8 @@
   - Чтение: `target.read_text(encoding="utf-8")`
   - FileNotFoundError пробрасывается естественно при отсутствии файла
   - Google-style docstring
-- [ ] **Верификация интерфейсов**: запустить `python -m pytest tests/loader/test_codemanifest.py -k "test_load_codemanifest_callable or test_load_codemanifest_signature" -x` — контрактные тесты должны пройти
-- [ ] **Логические тесты** (добавить в `tests/loader/test_codemanifest.py`):
+- [x] **Верификация интерфейсов**: запустить `python -m pytest tests/loader/test_codemanifest.py -k "test_load_codemanifest_callable or test_load_codemanifest_signature" -x` — контрактные тесты должны пройти
+- [x] **Логические тесты** (добавить в `tests/loader/test_codemanifest.py`):
   - Общий подход: использовать `monkeypatch` для подмены `Path(__file__)` в `codemanifest.py` на `tmp_path / "fake_cell" / "codemanifest.py"` — это позволяет `load_codemanifest` вычислять корень проекта относительно `tmp_path`
   - `test_load_codemanifest_reads_existing_file` — monkeypatch `__file__` на `tmp_path / "fake_cell" / "codemanifest.py"`, создать директорию `goga_tool_viewer/parser/` в `tmp_path`, поместить CODEMANIFEST с содержимым `"Usages:\n  test: value\n"`, вызвать `load_codemanifest("goga_tool_viewer/parser")`, проверить `result == "Usages:\n  test: value\n"`
   - `test_load_codemanifest_rejects_path_traversal` — `load_codemanifest("../../etc/passwd")` → pytest.raises(ValueError) (без monkeypatch — строковая валидация не зависит от filesystem)
@@ -156,10 +156,10 @@
   - `test_load_codemanifest_raises_on_missing_file` — monkeypatch `__file__` на `tmp_path / "fake_cell" / "codemanifest.py"`, `load_codemanifest("nonexistent/cell")` с пустым tmp_path → pytest.raises(FileNotFoundError)
   - `test_load_codemanifest_empty_path` — monkeypatch `__file__` на `tmp_path / "fake_cell" / "codemanifest.py"`, `load_codemanifest("")` → pytest.raises(FileNotFoundError)
   - `test_load_codemanifest_path_traversal_encoded` — monkeypatch `__file__` на `tmp_path / "fake_cell" / "codemanifest.py"`, `load_codemanifest("cell/..%2F..%2Fsecret")` → pytest.raises((ValueError, FileNotFoundError))
-- [ ] **Отладка**: запустить `python -m pytest tests/loader/test_codemanifest.py -x` — исправлять код реализации, пока все тесты не пройдут (НЕ исправлять тесты)
-- [ ] **Перепроверка контракта**: проверить что `load_codemanifest` доступна из `goga_tool_viewer.loader`, сигнатура `(cell_path: str) -> str`, выбрасывает ValueError и FileNotFoundError
-- [ ] **Линт**: запустить `python -m ruff check goga_tool_viewer/loader/codemanifest.py tests/loader/test_codemanifest.py` — исправить форматирование
-- [ ] **ЗАВЕРШЕНИЕ**: отметить чекбоксы как выполненные
+- [x] **Отладка**: запустить `python -m pytest tests/loader/test_codemanifest.py -x` — исправлять код реализации, пока все тесты не пройдут (НЕ исправлять тесты)
+- [x] **Перепроверка контракта**: проверить что `load_codemanifest` доступна из `goga_tool_viewer.loader`, сигнатура `(cell_path: str) -> str`, выбрасывает ValueError и FileNotFoundError
+- [x] **Линт**: запустить `python -m ruff check goga_tool_viewer/loader/codemanifest.py tests/loader/test_codemanifest.py` — исправить форматирование
+- [x] **ЗАВЕРШЕНИЕ**: отметить чекбоксы как выполненные
 
 ### Task 3: Добавление роута `/api/codemanifest` в GraphServer (TDD кодирование)
 
