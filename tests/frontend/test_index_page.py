@@ -673,16 +673,21 @@ class TestCodemanifestFixedTitlebar:
         panel_css = html[panel_start:panel_end]
         assert "overflow: hidden" in panel_css
 
-    def test_pre_has_overflow_y_auto(self):
+    def test_scroll_container_has_overflow_y_auto(self):
         html = index_page(graph_json_url="/api/graph")
-        pre_start = html.index("#codemanifest-panel pre {")
-        pre_end = html.index("}", pre_start) + 1
-        pre_css = html[pre_start:pre_end]
-        assert "overflow-y: auto" in pre_css
+        scroll_start = html.index("#codemanifest-panel .cm-scroll {")
+        scroll_end = html.index("}", scroll_start) + 1
+        scroll_css = html[scroll_start:scroll_end]
+        assert "overflow-y: auto" in scroll_css
 
-    def test_pre_has_flex_one(self):
+    def test_scroll_container_has_flex_one(self):
         html = index_page(graph_json_url="/api/graph")
-        pre_start = html.index("#codemanifest-panel pre {")
-        pre_end = html.index("}", pre_start) + 1
-        pre_css = html[pre_start:pre_end]
-        assert "flex: 1" in pre_css
+        wrap_start = html.index("#codemanifest-panel .cm-scroll-wrap {")
+        wrap_end = html.index("}", wrap_start) + 1
+        wrap_css = html[wrap_start:wrap_end]
+        assert "flex: 1" in wrap_css
+
+    def test_custom_scrollbar_markup(self):
+        html = index_page(graph_json_url="/api/graph")
+        assert "cm-scroll-bar" in html
+        assert "cm-scroll-thumb" in html

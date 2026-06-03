@@ -466,11 +466,68 @@ def index_page(graph_json_url: str) -> str:
     #codemanifest-panel .titlebar .close:hover {{
       color: var(--color-brand-text);
     }}
+    #codemanifest-panel .cm-scroll-wrap {{
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+    }}
+    #codemanifest-panel .cm-scroll {{
+      margin: 0;
+      height: 100%;
+      overflow-y: auto;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255, 255, 255, 0.25) transparent;
+    }}
+    #codemanifest-panel .cm-scroll::-webkit-scrollbar {{
+      width: 6px;
+    }}
+    #codemanifest-panel .cm-scroll::-webkit-scrollbar-track {{
+      background: transparent;
+    }}
+    #codemanifest-panel .cm-scroll::-webkit-scrollbar-thumb {{
+      background: rgba(255, 255, 255, 0.25);
+      border-radius: 3px;
+    }}
+    #codemanifest-panel .cm-scroll::-webkit-scrollbar-thumb:hover {{
+      background: rgba(255, 255, 255, 0.4);
+    }}
+    @supports not (scrollbar-color: auto) {{
+      #codemanifest-panel .cm-scroll {{
+        scrollbar-width: none;
+      }}
+      #codemanifest-panel .cm-scroll::-webkit-scrollbar {{
+        display: none;
+      }}
+      #codemanifest-panel .cm-scroll-bar {{
+        display: block;
+        position: absolute;
+        right: 2px;
+        top: 0;
+        bottom: 0;
+        width: 6px;
+        z-index: 1;
+        border-radius: 3px;
+        opacity: 0;
+        transition: opacity 0.2s;
+      }}
+      #codemanifest-panel .cm-scroll-wrap:hover .cm-scroll-bar {{
+        opacity: 1;
+      }}
+      #codemanifest-panel .cm-scroll-bar .cm-scroll-thumb {{
+        position: absolute;
+        left: 0;
+        right: 0;
+        min-height: 30px;
+        background: rgba(255, 255, 255, 0.25);
+        border-radius: 3px;
+      }}
+      #codemanifest-panel .cm-scroll-wrap:hover .cm-scroll-thumb {{
+        background: rgba(255, 255, 255, 0.4);
+      }}
+    }}
     #codemanifest-panel pre {{
       margin: 0;
       display: flex;
-      flex: 1;
-      overflow-y: auto;
     }}
     #codemanifest-panel .line-numbers {{
       font-family: ui-monospace, SFMono-Regular, monospace;
@@ -890,16 +947,61 @@ def index_page(graph_json_url: str) -> str:
       panel.id = 'codemanifest-panel';
       panel.innerHTML = '<div class="titlebar"><span class="title">CODEMANIFEST</span>'
         + '<button class="close">&times;</button></div>'
-        + '<pre><div class="line-numbers">' + numsHtml + '</div>'
-        + '<code class="code-content">' + codeHtml + '</code></pre>';
+        + '<div class="cm-scroll-wrap"><div class="cm-scroll"><pre><div class="line-numbers">' + numsHtml + '</div>'
+        + '<code class="code-content">' + codeHtml + '</code></pre></div>'
+        + '<div class="cm-scroll-bar"><div class="cm-scroll-thumb"></div></div></div>';
       document.querySelector('main').appendChild(panel);
-      var infoWrapper = document.getElementById('info-wrapper');
-      if (!infoWrapper.classList.contains('hidden')) {{
-        var infoRect = infoWrapper.getBoundingClientRect();
-        panel.style.right = (window.innerWidth - infoRect.left + 8) + 'px';
+      function updatePanelRight() {{
+        var iw = document.getElementById('info-wrapper');
+        if (!iw.classList.contains('hidden')) {{
+          var infoRect = iw.getBoundingClientRect();
+          panel.style.right = (window.innerWidth - infoRect.left + 8) + 'px';
+        }} else {{
+          panel.style.right = '8px';
+        }}
       }}
+      updatePanelRight();
+      window.addEventListener('resize', updatePanelRight);
       panel.querySelector('.close').addEventListener('click', function() {{
+        window.removeEventListener('resize', updatePanelRight);
         panel.remove();
+      }});
+      var cmScroll = panel.querySelector('.cm-scroll');
+      var cmThumb = panel.querySelector('.cm-scroll-thumb');
+      function updateScrollbar() {{
+        if (!cmScroll || !cmThumb) return;
+        var ratio = cmScroll.clientHeight / cmScroll.scrollHeight;
+        if (ratio >= 1) {{
+          cmThumb.style.display = 'none';
+          return;
+        }}
+        cmThumb.style.display = '';
+        var thumbH = Math.max(30, cmScroll.clientHeight * ratio);
+        var scrollRatio = cmScroll.scrollTop / (cmScroll.scrollHeight - cmScroll.clientHeight);
+        var thumbTop = scrollRatio * (cmScroll.clientHeight - thumbH);
+        cmThumb.style.height = thumbH + 'px';
+        cmThumb.style.top = thumbTop + 'px';
+      }}
+      cmScroll.addEventListener('scroll', updateScrollbar);
+      updateScrollbar();
+      var dragging = false, startY = 0, startTop = 0;
+      cmThumb.addEventListener('mousedown', function(e) {{
+        dragging = true;
+        startY = e.clientY;
+        startTop = parseInt(cmThumb.style.top) || 0;
+        e.preventDefault();
+      }});
+      document.addEventListener('mousemove', function(e) {{
+        if (!dragging) return;
+        var delta = e.clientY - startY;
+        var thumbH = parseInt(cmThumb.style.height) || 30;
+        var maxTop = cmScroll.clientHeight - thumbH;
+        var newTop = Math.max(0, Math.min(maxTop, startTop + delta));
+        cmThumb.style.top = newTop + 'px';
+        cmScroll.scrollTop = (newTop / maxTop) * (cmScroll.scrollHeight - cmScroll.clientHeight);
+      }});
+      document.addEventListener('mouseup', function() {{
+        dragging = false;
       }});
     }}
 
