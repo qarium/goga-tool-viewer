@@ -420,6 +420,64 @@ def index_page(graph_json_url: str) -> str:
       from {{ opacity: 0; }}
       to {{ opacity: 1; }}
     }}
+    #codemanifest-panel {{
+      position: absolute;
+      top: 8px;
+      bottom: 8px;
+      left: 284px;
+      max-width: 50%;
+      background: #0f172a;
+      border-radius: 8px;
+      box-shadow: 0 4px 24px rgba(0, 0, 0, 0.4);
+      z-index: 8;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+    }}
+    #codemanifest-panel .titlebar {{
+      display: flex;
+      align-items: center;
+      padding: 8px 12px;
+      background: #1e293b;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+      flex-shrink: 0;
+    }}
+    #codemanifest-panel .titlebar .title {{
+      flex: 1;
+      text-align: center;
+      font-size: 12px;
+      color: var(--color-brand-muted);
+      font-family: ui-monospace, SFMono-Regular, monospace;
+    }}
+    #codemanifest-panel .titlebar .close {{
+      background: none;
+      border: none;
+      color: var(--color-brand-muted);
+      font-size: 16px;
+      cursor: pointer;
+      padding: 0 4px;
+      line-height: 1;
+    }}
+    #codemanifest-panel .titlebar .close:hover {{
+      color: var(--color-brand-text);
+    }}
+    #codemanifest-panel pre code {{
+      font-family: ui-monospace, SFMono-Regular, monospace;
+      font-size: 12px;
+      color: var(--color-brand-text);
+      white-space: pre-wrap;
+      padding: 16px;
+      display: block;
+    }}
+    .codemanifest-link {{
+      cursor: pointer;
+      color: var(--color-brand-muted);
+      font-size: 11px;
+      transition: color 0.15s;
+    }}
+    .codemanifest-link:hover {{
+      color: var(--color-brand-teal);
+    }}
   </style>
   <script>{cytoscape_js}</script>
   <script>{dagre_js}</script>
@@ -716,7 +774,52 @@ def index_page(graph_json_url: str) -> str:
         html += '<div class="section"><h2 data-icon="dependencies">Dependencies</h2><ul>' +
           deps.map(d => '<li>' + _esc(d) + '</li>').join('') + '</ul></div>';
       }}
+      html += '<div class="section"><span class="codemanifest-link" data-cell="'
+        + _esc(cell.name) + '">CODEMANIFEST</span></div>';
       document.getElementById("info").innerHTML = html;
+      const cmLink = document.querySelector('.codemanifest-link');
+      if (cmLink) {{
+        cmLink.addEventListener('click', function() {{
+          show_codemanifest(cell_name, graph);
+        }});
+      }}
+    }}
+
+    function show_codemanifest(cell_name, graph) {{
+      const cell = graph.cells.find(c => c.name === cell_name);
+      if (!cell) return;
+      fetch('/api/codemanifest?cell=' + encodeURIComponent(cell.name))
+        .then(function(response) {{
+          if (response.status === 404) return 'CODEMANIFEST not found';
+          if (response.ok) return response.text();
+          return 'Failed to load CODEMANIFEST';
+        }})
+        .then(function(content) {{
+          const existing = document.getElementById('codemanifest-panel');
+          if (existing) existing.remove();
+          const panel = document.createElement('div');
+          panel.id = 'codemanifest-panel';
+          panel.innerHTML = '<div class="titlebar"><span class="title">CODEMANIFEST</span>'
+            + '<button class="close">&times;</button></div>'
+            + '<pre><code>' + _esc(content) + '</code></pre>';
+          document.querySelector('main').appendChild(panel);
+          panel.querySelector('.close').addEventListener('click', function() {{
+            panel.remove();
+          }});
+        }})
+        .catch(function() {{
+          const existing = document.getElementById('codemanifest-panel');
+          if (existing) existing.remove();
+          const panel = document.createElement('div');
+          panel.id = 'codemanifest-panel';
+          panel.innerHTML = '<div class="titlebar"><span class="title">CODEMANIFEST</span>'
+            + '<button class="close">&times;</button></div>'
+            + '<pre><code>Failed to load CODEMANIFEST</code></pre>';
+          document.querySelector('main').appendChild(panel);
+          panel.querySelector('.close').addEventListener('click', function() {{
+            panel.remove();
+          }});
+        }});
     }}
   </script>
 </body>

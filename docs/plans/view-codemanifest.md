@@ -211,12 +211,12 @@
 
 **КРИТИЧЕСКИ: файлы `CODEMANIFEST` — определения контракта только для чтения. НЕ изменяйте их. Если реализация не соответствует контракту, исправляйте реализацию — никогда не исправляйте контракт.**
 
-- [ ] **ШАГ 0 (ОБЪЯВЛЕНИЕ)**: Объявить, что работа ведётся над Task 4 — обновление frontend для CODEMANIFEST viewer
-- [ ] **Контрактные тесты**: добавить тесты в `tests/frontend/test_index_page.py`
+- [x] **ШАГ 0 (ОБЪЯВЛЕНИЕ)**: Объявить, что работа ведётся над Task 4 — обновление frontend для CODEMANIFEST viewer
+- [x] **Контрактные тесты**: добавить тесты в `tests/frontend/test_index_page.py`
   - `test_index_page_contains_show_codemanifest_function` — проверить что HTML содержит `"function show_codemanifest"` и `"/api/codemanifest"`
   - `test_index_page_contains_codemanifest_panel_css` — проверить что HTML содержит `"#codemanifest-panel"` и стили для панели
   - Все контрактные тесты ожидаемо падают (функция и CSS ещё не добавлены)
-- [ ] **Код**: обновить `goga_tool_viewer/frontend/pages.py`:
+- [x] **Код**: обновить `goga_tool_viewer/frontend/pages.py`:
   - Добавить CSS для `#codemanifest-panel`: position absolute, top/bottom 8px, left от sidebar (276px + 8px gap), background #0f172a, border-radius 8px, box-shadow, z-index 8, overflow-y auto, max-width ~50%
   - Добавить CSS для `.titlebar` в панели: стиль как info-titlebar (#1e293b фон, моноширинный)
   - Добавить CSS для `#codemanifest-panel pre code`: font-family monospace, font-size 12px, color var(--color-brand-text), white-space pre-wrap, padding 16px
@@ -228,15 +228,15 @@
     4. Создание панели: удалить существующую `#codemanifest-panel`, создать div с titlebar (заголовок "CODEMANIFEST" + крестик ×) и body (`<pre><code>content</code></pre>`), append to main
     5. Привязка закрытия: крестик → remove panel
   - Обновить `show_cell_info`: после всех секций (Name, Description, Types, Consumers, Dependencies) добавить `<span class="codemanifest-link" data-cell="cell_name">CODEMANIFEST</span>` с addEventListener('click', () => show_codemanifest(cell_name, graph))
-- [ ] **Верификация интерфейсов**: запустить `python -m pytest tests/frontend/test_index_page.py -k "test_index_page_contains_show_codemanifest or test_index_page_contains_codemanifest_panel_css" -x` — контрактные тесты должны пройти
-- [ ] **Логические тесты** (добавить в `tests/frontend/test_index_page.py`):
+- [x] **Верификация интерфейсов**: запустить `python -m pytest tests/frontend/test_index_page.py -k "test_index_page_contains_show_codemanifest or test_index_page_contains_codemanifest_panel_css" -x` — контрактные тесты должны пройти
+- [x] **Логические тесты** (добавить в `tests/frontend/test_index_page.py`):
   - `test_index_page_contains_codemanifest_link_in_info_panel` — `"codemanifest-link"` in html, `"show_codemanifest"` in html (привязка обработчика)
   - `test_index_page_codemanifest_error_messages` — `"CODEMANIFEST not found"` in html, `"Failed to load CODEMANIFEST"` in html
   - `test_show_codemanifest_no_cache_per_click` — проверить что HTML содержит `show_codemanifest` (каждый клик инициирует новый fetch)
-- [ ] **Отладка**: запустить `python -m pytest tests/frontend/test_index_page.py -x` — исправлять код реализации, пока все тесты не пройдут
-- [ ] **Перепроверка контракта**: проверить что `index_page` генерирует HTML с функцией `show_codemanifest`, CSS для `#codemanifest-panel`, ссылкой «CODEMANIFEST» в info panel
-- [ ] **Линт**: запустить `python -m ruff check goga_tool_viewer/frontend/pages.py tests/frontend/test_index_page.py` — исправить форматирование
-- [ ] **ЗАВЕРШЕНИЕ**: отметить чекбоксы как выполненные
+- [x] **Отладка**: запустить `python -m pytest tests/frontend/test_index_page.py -x` — исправлять код реализации, пока все тесты не пройдут
+- [x] **Перепроверка контракта**: проверить что `index_page` генерирует HTML с функцией `show_codemanifest`, CSS для `#codemanifest-panel`, ссылкой «CODEMANIFEST» в info panel
+- [x] **Линт**: запустить `python -m ruff check goga_tool_viewer/frontend/pages.py tests/frontend/test_index_page.py` — исправить форматирование
+- [x] **ЗАВЕРШЕНИЕ**: отметить чекбоксы как выполненные
 
 ### Task 5: Интеграционные тесты для CODEMANIFEST viewer
 

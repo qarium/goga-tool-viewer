@@ -407,3 +407,35 @@ class TestIndexPageSidebar:
         html = index_page(graph_json_url="/api/graph")
         assert "::-webkit-scrollbar" in html
         assert "4px" in html
+
+
+class TestIndexPageCodemanifest:
+    """Contract tests for CODEMANIFEST viewer in frontend."""
+
+    def test_index_page_contains_show_codemanifest_function(self):
+        html = index_page(graph_json_url="/api/graph")
+        assert "function show_codemanifest" in html
+        assert "/api/codemanifest" in html
+
+    def test_index_page_contains_codemanifest_panel_css(self):
+        html = index_page(graph_json_url="/api/graph")
+        assert "#codemanifest-panel" in html
+        assert "codemanifest-panel pre code" in html
+
+
+class TestIndexPageCodemanifestLogical:
+    """Logical tests for CODEMANIFEST viewer features."""
+
+    def test_index_page_contains_codemanifest_link_in_info_panel(self):
+        html = index_page(graph_json_url="/api/graph")
+        assert "codemanifest-link" in html
+        assert "show_codemanifest" in html
+
+    def test_index_page_codemanifest_error_messages(self):
+        html = index_page(graph_json_url="/api/graph")
+        assert "CODEMANIFEST not found" in html
+        assert "Failed to load CODEMANIFEST" in html
+
+    def test_show_codemanifest_no_cache_per_click(self):
+        html = index_page(graph_json_url="/api/graph")
+        assert "show_codemanifest" in html
