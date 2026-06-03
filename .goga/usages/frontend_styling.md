@@ -142,7 +142,8 @@ Sidebar фиксированной ширины (260px) слева от граф
 - Right: 8px от правого края main; если info-wrapper видим — right устанавливается JS динамически
   с учётом позиции info-wrapper + 8px gap
 - z-index: 8 (выше cy, ниже info-wrapper)
-- Содержимое: titlebar (аналог info-titlebar) + <pre><code> с yaml-контентом
+- Содержимое: titlebar (аналог info-titlebar) + код с номерами строк слева
+- Номера строк: muted цвет, не выделяются при копировании, отделены от кода тонким border-разделителем
 - Overflow-y: auto — скроллинг при переполнении
 
 ### Подсветка YAML-синтаксиса

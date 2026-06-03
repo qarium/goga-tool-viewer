@@ -466,13 +466,29 @@ def index_page(graph_json_url: str) -> str:
     #codemanifest-panel .titlebar .close:hover {{
       color: var(--color-brand-text);
     }}
-    #codemanifest-panel pre code {{
+    #codemanifest-panel pre {{
+      margin: 0;
+      display: flex;
+    }}
+    #codemanifest-panel .line-numbers {{
+      font-family: ui-monospace, SFMono-Regular, monospace;
+      font-size: 12px;
+      color: var(--color-brand-muted);
+      text-align: right;
+      padding: 16px 12px 16px 16px;
+      user-select: none;
+      flex-shrink: 0;
+      border-right: 1px solid rgba(255, 255, 255, 0.05);
+      line-height: 1.5;
+    }}
+    #codemanifest-panel .code-content {{
       font-family: ui-monospace, SFMono-Regular, monospace;
       font-size: 12px;
       color: var(--color-brand-text);
       white-space: pre-wrap;
       padding: 16px;
-      display: block;
+      flex: 1;
+      line-height: 1.5;
     }}
     .yaml-key {{ color: #20d4bf; }}
     .yaml-comment {{ color: #64748b; }}
@@ -849,7 +865,8 @@ def index_page(graph_json_url: str) -> str:
           continue;
         }}
         if (commentIdx > 0) {{
-          lines[i] = line.substring(0, commentIdx) + '<span class="yaml-comment">' + line.substring(commentIdx) + '</span>';
+          var before = line.substring(0, commentIdx);
+          lines[i] = before + '<span class="yaml-comment">' + line.substring(commentIdx) + '</span>';
           continue;
         }}
       }}
@@ -859,11 +876,20 @@ def index_page(graph_json_url: str) -> str:
     function _show_cm_panel(rawContent) {{
       var existing = document.getElementById('codemanifest-panel');
       if (existing) existing.remove();
+      var highlighted = _highlight_yaml(rawContent);
+      var lines = highlighted.split('\\n');
+      var numsHtml = '';
+      var codeHtml = '';
+      for (var i = 0; i < lines.length; i++) {{
+        numsHtml += (i + 1) + '\\n';
+        codeHtml += lines[i] + '\\n';
+      }}
       var panel = document.createElement('div');
       panel.id = 'codemanifest-panel';
       panel.innerHTML = '<div class="titlebar"><span class="title">CODEMANIFEST</span>'
         + '<button class="close">&times;</button></div>'
-        + '<pre><code>' + _highlight_yaml(rawContent) + '</code></pre>';
+        + '<pre><div class="line-numbers">' + numsHtml + '</div>'
+        + '<code class="code-content">' + codeHtml + '</code></pre>';
       document.querySelector('main').appendChild(panel);
       var infoWrapper = document.getElementById('info-wrapper');
       if (!infoWrapper.classList.contains('hidden')) {{

@@ -420,7 +420,7 @@ class TestIndexPageCodemanifest:
     def test_index_page_contains_codemanifest_panel_css(self):
         html = index_page(graph_json_url="/api/graph")
         assert "#codemanifest-panel" in html
-        assert "codemanifest-panel pre code" in html
+        assert ".code-content" in html
 
 
 class TestIndexPageCodemanifestLogical:
@@ -616,3 +616,41 @@ class TestYamlHighlightingInlineCode:
         html = index_page(graph_json_url="/api/graph")
         assert "yaml-code" in html
         assert "`$1`" in html
+
+
+class TestLineNumbers:
+    """Tests for line numbers in CODEMANIFEST panel."""
+
+    def test_line_numbers_css_class(self):
+        html = index_page(graph_json_url="/api/graph")
+        assert ".line-numbers" in html
+
+    def test_code_content_css_class(self):
+        html = index_page(graph_json_url="/api/graph")
+        assert ".code-content" in html
+
+    def test_line_numbers_muted_color(self):
+        html = index_page(graph_json_url="/api/graph")
+        ln_start = html.index(".line-numbers")
+        ln_end = html.index("}", ln_start) + 1
+        ln_css = html[ln_start:ln_end]
+        assert "var(--color-brand-muted)" in ln_css
+
+    def test_line_numbers_user_select_none(self):
+        html = index_page(graph_json_url="/api/graph")
+        ln_start = html.index(".line-numbers")
+        ln_end = html.index("}", ln_start) + 1
+        ln_css = html[ln_start:ln_end]
+        assert "user-select: none" in ln_css
+
+    def test_line_numbers_border_right(self):
+        html = index_page(graph_json_url="/api/graph")
+        ln_start = html.index(".line-numbers")
+        ln_end = html.index("}", ln_start) + 1
+        ln_css = html[ln_start:ln_end]
+        assert "border-right" in ln_css
+
+    def test_show_cm_panel_generates_line_numbers(self):
+        html = index_page(graph_json_url="/api/graph")
+        assert 'class="line-numbers"' in html
+        assert 'class="code-content"' in html
