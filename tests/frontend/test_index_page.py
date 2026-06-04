@@ -336,10 +336,16 @@ class TestIndexPageSidebar:
         html = index_page(graph_json_url="/api/graph")
         assert ">Cells<" in html
 
-    def test_sidebar_show_all_button(self):
+    def test_sidebar_reset_button(self):
         html = index_page(graph_json_url="/api/graph")
         assert "tree-show-all" in html
-        assert "Show all" in html
+        assert "Reset" in html
+
+    def test_sidebar_reset_button_has_icon(self):
+        html = index_page(graph_json_url="/api/graph")
+        assert "tree-show-all" in html
+        assert "Reset" in html
+        assert "link-icon" in html
 
     def test_sidebar_css_width(self):
         html = index_page(graph_json_url="/api/graph")
@@ -435,6 +441,11 @@ class TestIndexPageCodemanifestLogical:
         html = index_page(graph_json_url="/api/graph")
         assert "CODEMANIFEST not found" in html
         assert "Failed to load CODEMANIFEST" in html
+
+    def test_codemanifest_link_has_code_icon(self):
+        html = index_page(graph_json_url="/api/graph")
+        assert "codeIcon" in html
+        assert html.count("data:image/svg+xml,") >= 1
 
 
 

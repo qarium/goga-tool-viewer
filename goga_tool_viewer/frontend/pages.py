@@ -33,6 +33,8 @@ _ICON_CONSUMERS = _svg_data_uri("icon-consumers.svg")
 _ICON_DEPENDENCIES = _svg_data_uri("icon-dependencies.svg")
 _ICON_FOLDER = _svg_data_uri("icon-folder.svg")
 _ICON_LAYERS = _svg_data_uri("icon-layers.svg")
+_ICON_CODE = _svg_data_uri("icon-code.svg")
+_ICON_RESET = _svg_data_uri("icon-reset.svg")
 
 
 def index_page(graph_json_url: str) -> str:
@@ -266,6 +268,9 @@ def index_page(graph_json_url: str) -> str:
       color: var(--color-brand-muted);
       cursor: pointer;
       transition: color 0.15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
     }}
     .tree-show-all:hover {{
       color: var(--color-brand-teal);
@@ -561,9 +566,16 @@ def index_page(graph_json_url: str) -> str:
       color: var(--color-brand-muted);
       font-size: 11px;
       transition: color 0.15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
     }}
     .codemanifest-link:hover {{
       color: var(--color-brand-teal);
+    }}
+    .link-icon {{
+      width: 12px;
+      height: 12px;
     }}
   </style>
   <script>{cytoscape_js}</script>
@@ -590,7 +602,8 @@ def index_page(graph_json_url: str) -> str:
     <div id="sidebar">
       <div id="sidebar-title">Cells</div>
       <div id="sidebar-tree"></div>
-      <div id="sidebar-footer"><span class="tree-show-all">Show all</span></div>
+      <div id="sidebar-footer"><span class="tree-show-all"><img
+        class="link-icon" src="{_ICON_RESET}" alt="">Reset</span></div>
     </div>
     <div id="cy"></div>
     <div id="info-wrapper" class="hidden">
@@ -727,14 +740,22 @@ def index_page(graph_json_url: str) -> str:
       node.connectedEdges().connectedNodes().removeClass('dimmed');
     }}
 
-    function filter_cell(cell_name, cy) {{
-      const node = cy.getElementById(cell_name);
-      if (node.length === 0) return;
-      const connected = node.connectedEdges().connectedNodes();
-      const visibleIds = new Set();
-      visibleIds.add(cell_name);
-      connected.forEach(function(n) {{ visibleIds.add(n.id()); }});
+    const selectedCells = new Set();
+    const codeIcon = '{_ICON_CODE}';
+
+    function apply_filter(cy) {{
       cy.elements().removeClass('highlight highlighted dimmed').show();
+      if (selectedCells.size === 0) {{
+        cy.layout({{ name: 'dagre', spacingFactor: 1.5, rankDir: 'LR' }}).run();
+        return;
+      }}
+      const visibleIds = new Set();
+      selectedCells.forEach(function(cellName) {{
+        const node = cy.getElementById(cellName);
+        if (node.length === 0) return;
+        visibleIds.add(cellName);
+        node.connectedEdges().connectedNodes().forEach(function(n) {{ visibleIds.add(n.id()); }});
+      }});
       cy.nodes().forEach(function(n) {{
         if (!visibleIds.has(n.id())) n.hide();
       }});
@@ -743,12 +764,16 @@ def index_page(graph_json_url: str) -> str:
         const tgt = e.target().id();
         if (!visibleIds.has(src) || !visibleIds.has(tgt)) e.hide();
       }});
-      node.addClass('highlight');
-      node.connectedEdges().addClass('highlighted');
+      selectedCells.forEach(function(cellName) {{
+        const node = cy.getElementById(cellName);
+        node.addClass('highlight');
+        node.connectedEdges().addClass('highlighted');
+      }});
       cy.layout({{ name: 'dagre', spacingFactor: 1.5, rankDir: 'LR' }}).run();
     }}
 
     function reset_filter(cy) {{
+      selectedCells.clear();
       cy.elements().show();
       cy.elements().removeClass('highlight highlighted dimmed');
       document.querySelectorAll('.tree-node.active').forEach(function(n) {{ n.classList.remove('active'); }});
@@ -812,11 +837,14 @@ def index_page(graph_json_url: str) -> str:
         }}
         div.innerHTML = inner;
         div.addEventListener('click', function() {{
-          document.querySelectorAll('.tree-node.active').forEach(function(n) {{
-            n.classList.remove('active');
-          }});
-          div.classList.add('active');
-          filter_cell(cell.name, cy_instance);
+          if (selectedCells.has(cell.name)) {{
+            selectedCells.delete(cell.name);
+            div.classList.remove('active');
+          }} else {{
+            selectedCells.add(cell.name);
+            div.classList.add('active');
+          }}
+          apply_filter(cy_instance);
         }});
         container.appendChild(div);
         if (hasChildren) {{
@@ -868,7 +896,9 @@ def index_page(graph_json_url: str) -> str:
       }}
       document.getElementById("info").innerHTML = html;
       var infoFooter = document.getElementById("info-footer");
-      infoFooter.innerHTML = '<span class="codemanifest-link">CODEMANIFEST</span>';
+      infoFooter.innerHTML = '<span class="codemanifest-link">'
+        + '<img class="link-icon" src="' + codeIcon + '" alt="">'
+        + 'CODEMANIFEST</span>';
       infoFooter.querySelector('.codemanifest-link').addEventListener('click', function() {{
         show_codemanifest(cell_name, graph);
       }});

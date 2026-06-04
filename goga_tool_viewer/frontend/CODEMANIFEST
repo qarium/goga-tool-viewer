@@ -9,6 +9,10 @@ Usages:
       dependencies[{from_cell, to_cell, types[], usages[]}]}
     - graph.edges[] — массив объектов: {from_cell, to_cell, types[], usages[]}
 
+    Глобальное состояние:
+    - selectedCells (Set) — набор имён выделенных cells. Используется для
+      мультивыделения в sidebar. Toggle по клику: повторный клик снимает выделение.
+
     Функции:
     - render_graph(container_id, graph) — инициализирует Cytoscape.js в контейнере,
       создаёт узлы из graph.cells (name — label, description — tooltip),
@@ -17,20 +21,22 @@ Usages:
     - highlight_cell(cell_name, cy_instance) — подсвечивает cell и все её связи,
       остальные узлы затемняются. Используется при hover на node в графе.
       cy_instance — экземпляр Cytoscape.
-    - filter_cell(cell_name, cy_instance) — фильтрует граф: скрывает все nodes и edges,
-      не связанные с cell_name. Целевая cell и все связанные nodes остаются видимыми.
-      Применяет класс highlight к целевой cell, highlighted к её edges.
+    - apply_filter(cy_instance) — фильтрует граф по текущему набору выделенных cells
+      (selectedCells). Для каждой cell из набора собирает connected nodes и edges.
+      Показывает union всех связанных элементов, скрывает остальные.
+      Подсвечивает выделенные cells (класс highlight) и их edges (класс highlighted).
+      Если selectedCells пуст — показывает весь граф.
       Перерисовывает layout dagre после фильтрации.
-    - reset_filter(cy_instance) — сбрасывает фильтрацию: показывает все элементы,
-      снимает классы highlight/highlighted/dimmed, снимает active с узлов дерева,
-      перерисовывает layout dagre.
+    - reset_filter(cy_instance) — сбрасывает фильтрацию: очищает selectedCells,
+      показывает все элементы, снимает классы highlight/highlighted/dimmed,
+      снимает active с узлов дерева, перерисовывает layout dagre.
     - show_cell_info(cell_name, graph) — показывает панель с информацией о cell
       в формате markdown-рендеринга. Секции разделены .section div'ами с border-top.
       Каждый h2 имеет SVG-иконку через data-icon атрибут и ::before pseudo-element.
       Description отображается как blockquote (.description класс).
       Секции: Name, Description, Types, Consumers (если есть), Dependencies (если есть).
       Ссылка «CODEMANIFEST» (.codemanifest-link) рендерится в фиксированном footer
-      (#info-footer) внизу info-wrapper — аналогично «Show all» в #sidebar-footer.
+      (#info-footer) внизу info-wrapper — аналогично «Reset» в #sidebar-footer.
       Footer не скроллируется, всегда видима.
     - show_codemanifest(cell_name, graph) — открывает центральную панель с содержимым CODEMANIFEST.
       Определяет путь cell по имени из graph.cells.
@@ -56,9 +62,12 @@ Usages:
       иконку (folder для cells с children, layers для leaf), короткое имя cell
       (последний сегмент пути), бейдж с количеством зависимостей.
       Дерево визуализируется tree lines (::before/::after) с CSS переменной --depth.
-      Дерево полностью раскрыто. Клик по узлу дерева вызывает
-      filter_cell(cell_name, cy_instance) — фильтрует граф до выбранной cell и её связей.
-      Кнопка «показать все» вызывает reset_filter(cy_instance) — показывает весь граф.
+      Дерево полностью раскрыто. Клик по узлу дерева toggle'ит выделение:
+      повторный клик по выделенной cell снимает выделение, клик по невыделенной —
+      добавляет. Состояние выделения хранится в selectedCells Set.
+      После каждого клика вызывается apply_filter(cy_instance).
+      Кнопка «Reset» вызывает reset_filter(cy_instance) — сбрасывает выделение
+      и показывает весь граф.
 
 Annotations: |
   Использовать `conventions` для правил написания кода и тестов.
@@ -86,7 +95,7 @@ Annotations: |
     информационную панель как карточку справа,
     JS-скрипт для загрузки данных из `graph_json_url` и инициализации Cytoscape.
 
-    В info panel внизу — ссылка «CODEMANIFEST» (аналог «Show all» в sidebar).
+    В info panel внизу — ссылка «CODEMANIFEST» (аналог «Reset» в sidebar).
     При клике открывается центральная панель между sidebar и info panel.
     Центральная панель показывает содержимое CODEMANIFEST как yaml-код (<pre><code>).
     Содержимое загружается без кеширования — каждый клик инициирует новый запрос.
@@ -95,9 +104,9 @@ Annotations: |
 
     Sidebar содержит полностью раскрытое дерево вложенности cells.
     Дерево строится рекурсивно из children[] в graph.cells.
-    Клик по узлу дерева фильтрует граф — видны только выбранная cell и её связи.
-    Hover на node в графе подсвечивает cell и затемняет остальные.
-    Кнопка «показать все» сбрасывает фильтр — все узлы видимы.
+    Клик по узлу дерева toggle'ит выделение cell — повторный клик снимает выделение.
+    Видны все выделенные cells и их связи (union).
+    Кнопка «Reset» сбрасывает выделение — все узлы видимы.
     Активный узел дерева подсвечивается бордером слева teal.
 
     `graph_json_url`: URL API-эндпоинта для загрузки данных графа
