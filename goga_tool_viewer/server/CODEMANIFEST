@@ -53,9 +53,14 @@ Annotations: |
 
     Используй `stdlib_http` для реализации.
     Используй `index_page` для генерации SPA-страницы. См. `serving`.
+  properties:
+    "port -> int": |
+      Номер TCP-порта сервера.
   methods:
     "start() -> void:null": |
       Запускает HTTP-сервер. Блокирующий вызов.
+    "stop() -> void:null": |
+      Останавливает HTTP-сервер и закрывает сокет.
     "url() -> address:str": |
       Возвращает полный URL сервера.
     "get_codemanifest(cell_path: str) -> content:str": |

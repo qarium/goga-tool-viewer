@@ -15,6 +15,7 @@
 
 - `GET /` — SPA-страница (HTML)
 - `GET /api/graph` — данные графа (JSON, формат CellGraph)
+- `GET /api/codemanifest?cell=<path>` — содержимое CODEMANIFEST (text/plain, Cache-Control: no-store)
 
 ## Получение URL
 
