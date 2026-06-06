@@ -281,6 +281,14 @@ class TestStaticFiles:
         assert "--icon-layers" in js
         assert "--icon-code" in js
 
+    def test_app_js_yaml_regex_supports_arrow_keys(self):
+        js = (_STATIC / "app.js").read_text(encoding="utf-8")
+        assert "keyMatch" in js
+        assert "yaml-key" in js
+        idx = js.index("keyMatch")
+        snippet = js[idx:idx + 200]
+        assert "&" in snippet
+
     def test_style_css_uses_icon_custom_properties(self):
         css = (_STATIC / "style.css").read_text(encoding="utf-8")
         assert "var(--icon-name)" in css

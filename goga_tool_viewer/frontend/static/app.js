@@ -361,7 +361,7 @@
         lines[i] = '<span class="yaml-comment">' + line + '</span>';
         continue;
       }
-      var keyMatch = line.match(/^(\s*(?:-\s*)?)("[^"]*"|[\w][\w.-]*)(:)(.*)$/);
+      var keyMatch = line.match(/^(\s*(?:-\s*)?)("[^"]*"|[\w][\w.\s\-&;]*)(:)(.*)$/);
       if (keyMatch) {
         var indent = keyMatch[1];
         var key = keyMatch[2];
