@@ -36,8 +36,8 @@ class TestGraphServer:
             with urllib.request.urlopen(req, timeout=2) as resp:
                 html = resp.read().decode("utf-8")
                 assert "<!DOCTYPE html>" in html
-                assert "cytoscape" in html
-                assert "render_graph" in html
+                assert '<link rel="stylesheet" href="/static/style.css">' in html
+                assert '<script src="/static/app.js">' in html
                 assert resp.headers.get_content_type() == "text/html"
         finally:
             server.stop()
@@ -64,6 +64,122 @@ class TestGraphServer:
             with pytest.raises(urllib.error.HTTPError) as exc_info:
                 urllib.request.urlopen(urllib.request.Request(url + "/unknown"), timeout=2)
             assert exc_info.value.code == 404
+        finally:
+            server.stop()
+            thread.join(timeout=2)
+
+
+class TestStaticFilesRoute:
+    """Tests for /static/* route."""
+
+    def test_serves_css_file(self, running_server):
+        server, url, thread = running_server(CellGraph())
+        try:
+            req = urllib.request.Request(url + "/static/style.css")
+            with urllib.request.urlopen(req, timeout=2) as resp:
+                assert resp.status == 200
+                assert "text/css" in resp.headers.get_content_type()
+                body = resp.read().decode("utf-8")
+                assert ":root" in body
+                assert "--color-brand-bg" in body
+        finally:
+            server.stop()
+            thread.join(timeout=2)
+
+    def test_serves_js_file(self, running_server):
+        server, url, thread = running_server(CellGraph())
+        try:
+            req = urllib.request.Request(url + "/static/app.js")
+            with urllib.request.urlopen(req, timeout=2) as resp:
+                assert resp.status == 200
+                assert "javascript" in resp.headers.get_content_type()
+                body = resp.read().decode("utf-8")
+                assert "function render_graph" in body
+        finally:
+            server.stop()
+            thread.join(timeout=2)
+
+    def test_serves_cytoscape_js(self, running_server):
+        server, url, thread = running_server(CellGraph())
+        try:
+            req = urllib.request.Request(url + "/static/cytoscape.min.js")
+            with urllib.request.urlopen(req, timeout=2) as resp:
+                assert resp.status == 200
+                assert "javascript" in resp.headers.get_content_type()
+        finally:
+            server.stop()
+            thread.join(timeout=2)
+
+    def test_serves_png_image(self, running_server):
+        server, url, thread = running_server(CellGraph())
+        try:
+            req = urllib.request.Request(url + "/static/logo.png")
+            with urllib.request.urlopen(req, timeout=2) as resp:
+                assert resp.status == 200
+                assert "image/png" in resp.headers.get_content_type()
+        finally:
+            server.stop()
+            thread.join(timeout=2)
+
+    def test_serves_svg_image(self, running_server):
+        server, url, thread = running_server(CellGraph())
+        try:
+            req = urllib.request.Request(url + "/static/icon-telegram.svg")
+            with urllib.request.urlopen(req, timeout=2) as resp:
+                assert resp.status == 200
+                assert "image/svg+xml" in resp.headers.get_content_type()
+        finally:
+            server.stop()
+            thread.join(timeout=2)
+
+    def test_returns_404_for_missing_static_file(self, running_server):
+        server, url, thread = running_server(CellGraph())
+        try:
+            with pytest.raises(urllib.error.HTTPError) as exc_info:
+                urllib.request.urlopen(
+                    urllib.request.Request(url + "/static/nonexistent.css"),
+                    timeout=2,
+                )
+            assert exc_info.value.code == 404
+        finally:
+            server.stop()
+            thread.join(timeout=2)
+
+    def test_rejects_path_traversal(self, running_server):
+        server, url, thread = running_server(CellGraph())
+        try:
+            with pytest.raises(urllib.error.HTTPError) as exc_info:
+                urllib.request.urlopen(
+                    urllib.request.Request(url + "/static/../server.py"),
+                    timeout=2,
+                )
+            assert exc_info.value.code == 400
+        finally:
+            server.stop()
+            thread.join(timeout=2)
+
+    def test_rejects_double_dot_filename(self, running_server):
+        server, url, thread = running_server(CellGraph())
+        try:
+            with pytest.raises(urllib.error.HTTPError) as exc_info:
+                urllib.request.urlopen(
+                    urllib.request.Request(url + "/static/..%2fserver.py"),
+                    timeout=2,
+                )
+            assert exc_info.value.code in (400, 404)
+        finally:
+            server.stop()
+            thread.join(timeout=2)
+
+    def test_rejects_subdirectory_path(self, running_server):
+        server, url, thread = running_server(CellGraph())
+        try:
+            with pytest.raises(urllib.error.HTTPError) as exc_info:
+                urllib.request.urlopen(
+                    urllib.request.Request(url + "/static/sub/file.css"),
+                    timeout=2,
+                )
+            assert exc_info.value.code == 400
         finally:
             server.stop()
             thread.join(timeout=2)

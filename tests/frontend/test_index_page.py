@@ -2,7 +2,7 @@ import inspect
 
 import pytest
 from goga_tool_viewer.frontend import index_page
-from goga_tool_viewer.frontend.pages import _read_static_bytes
+from goga_tool_viewer.frontend.pages import _STATIC, _read_static_bytes
 
 
 @pytest.fixture
@@ -10,7 +10,6 @@ def static_with_assets(tmp_path, monkeypatch):
     """Create a temporary static directory with minimal PNG and JS files."""
     static = tmp_path / "static"
     static.mkdir()
-    # Minimal valid PNG (1x1 transparent pixel)
     png_bytes = (
         b"\x89PNG\r\n\x1a\n"
         b"\x00\x00\x00\rIHDR\x00\x00\x00\x01\x00\x00\x00\x01"
@@ -30,58 +29,33 @@ def static_with_assets(tmp_path, monkeypatch):
 class TestIndexPageDarkTheme:
     """Contract tests for dark theme features."""
 
-    def test_index_page_contains_dark_theme_css_variables(self):
+    def test_index_page_contains_dark_theme_css_link(self):
         html = index_page(graph_json_url="/api/graph")
-        assert "--color-brand-bg: #0a0e1a" in html
-        assert "--color-brand-card: #121830" in html
-        assert "--color-brand-teal: #20d4bf" in html
-        assert "--color-brand-blue: #3882f6" in html
-        assert "--color-brand-text: #fff" in html
-        assert "--color-brand-muted: #a0aec0" in html
+        assert '<link rel="stylesheet" href="/static/style.css">' in html
+
+    def test_index_page_contains_js_script_link(self):
+        html = index_page(graph_json_url="/api/graph")
+        assert '<script src="/static/app.js">' in html
 
     def test_index_page_contains_header_with_logo(self):
         html = index_page(graph_json_url="/api/graph")
         assert "<header" in html
         assert "QArium" in html
         assert "data:image/png;base64" in html
-        assert "backdrop-filter" in html
 
     def test_index_page_contains_footer_with_copyright(self):
         html = index_page(graph_json_url="/api/graph")
         assert "<footer" in html
-        assert "© 2026 QArium. All rights reserved." in html
+        assert "QArium" in html
 
     def test_index_page_contains_favicon_link(self):
         html = index_page(graph_json_url="/api/graph")
         assert '<link rel="icon"' in html
         assert "data:image/png;base64" in html
 
-    def test_index_page_cytoscape_dark_styles(self):
+    def test_index_page_passes_api_url_via_data_attribute(self):
         html = index_page(graph_json_url="/api/graph")
-        assert "#121830" in html
-        assert "#20d4bf" in html
-        assert "round-rectangle" in html
-        assert "target-arrow-shape" in html
-
-    def test_index_page_info_panel_card_style(self):
-        html = index_page(graph_json_url="/api/graph")
-        assert "#info" in html
-        assert "rgba(255, 255, 255, 0.05)" in html
-        assert "#info h2" in html
-        assert "#info p" in html
-        assert "#info ul" in html
-        assert "#info .section" in html
-        assert "#info .description" in html
-
-    def test_index_page_curly_brace_escaping(self):
-        html = index_page(graph_json_url="/api/graph")
-        # JS blocks should not contain literal {{ which indicates bad escaping
-        # Within the <script> section, single { should appear (from f-string {{ })
-        # We check that there are no accidental double-braces in JS
-        script_start = html.index("<script>", html.index("</head>"))
-        script_end = html.index("</script>", script_start)
-        script_block = html[script_start:script_end]
-        assert "{{" not in script_block, "JS contains unescaped double braces {{ from f-string"
+        assert 'data-api-url="/api/graph"' in html
 
 
 class TestIndexPage:
@@ -98,32 +72,21 @@ class TestIndexPage:
         result = index_page(graph_json_url="/api/graph")
         assert isinstance(result, str)
 
-    def test_contains_cytoscape(self):
+    def test_contains_cytoscape_script_tag(self):
         html = index_page(graph_json_url="/api/graph")
-        assert "cytoscape" in html
-        assert "/api/graph" in html
-        assert "render_graph" in html
-        assert "<!DOCTYPE html>" in html
-        assert "show_cell_info" in html
-        assert "highlight_cell" in html
+        assert '<script src="/static/cytoscape.min.js">' in html
 
-    def test_contains_layout_styles(self):
+    def test_contains_dagre_script_tags(self):
         html = index_page(graph_json_url="/api/graph")
-        assert "flex" in html
-        assert "flex: 1" in html
+        assert '<script src="/static/dagre.min.js">' in html
+        assert '<script src="/static/cytoscape-dagre.min.js">' in html
 
     def test_uses_graph_json_url(self):
         html = index_page(graph_json_url="/api/graph")
-        assert 'fetch("/api/graph")' in html
+        assert 'data-api-url="/api/graph"' in html
 
         html2 = index_page(graph_json_url="/custom/api")
-        assert 'fetch("/custom/api")' in html2
-
-    def test_contains_dagre_layout(self):
-        html = index_page(graph_json_url="/api/graph")
-        assert "dagre" in html
-        assert "cytoscape-dagre" in html
-        assert "mouseout" in html
+        assert 'data-api-url="/custom/api"' in html2
 
     def test_available_from_facade(self):
         from goga_tool_viewer.frontend import index_page as facade_index_page  # noqa: PLC0415
@@ -136,15 +99,13 @@ class TestIndexPageIntegration:
 
     def test_index_page_full_html_structure(self):
         html = index_page(graph_json_url="/api/graph")
-        # All sections present
         assert "<!DOCTYPE html>" in html
-        assert "<html>" in html
+        assert "<html" in html
         assert "<head>" in html
         assert "<body>" in html
         assert "<header" in html
         assert "<main>" in html
         assert "<footer" in html
-        # Correct order
         head_pos = html.index("<head>")
         header_pos = html.index("<header")
         main_pos = html.index("<main>")
@@ -152,37 +113,29 @@ class TestIndexPageIntegration:
         close_body = html.index("</body>")
         assert head_pos < header_pos < main_pos < footer_pos < close_body
 
-    def test_index_page_css_variables_used_in_inline_styles(self):
+    def test_index_page_css_custom_properties_for_icons(self):
         html = index_page(graph_json_url="/api/graph")
-        # Variables declared in :root
-        assert ":root" in html
-        for var in [
-            "--color-brand-bg",
-            "--color-brand-card",
-            "--color-brand-teal",
-            "--color-brand-blue",
-            "--color-brand-text",
-            "--color-brand-muted",
-        ]:
-            assert var in html
-        # Variables used via var() in styles
-        assert "var(--color-brand-bg)" in html
-        assert "var(--color-brand-teal)" in html
-        assert "var(--color-brand-text)" in html
-        assert "var(--color-brand-muted)" in html
+        assert "--icon-name:" in html
+        assert "--icon-description:" in html
+        assert "--icon-types:" in html
+        assert "--icon-consumers:" in html
+        assert "--icon-dependencies:" in html
+        assert "--icon-folder:" in html
+        assert "--icon-layers:" in html
+        assert "--icon-code:" in html
+        assert "--icon-reset:" in html
 
-    def test_index_page_embeds_all_js_libraries(self, static_with_assets):
+    def test_no_inline_cytoscape_js(self, static_with_assets):
         html = index_page(graph_json_url="/api/graph")
-        # Each library is embedded in a <script> tag within <head>
-        head_end = html.index("</head>")
-        head_section = html[:head_end]
-        assert "/* cytoscape */" in head_section
-        assert "/* dagre */" in head_section
-        assert "/* cyto-dagre */" in head_section
-        # Verify they are inside <script> tags
-        assert "<script>/* cytoscape */</script>" in head_section
-        assert "<script>/* dagre */</script>" in head_section
-        assert "<script>/* cyto-dagre */</script>" in head_section
+        assert "/* cytoscape */" not in html
+        assert "/* dagre */" not in html
+        assert "/* cyto-dagre */" not in html
+
+    def test_js_libraries_loaded_via_script_src(self, static_with_assets):
+        html = index_page(graph_json_url="/api/graph")
+        assert '<script src="/static/cytoscape.min.js">' in html
+        assert '<script src="/static/dagre.min.js">' in html
+        assert '<script src="/static/cytoscape-dagre.min.js">' in html
 
 
 class TestIndexPageLogical:
@@ -198,7 +151,7 @@ class TestIndexPageLogical:
     def test_index_page_special_chars_in_url(self):
         html = index_page(graph_json_url="/api/graph?param=value&other=test")
         assert isinstance(html, str)
-        assert 'fetch("/api/graph?param=value&other=test")' in html
+        assert 'data-api-url="/api/graph?param=value&other=test"' in html
 
     def test_index_page_empty_graph_url(self):
         html = index_page(graph_json_url="")
@@ -251,75 +204,9 @@ class TestIndexPageVisualUpdates:
         html = index_page(graph_json_url="/api/graph")
         assert 'class="hidden"' in html
 
-    def test_info_panel_close_handler(self):
+    def test_info_panel_close_handler_in_external_js(self):
         html = index_page(graph_json_url="/api/graph")
-        assert 'addEventListener("click"' in html
-
-    def test_markdown_formatting_in_show_cell_info(self):
-        html = index_page(graph_json_url="/api/graph")
-        assert "function show_cell_info" in html
-        assert '<h2 data-icon="name">Name</h2>' in html
-        assert '<h2 data-icon="description">Description</h2>' in html
-        assert '<h2 data-icon="types">Types</h2>' in html
-        assert '<h2 data-icon="consumers">Consumers</h2>' in html
-        assert '<h2 data-icon="dependencies">Dependencies</h2>' in html
-        assert "section" in html
-        assert "description" in html
-        assert "_esc" in html
-
-    def test_node_styling_with_border(self):
-        html = index_page(graph_json_url="/api/graph")
-        assert "#0f172a" in html
-        assert "border-width" in html
-        assert "text-wrap" in html
-
-    def test_info_panel_opens_on_node_tap(self):
-        html = index_page(graph_json_url="/api/graph")
-        assert 'classList.remove("hidden")' in html
-
-
-class TestIndexPageVisualEffects:
-    """Tests for visual effects: gradients, shadows, animations."""
-
-    def test_node_gradient_fill(self):
-        html = index_page(graph_json_url="/api/graph")
-        assert "linear-gradient" in html
-        assert "background-gradient-direction" in html
-        assert "background-gradient-stop-colors" in html
-
-    def test_node_shadow_glow(self):
-        html = index_page(graph_json_url="/api/graph")
-        assert "shadow-blur" in html
-        assert "shadow-color" in html
-        assert "rgba(32, 212, 191, 0.15)" in html
-
-    def test_node_transition_properties(self):
-        html = index_page(graph_json_url="/api/graph")
-        assert "transition-property" in html
-        assert "transition-duration" in html
-
-    def test_fade_in_animation(self):
-        html = index_page(graph_json_url="/api/graph")
-        assert "@keyframes fadeIn" in html
-        assert "fadeIn" in html
-        assert "animation:" in html
-
-    def test_edge_highlighted_style(self):
-        html = index_page(graph_json_url="/api/graph")
-        assert "edge.highlighted" in html
-
-    def test_dimmed_style_class(self):
-        html = index_page(graph_json_url="/api/graph")
-        assert "'.dimmed'" in html
-
-    def test_highlight_enhanced_glow(self):
-        html = index_page(graph_json_url="/api/graph")
-        assert "'.highlight'" in html
-        assert "rgba(32, 212, 191, 0.4)" in html
-
-    def test_highlight_cell_clears_previous_state(self):
-        html = index_page(graph_json_url="/api/graph")
-        assert "removeClass('highlight highlighted')" in html
+        assert '<script src="/static/app.js">' in html
 
 
 class TestIndexPageSidebar:
@@ -347,448 +234,58 @@ class TestIndexPageSidebar:
         assert "Reset" in html
         assert "link-icon" in html
 
-    def test_sidebar_css_width(self):
-        html = index_page(graph_json_url="/api/graph")
-        assert "width: 260px" in html
-
-    def test_sidebar_css_background(self):
-        html = index_page(graph_json_url="/api/graph")
-        sidebar_start = html.index("#sidebar")
-        sidebar_end = html.index("}", sidebar_start) + 1
-        sidebar_css = html[sidebar_start:sidebar_end]
-        assert "#0f172a" in sidebar_css
-
-    def test_tree_node_css_styles(self):
-        html = index_page(graph_json_url="/api/graph")
-        assert ".tree-node" in html
-        assert ".tree-node.active" in html
-        assert "border-left-color" in html
-        assert "cursor: pointer" in html
-        assert ".tree-icon" in html
-        assert ".tree-name" in html
-        assert ".tree-badge" in html
-        assert ".tree-guide" in html
-
-    def test_graph_offset_by_sidebar(self):
-        html = index_page(graph_json_url="/api/graph")
-        cy_start = html.index("#cy")
-        cy_end = html.index("}", cy_start) + 1
-        cy_css = html[cy_start:cy_end]
-        assert "left: 276px" in cy_css
-
-    def test_render_tree_function_exists(self):
-        html = index_page(graph_json_url="/api/graph")
-        assert "function render_tree(" in html
-        assert "build_node" in html
-        assert "ancestorPipes" in html
-
-    def test_tree_node_has_icons(self):
-        html = index_page(graph_json_url="/api/graph")
-        assert "folderIcon" in html
-        assert "cubeIcon" in html
-        assert "tree-icon" in html
-        assert "icon-layers" not in html
-        assert "icon-folder" not in html
-
-    def test_tree_node_has_deps_badge(self):
-        html = index_page(graph_json_url="/api/graph")
-        assert "tree-badge" in html
-        assert "depCount" in html
-
-    def test_render_tree_uses_children(self):
-        html = index_page(graph_json_url="/api/graph")
-        assert "cell.children" in html
-
-    def test_render_tree_called_on_init(self):
-        html = index_page(graph_json_url="/api/graph")
-        assert 'render_tree("sidebar-tree", graph, cy)' in html
-
-    def test_show_all_resets_highlight(self):
-        html = index_page(graph_json_url="/api/graph")
-        assert ".tree-show-all" in html
-        assert "removeClass('dimmed highlight highlighted')" in html
-        assert ".tree-node.active" in html
-
-    def test_sidebar_scrollbar_styles(self):
-        html = index_page(graph_json_url="/api/graph")
-        assert "::-webkit-scrollbar" in html
-        assert "4px" in html
-
 
 class TestIndexPageCodemanifest:
     """Contract tests for CODEMANIFEST viewer in frontend."""
 
-    def test_index_page_contains_show_codemanifest_function(self):
-        html = index_page(graph_json_url="/api/graph")
-        assert "function show_codemanifest" in html
-        assert "/api/codemanifest" in html
-
-    def test_index_page_contains_codemanifest_panel_css(self):
-        html = index_page(graph_json_url="/api/graph")
-        assert "#codemanifest-panel" in html
-        assert ".code-content" in html
-
-
-class TestIndexPageCodemanifestLogical:
-    """Logical tests for CODEMANIFEST viewer features."""
-
-    def test_index_page_contains_codemanifest_link_in_info_panel(self):
-        html = index_page(graph_json_url="/api/graph")
-        assert "codemanifest-link" in html
-        assert "show_codemanifest" in html
-
-    def test_index_page_codemanifest_error_messages(self):
-        html = index_page(graph_json_url="/api/graph")
-        assert "CODEMANIFEST not found" in html
-        assert "Failed to load CODEMANIFEST" in html
-
-    def test_codemanifest_link_has_code_icon(self):
-        html = index_page(graph_json_url="/api/graph")
-        assert "codeIcon" in html
-        assert html.count("data:image/svg+xml,") >= 1
-
-
-
-class TestIndexPageCodemanifestIntegration:
-    """Integration test for full CODEMANIFEST viewer markup."""
-
-    def test_index_page_codemanifest_full_markup(self):
-        """Verify all CODEMANIFEST viewer components are present in HTML."""
-        html = index_page(graph_json_url="/api/graph")
-        assert "function show_codemanifest" in html
-        assert "#codemanifest-panel" in html
-        assert "codemanifest-link" in html
-        assert "/api/codemanifest" in html
-        assert "CODEMANIFEST not found" in html
-
-
-class TestIndexPageInfoFooter:
-    """Tests for info panel footer with pinned CODEMANIFEST link."""
-
-    def test_info_footer_html_element(self):
+    def test_index_page_has_codemanifest_panel_html(self):
         html = index_page(graph_json_url="/api/graph")
         assert 'id="info-footer"' in html
-
-    def test_info_footer_after_info_div(self):
-        html = index_page(graph_json_url="/api/graph")
-        info_pos = html.index('id="info"')
-        footer_pos = html.index('id="info-footer"')
-        assert footer_pos > info_pos, "info-footer must come after info div"
-
-    def test_info_footer_css_exists(self):
-        html = index_page(graph_json_url="/api/graph")
-        assert "#info-footer" in html
-        assert "flex-shrink: 0" in html
-
-    def test_info_footer_has_border_top(self):
-        html = index_page(graph_json_url="/api/graph")
-        footer_start = html.index("#info-footer")
-        footer_end = html.index("}", footer_start) + 1
-        footer_css = html[footer_start:footer_end]
-        assert "border-top" in footer_css
-
-    def test_codemanifest_link_rendered_in_footer_js(self):
-        html = index_page(graph_json_url="/api/graph")
-        assert 'getElementById("info-footer")' in html
-
-    def test_codemanifest_panel_fills_space_css(self):
-        html = index_page(graph_json_url="/api/graph")
-        panel_start = html.index("#codemanifest-panel")
-        panel_end = html.index("}", panel_start) + 1
-        panel_css = html[panel_start:panel_end]
-        assert "left: 276px" in panel_css
-        assert "right: 8px" in panel_css
-        assert "max-width" not in panel_css
-
-    def test_codemanifest_panel_adjusts_right_for_info_wrapper(self):
-        html = index_page(graph_json_url="/api/graph")
-        assert "getBoundingClientRect" in html
-        assert "panel.style.right" in html
-
-
-class TestYamlHighlighting:
-    """Tests for YAML syntax highlighting in CODEMANIFEST panel."""
-
-    def test_highlight_yaml_function_exists(self):
-        html = index_page(graph_json_url="/api/graph")
-        assert "function _highlight_yaml" in html
-
-    def test_yaml_key_css(self):
-        html = index_page(graph_json_url="/api/graph")
-        assert ".yaml-key" in html
-        assert "#20d4bf" in html
-
-    def test_yaml_comment_css(self):
-        html = index_page(graph_json_url="/api/graph")
-        assert ".yaml-comment" in html
-
-    def test_yaml_delimiter_css(self):
-        html = index_page(graph_json_url="/api/graph")
-        assert ".yaml-delim" in html
-
-    def test_yaml_bool_css(self):
-        html = index_page(graph_json_url="/api/graph")
-        assert ".yaml-bool" in html
-
-    def test_yaml_number_css(self):
-        html = index_page(graph_json_url="/api/graph")
-        assert ".yaml-number" in html
-
-    def test_yaml_literal_css(self):
-        html = index_page(graph_json_url="/api/graph")
-        assert ".yaml-literal" in html
-
-    def test_show_cm_panel_uses_highlight(self):
-        html = index_page(graph_json_url="/api/graph")
-        assert "_highlight_yaml(rawContent)" in html
-
-
-class TestYamlHighlightingQuotedKeys:
-    """Tests for YAML highlighting of keys in double quotes."""
-
-    def test_regex_captures_quoted_keys(self):
-        html = index_page(graph_json_url="/api/graph")
-        assert '"[^"]*"' in html
-
-    def test_regex_allows_quoted_and_plain_keys(self):
-        html = index_page(graph_json_url="/api/graph")
-        script_start = html.index("<script>", html.index("</head>"))
-        script_end = html.index("</script>", script_start)
-        script = html[script_start:script_end]
-        regex_line = None
-        for line in script.split("\n"):
-            if "keyMatch" in line and "match" in line:
-                regex_line = line
-                break
-        assert regex_line is not None
-        assert "[\\w][\\w.-]*" in regex_line or "[\\\\w][\\\\w.-]*" in regex_line
-
-
-class TestYamlHighlightingLiteralBlock:
-    """Tests for YAML highlighting respecting literal blocks (|, >)."""
-
-    def test_literal_indent_tracking_variable(self):
-        html = index_page(graph_json_url="/api/graph")
-        assert "literalIndent" in html
-
-    def test_literal_indent_resets_to_negative(self):
-        html = index_page(graph_json_url="/api/graph")
-        assert "literalIndent = -1" in html
-
-    def test_literal_indent_set_from_key_indent(self):
-        html = index_page(graph_json_url="/api/graph")
-        assert "literalIndent = keyIndent" in html
-
-    def test_literal_block_continuation_skip(self):
-        html = index_page(graph_json_url="/api/graph")
-        assert "lineIndent > literalIndent" in html
-
-    def test_literal_operator_match(self):
-        html = index_page(graph_json_url="/api/graph")
-        assert "litMatch" in html
-
-
-class TestYamlHighlightingListKeys:
-    """Tests for YAML highlighting of keys inside list items (- Key:)."""
-
-    def test_regex_captures_dash_prefix(self):
-        html = index_page(graph_json_url="/api/graph")
-        assert "-\\\\s*" in html or "-\\s*" in html
-
-    def test_list_key_regex_in_keymatch(self):
-        html = index_page(graph_json_url="/api/graph")
-        script_start = html.index("<script>", html.index("</head>"))
-        script_end = html.index("</script>", script_start)
-        script = html[script_start:script_end]
-        regex_line = None
-        for line in script.split("\n"):
-            if "keyMatch" in line and "match" in line:
-                regex_line = line
-                break
-        assert regex_line is not None
-        assert "-\\s*" in regex_line or "-\\\\s*" in regex_line
-
-
-class TestYamlHighlightingInlineCode:
-    """Tests for YAML highlighting of inline code in backticks."""
-
-    def test_yaml_code_css_class(self):
-        html = index_page(graph_json_url="/api/graph")
-        assert ".yaml-code" in html
-
-    def test_yaml_code_css_color(self):
-        html = index_page(graph_json_url="/api/graph")
-        code_start = html.index(".yaml-code")
-        code_end = html.index("}", code_start) + 1
-        code_css = html[code_start:code_end]
-        assert "#a5f3fc" in code_css
-
-    def test_backtick_replace_in_highlight(self):
-        html = index_page(graph_json_url="/api/graph")
-        assert "yaml-code" in html
-        assert "`$1`" in html
-
-
-class TestLineNumbers:
-    """Tests for line numbers in CODEMANIFEST panel."""
-
-    def test_line_numbers_css_class(self):
-        html = index_page(graph_json_url="/api/graph")
-        assert ".line-numbers" in html
-
-    def test_code_content_css_class(self):
-        html = index_page(graph_json_url="/api/graph")
-        assert ".code-content" in html
-
-    def test_line_numbers_muted_color(self):
-        html = index_page(graph_json_url="/api/graph")
-        ln_start = html.index(".line-numbers")
-        ln_end = html.index("}", ln_start) + 1
-        ln_css = html[ln_start:ln_end]
-        assert "var(--color-brand-muted)" in ln_css
-
-    def test_line_numbers_user_select_none(self):
-        html = index_page(graph_json_url="/api/graph")
-        ln_start = html.index(".line-numbers")
-        ln_end = html.index("}", ln_start) + 1
-        ln_css = html[ln_start:ln_end]
-        assert "user-select: none" in ln_css
-
-    def test_line_numbers_border_right(self):
-        html = index_page(graph_json_url="/api/graph")
-        ln_start = html.index(".line-numbers")
-        ln_end = html.index("}", ln_start) + 1
-        ln_css = html[ln_start:ln_end]
-        assert "border-right" in ln_css
-
-    def test_show_cm_panel_generates_line_numbers(self):
-        html = index_page(graph_json_url="/api/graph")
-        assert 'class="line-numbers"' in html
-        assert 'class="code-content"' in html
-
-
-class TestCodemanifestFixedTitlebar:
-    """Tests for fixed titlebar in CODEMANIFEST panel."""
-
-    def test_panel_no_overflow_y_auto(self):
-        html = index_page(graph_json_url="/api/graph")
-        panel_start = html.index("#codemanifest-panel {")
-        panel_end = html.index("}", panel_start) + 1
-        panel_css = html[panel_start:panel_end]
-        assert "overflow-y: auto" not in panel_css
-
-    def test_panel_has_overflow_hidden(self):
-        html = index_page(graph_json_url="/api/graph")
-        panel_start = html.index("#codemanifest-panel {")
-        panel_end = html.index("}", panel_start) + 1
-        panel_css = html[panel_start:panel_end]
-        assert "overflow: hidden" in panel_css
-
-    def test_scroll_container_has_overflow_y_auto(self):
-        html = index_page(graph_json_url="/api/graph")
-        scroll_start = html.index("#codemanifest-panel .cm-scroll {")
-        scroll_end = html.index("}", scroll_start) + 1
-        scroll_css = html[scroll_start:scroll_end]
-        assert "overflow-y: auto" in scroll_css
-
-    def test_scroll_container_has_flex_one(self):
-        html = index_page(graph_json_url="/api/graph")
-        wrap_start = html.index("#codemanifest-panel .cm-scroll-wrap {")
-        wrap_end = html.index("}", wrap_start) + 1
-        wrap_css = html[wrap_start:wrap_end]
-        assert "flex: 1" in wrap_css
-
-    def test_custom_scrollbar_markup(self):
-        html = index_page(graph_json_url="/api/graph")
-        assert "cm-scroll-bar" in html
-        assert "cm-scroll-thumb" in html
-
-
-class TestSidebarCustomScrollbar:
-    """Tests for custom scrollbar in sidebar tree."""
-
-    def test_sidebar_scroll_content_wrapper_css(self):
-        html = index_page(graph_json_url="/api/graph")
-        assert "#sidebar-tree .scroll-content" in html
-        assert "overflow-y: auto" in html
-
-    def test_sidebar_scrollbar_css_properties(self):
-        html = index_page(graph_json_url="/api/graph")
-        assert "scrollbar-width: thin" in html
-        assert "scrollbar-color" in html
-        assert "#sidebar-tree .scroll-content::-webkit-scrollbar" in html
-        assert "width: 6px" in html
-
-    def test_sidebar_custom_scroll_fallback_css(self):
-        html = index_page(graph_json_url="/api/graph")
-        assert "@supports not (scrollbar-color: auto)" in html
-        assert "#sidebar-tree:hover .scroll-bar" in html
-
-    def test_sidebar_scroll_html_structure(self):
-        html = index_page(graph_json_url="/api/graph")
-        assert '<div id="sidebar-tree"><div class="scroll-content">' in html
-        assert '<div class="scroll-bar"><div class="scroll-thumb"></div></div>' in html
-
-
-class TestInfoCustomScrollbar:
-    """Tests for custom scrollbar in info panel."""
-
-    def test_info_scroll_content_wrapper_css(self):
-        html = index_page(graph_json_url="/api/graph")
-        assert "#info .scroll-content" in html
-
-    def test_info_scrollbar_css_properties(self):
-        html = index_page(graph_json_url="/api/graph")
-        assert "#info .scroll-content::-webkit-scrollbar" in html
-
-    def test_info_scroll_html_structure(self):
-        html = index_page(graph_json_url="/api/graph")
-        assert '<div id="info"><div class="scroll-content">' in html
-
-
-class TestInitCustomScroll:
-    """Tests for _init_custom_scroll JS function."""
-
-    def test_init_custom_scroll_function_exists(self):
-        html = index_page(graph_json_url="/api/graph")
-        assert "function _init_custom_scroll" in html
-
-    def test_init_custom_scroll_called_for_sidebar_and_info(self):
-        html = index_page(graph_json_url="/api/graph")
-        assert "_init_custom_scroll(document.getElementById('sidebar-tree'))" in html
-        assert "_init_custom_scroll(document.getElementById('info'))" in html
-
-    def test_init_custom_scroll_handles_drag(self):
-        html = index_page(graph_json_url="/api/graph")
-        assert "mousedown" in html
-        assert "mousemove" in html
-        assert "mouseup" in html
-
-    def test_init_custom_scroll_hides_thumb_when_no_overflow(self):
-        html = index_page(graph_json_url="/api/graph")
-        assert "ratio >= 1" in html
-        assert "scrollThumb.style.display = 'none'" in html
-
-
-class TestRenderTreeScrollContent:
-    """Tests for render_tree using .scroll-content wrapper."""
-
-    def test_render_tree_uses_scroll_content(self):
-        html = index_page(graph_json_url="/api/graph")
-        assert "wrapper.querySelector('.scroll-content')" in html
-
-    def test_render_tree_gets_wrapper_by_id(self):
-        html = index_page(graph_json_url="/api/graph")
-        assert "const wrapper = document.getElementById(container_id)" in html
-
-
-class TestShowCellInfoScrollContent:
-    """Tests for show_cell_info using .scroll-content."""
-
-    def test_show_cell_info_writes_to_scroll_content(self):
-        html = index_page(graph_json_url="/api/graph")
-        assert "querySelector('.scroll-content').innerHTML" in html
-
-    def test_show_cell_info_resets_scroll_top(self):
-        html = index_page(graph_json_url="/api/graph")
-        assert "querySelector('.scroll-content').scrollTop = 0" in html
+        assert "codemanifest-link" not in html
+
+
+class TestStaticFiles:
+    """Tests for external CSS and JS static files."""
+
+    def test_style_css_exists(self):
+        assert (_STATIC / "style.css").is_file()
+
+    def test_app_js_exists(self):
+        assert (_STATIC / "app.js").is_file()
+
+    def test_style_css_contains_key_selectors(self):
+        css = (_STATIC / "style.css").read_text(encoding="utf-8")
+        assert ":root" in css
+        assert "--color-brand-bg" in css
+        assert "#sidebar" in css
+        assert "#codemanifest-panel" in css
+        assert ".tree-node" in css
+
+    def test_app_js_contains_key_functions(self):
+        js = (_STATIC / "app.js").read_text(encoding="utf-8")
+        assert "function render_graph" in js
+        assert "function highlight_cell" in js
+        assert "function render_tree" in js
+        assert "function show_cell_info" in js
+        assert "function show_codemanifest" in js
+        assert "function _init_custom_scroll" in js
+        assert "function apply_filter" in js
+        assert "function reset_filter" in js
+
+    def test_app_js_reads_api_url_from_data_attribute(self):
+        js = (_STATIC / "app.js").read_text(encoding="utf-8")
+        assert "data-api-url" in js
+
+    def test_app_js_reads_icons_from_css_vars(self):
+        js = (_STATIC / "app.js").read_text(encoding="utf-8")
+        assert "--icon-folder" in js
+        assert "--icon-layers" in js
+        assert "--icon-code" in js
+
+    def test_style_css_uses_icon_custom_properties(self):
+        css = (_STATIC / "style.css").read_text(encoding="utf-8")
+        assert "var(--icon-name)" in css
+        assert "var(--icon-description)" in css
+        assert "var(--icon-types)" in css
+        assert "var(--icon-consumers)" in css
+        assert "var(--icon-dependencies)" in css

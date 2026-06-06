@@ -14,6 +14,7 @@
 ## API Endpoints
 
 - `GET /` — SPA-страница (HTML)
+- `GET /static/<filename>` — статические файлы (CSS, JS, изображения)
 - `GET /api/graph` — данные графа (JSON, формат CellGraph)
 - `GET /api/codemanifest?cell=<path>` — содержимое CODEMANIFEST (text/plain, Cache-Control: no-store)
 

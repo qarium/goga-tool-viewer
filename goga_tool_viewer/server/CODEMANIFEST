@@ -27,12 +27,14 @@ Usages:
   stdlib_http: |
     Использовать http.server из стандартной библиотеки Python.
     Custom handler наследуется от http.server.BaseHTTPRequestHandler.
-    MIME-типы: text/html для HTML, application/json для JSON.
+    MIME-типы: text/html для HTML, application/json для JSON,
+    text/css для CSS, application/javascript для JS,
+    image/png для PNG, image/svg+xml для SVG.
 
 Annotations: |
   Использовать `conventions` для правил написания кода и тестов.
 
-  HTTP-сервер для обслуживания SPA и API графа.
+  HTTP-сервер для обслуживания SPA, статических файлов и API графа.
 
   Используй `stdlib_http` для реализации сервера.
   Используй `load_json_file` и `load_json_stdin` для загрузки JSON-данных. См. `loading`.
@@ -41,15 +43,17 @@ Annotations: |
 
 ---
 
-"GraphServer(graph: CellGraph, port: int)":
+"GraphServer(graph: CellGraph, port: int, static_dir: Path | None = None)":
   location: server.py
   annotations: |
     HTTP-сервер, обслуживающий SPA и API.
-    Роуты: / — SPA-страница, /api/graph — JSON с данными графа,
+    Роуты: / — SPA-страница, /static/* — статические файлы (CSS, JS, изображения),
+    /api/graph — JSON с данными графа,
     /api/codemanifest?cell=<path> — содержимое CODEMANIFEST.
 
     `graph`: граф проекта для отдачи через API
     `port`: номер порта для запуска
+    `static_dir`: директория со статическими файлами. По умолчанию — frontend/static
 
     Используй `stdlib_http` для реализации.
     Используй `index_page` для генерации SPA-страницы. См. `serving`.
@@ -89,4 +93,4 @@ Annotations: |
 Author: Goga
 CreatedAt: 09/05/26
 Description: |
-  HTTP-сервер для обслуживания SPA и API данных графа cells.
+  HTTP-сервер для обслуживания SPA, статических файлов и API данных графа cells.

@@ -108,7 +108,7 @@ class TestFullCycle:
                 assert "<!DOCTYPE html>" in html
                 assert "cytoscape" in html
                 assert "/api/graph" in html
-                assert "render_graph" in html
+                assert '<script src="/static/app.js">' in html
 
             with urlopen(url + "/api/graph", timeout=2) as resp:
                 data = json.loads(resp.read().decode("utf-8"))

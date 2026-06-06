@@ -4,12 +4,17 @@
 
 ## Структура SPA
 
-SPA состоит из одного HTML-файла с встроенными CSS и JS.
-Без сборки — JS-библиотеки встроены inline из static/.
+SPA состоит из HTML-файла со ссылками на внешние CSS и JS файлы.
+Без сборки — статические файлы раздаются сервером из frontend/static/.
 
 Статические ассеты в static/:
+- style.css — все CSS-стили SPA
+- app.js — JS-логика SPA
 - logo.png, favicon.png — брендированные ресурсы. Референс: qarium.ru/goga. Скачать с сайта: логотип из хедера, favicon из вкладки браузера.
 - icon-telegram.svg, icon-github.svg, icon-email.svg — иконки контактов. Inline SVG, соответствующие иконкам из qarium.ru/goga.
+- icon-name.svg, icon-description.svg, icon-types.svg, icon-consumers.svg, icon-dependencies.svg — иконки секций info panel. Передаются через CSS custom properties (--icon-*).
+- icon-folder.svg, icon-layers.svg — иконки узлов дерева. Передаются через CSS custom properties.
+- icon-code.svg, icon-reset.svg — иконки действий. Передаются через CSS custom properties.
 - cytoscape.min.js — скачать с https://js.cytoscape.org/ (раздел Download)
 - dagre.min.js — скачать с https://github.com/dagrejs/dagre (npm: dagre)
 - cytoscape-dagre.min.js — скачать с https://github.com/cytoscape/cytoscape.js-dagre (npm: cytoscape-dagre)
@@ -60,7 +65,7 @@ SPA состоит из одного HTML-файла с встроенными C
 ## Граф (Cytoscape)
 
 Cytoscape.js — библиотека визуализации графов.
-Встроена inline в HTML из static/cytoscape.min.js. Подключить через <script> тег.
+Подключается через <script src="/static/cytoscape.min.js">. Сервер раздаёт файл из frontend/static/.
 Использовать layout dagre для иерархического отображения.
 
 Стили узлов:
@@ -103,7 +108,7 @@ Sidebar фиксированной ширины (260px) слева от граф
 Дерево вложенности (контейнер #sidebar-tree):
 - Flex: 1 (занимает всё доступное пространство)
 - Overflow-y: auto — скроллируется при переполнении
-- Scrollbar: тонкий (4px), цвет rgba(255, 255, 255, 0.1), border-radius 2px
+- Scrollbar: тонкий (6px), цвет rgba(255, 255, 255, 0.25), border-radius 3px
 - Полностью раскрыто — все узлы видны
 
 Узлы дерева (.tree-node):

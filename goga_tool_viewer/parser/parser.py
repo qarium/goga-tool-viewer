@@ -54,6 +54,7 @@ def _parse_cell(item: dict) -> tuple[CellData, list[CellData], list[DependencyIn
         children=children,
         dependencies=deps,
     )
+
     return cell_data, all_descendants, all_edges
 
 
@@ -91,10 +92,12 @@ def load_json_file(path: str) -> CellGraph:
     """Load JSON from file path into CellGraph."""
     json_str = Path(path).read_text(encoding="utf-8")
     project_root = str(Path(path).resolve().parent)
+
     return parse_json(json_str, project_root=project_root)
 
 
 def load_json_stdin() -> CellGraph:
     """Load JSON from stdin into CellGraph."""
     json_str = sys.stdin.read()
+
     return parse_json(json_str, project_root=str(Path.cwd()))
