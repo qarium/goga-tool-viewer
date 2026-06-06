@@ -23,7 +23,7 @@ _SVG_EMAIL = _read_static("icon-email.svg")
 def _svg_data_uri(filename: str) -> str:
     svg = _read_static(filename).strip()
 
-    return f'data:image/svg+xml,{urlquote(svg, safe="")}'
+    return f"data:image/svg+xml,{urlquote(svg, safe='')}"
 
 
 _ICON_NAME = _svg_data_uri("icon-name.svg")

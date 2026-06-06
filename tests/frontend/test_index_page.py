@@ -59,7 +59,6 @@ class TestIndexPageDarkTheme:
 
 
 class TestIndexPage:
-
     def test_callable(self):
         assert callable(index_page)
 

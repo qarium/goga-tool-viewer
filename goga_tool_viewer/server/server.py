@@ -66,7 +66,7 @@ class _GraphHandler(BaseHTTPRequestHandler):
         self._send_text(200, data, "application/json; charset=utf-8")
 
     def _serve_static(self) -> None:
-        filename = self.path[len("/static/"):]
+        filename = self.path[len("/static/") :]
 
         if "/" in filename or ".." in filename:
             self._send_text(400, "Invalid static path", "text/plain; charset=utf-8")
