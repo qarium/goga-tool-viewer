@@ -52,7 +52,7 @@ def _make_handler(graph: CellGraph) -> type[BaseHTTPRequestHandler]:
                     self.wfile.write(b"Missing 'cell' parameter")
                 else:
                     try:
-                        content = load_codemanifest(cell_path)
+                        content = load_codemanifest(cell_path, project_root=graph.project_root)
                         self.send_response(200)
                         self.send_header(
                             "Content-Type", "text/plain; charset=utf-8"
@@ -130,7 +130,7 @@ class GraphServer:
             FileNotFoundError: If the CODEMANIFEST file does not exist.
             ValueError: If the cell path is invalid or attempts traversal.
         """
-        return load_codemanifest(cell_path)
+        return load_codemanifest(cell_path, project_root=self.graph.project_root)
 
     def start(self) -> None:
         """Start the HTTP server (blocking).

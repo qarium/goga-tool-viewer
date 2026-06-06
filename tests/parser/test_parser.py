@@ -38,7 +38,7 @@ class TestParseJson:
     def test_signature(self):
         sig = signature(parse_json)
         params = list(sig.parameters.keys())
-        assert params == ["json_str"]
+        assert params == ["json_str", "project_root"]
 
     def test_returns_cell_graph(self):
         result = parse_json("[]")
@@ -48,6 +48,14 @@ class TestParseJson:
         from goga_tool_viewer.parser import parse_json as facade_parse  # noqa: PLC0415
 
         assert facade_parse is parse_json
+
+    def test_project_root_default_empty(self):
+        graph = parse_json("[]")
+        assert graph.project_root == ""
+
+    def test_project_root_passed_through(self):
+        graph = parse_json("[]", project_root="/tmp/test_project")
+        assert graph.project_root == "/tmp/test_project"
 
     def test_happy_path(self):
         graph = parse_json(SAMPLE_JSON)
@@ -212,6 +220,12 @@ class TestLoadJsonFile:
 
         assert facade_load_file is load_json_file
 
+    def test_project_root_set_from_file_parent(self, tmp_path):
+        p = tmp_path / "data.json"
+        p.write_text(SAMPLE_JSON, encoding="utf-8")
+        graph = load_json_file(str(p))
+        assert graph.project_root == str(tmp_path.resolve())
+
 
 class TestLoadJsonStdin:
     def test_callable(self):
@@ -237,3 +251,9 @@ class TestLoadJsonStdin:
         from goga_tool_viewer.parser import load_json_stdin as facade_load_stdin  # noqa: PLC0415
 
         assert facade_load_stdin is load_json_stdin
+
+    def test_project_root_set_from_cwd(self, monkeypatch, tmp_path):
+        monkeypatch.setattr(sys, "stdin", io.StringIO(SAMPLE_JSON))
+        monkeypatch.chdir(tmp_path)
+        graph = load_json_stdin()
+        assert graph.project_root == str(tmp_path.resolve())

@@ -6,7 +6,7 @@ from pathlib import Path
 logger = logging.getLogger(__name__)
 
 
-def load_codemanifest(cell_path: str) -> str:
+def load_codemanifest(cell_path: str, project_root: str = "") -> str:
     """Load CODEMANIFEST file content for a given cell path.
 
     Safely reads the CODEMANIFEST file located at the given relative
@@ -16,6 +16,8 @@ def load_codemanifest(cell_path: str) -> str:
     Args:
         cell_path: Relative path to a cell directory
             (e.g. "goga_tool_viewer/parser").
+        project_root: Absolute path to the project root directory.
+            When empty, falls back to the current working directory.
 
     Returns:
         Text content of the CODEMANIFEST file as a string.
@@ -31,7 +33,7 @@ def load_codemanifest(cell_path: str) -> str:
     if cell_path.startswith("/"):
         raise ValueError("absolute path not allowed")
 
-    base = Path(__file__).resolve().parent.parent.parent
+    base = Path(project_root).resolve() if project_root else Path.cwd()
     target = (base / cell_path / "CODEMANIFEST").resolve()
 
     if not target.is_relative_to(base):

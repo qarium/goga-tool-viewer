@@ -4,8 +4,9 @@
 
 ## Использование
 
-Вызвать `load_codemanifest(cell_path)` — вернёт содержимое CODEMANIFEST как строку.
+Вызвать `load_codemanifest(cell_path, project_root="")` — вернёт содержимое CODEMANIFEST как строку.
 cell_path — относительный путь к cell (например "goga_tool_viewer/parser").
+project_root — абсолютный путь к корню проекта. Если пустой — используется текущая рабочая директория.
 
 ## Защита от path traversal
 

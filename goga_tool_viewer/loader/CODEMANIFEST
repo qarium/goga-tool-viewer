@@ -8,7 +8,7 @@ Annotations: |
 
 ---
 
-"load_codemanifest(cell_path: str) -> content:str":
+"load_codemanifest(cell_path: str, project_root: str = '') -> content:str":
   location: codemanifest.py
   annotations: |
     Читает файл CODEMANIFEST по пути cell.
@@ -19,6 +19,7 @@ Annotations: |
     Защита от path traversal: путь не должен содержать ".." и не должен начинаться с "/".
 
     `cell_path`: относительный путь к cell (например "goga_tool_viewer/parser")
+    `project_root`: абсолютный путь к корню проекта. Если пустой — используется текущая рабочая директория
     `content`: текстовое содержимое CODEMANIFEST
 
 ---

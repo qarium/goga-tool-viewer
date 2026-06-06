@@ -50,7 +50,9 @@ class CellGraph:
     Args:
         cells: Flat list of all cells in the graph.
         edges: Flat list of all dependency edges.
+        project_root: Absolute path to the project root directory.
     """
 
     cells: list[CellData] = field(default_factory=list)
     edges: list[DependencyInfo] = field(default_factory=list)
+    project_root: str = ""

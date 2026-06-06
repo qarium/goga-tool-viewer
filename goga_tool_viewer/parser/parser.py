@@ -71,7 +71,7 @@ def _collect_all(item: dict, cells: list[CellData], edges: list[DependencyInfo])
     edges.extend(cell_edges)
 
 
-def parse_json(json_str: str) -> CellGraph:
+def parse_json(json_str: str, project_root: str = "") -> CellGraph:
     """Parse JSON string into CellGraph."""
     data = json.loads(json_str)
 
@@ -84,16 +84,17 @@ def parse_json(json_str: str) -> CellGraph:
     for item in data:
         _collect_all(item, cells, edges)
 
-    return CellGraph(cells=cells, edges=edges)
+    return CellGraph(cells=cells, edges=edges, project_root=project_root)
 
 
 def load_json_file(path: str) -> CellGraph:
     """Load JSON from file path into CellGraph."""
     json_str = Path(path).read_text(encoding="utf-8")
-    return parse_json(json_str)
+    project_root = str(Path(path).resolve().parent)
+    return parse_json(json_str, project_root=project_root)
 
 
 def load_json_stdin() -> CellGraph:
     """Load JSON from stdin into CellGraph."""
     json_str = sys.stdin.read()
-    return parse_json(json_str)
+    return parse_json(json_str, project_root=str(Path.cwd()))

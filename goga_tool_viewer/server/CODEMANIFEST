@@ -66,6 +66,7 @@ Annotations: |
     "get_codemanifest(cell_path: str) -> content:str": |
       Возвращает содержимое CODEMANIFEST для указанного cell.
       Если cell или CODEMANIFEST не найден — возвращает 404.
+      Передаёт project_root из графа в load_codemanifest.
 
       `cell_path`: путь к cell из параметра запроса
       `content`: yaml-содержимое CODEMANIFEST

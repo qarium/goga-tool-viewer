@@ -17,13 +17,14 @@ Annotations: |
 
 ---
 
-"parse_json(json_str: str) -> graph:CellGraph":
+"parse_json(json_str: str, project_root: str = '') -> graph:CellGraph":
   location: parser.py
   annotations: |
     Парсит JSON-строку в CellGraph.
     JSON — массив корневых cells на верхнем уровне.
 
     `json_str`: содержимое JSON-файла как строка
+    `project_root`: абсолютный путь к корню проекта
     `graph`: полный граф проекта со всеми cells и зависимостями
 
     Используй `CellGraph` для правил преобразования JSON → модели. См. `reading`.
@@ -32,6 +33,7 @@ Annotations: |
   location: parser.py
   annotations: |
     Читает JSON-файл по пути и передаёт его содержимое в `parse_json`.
+    Определяет project_root как родительскую директорию файла.
 
     `path`: путь к JSON-файлу
     `graph`: полный граф проекта
@@ -44,6 +46,7 @@ Annotations: |
   annotations: |
     Читает JSON из stdin и передаёт его содержимое в `parse_json`.
     Используется при pipe: cat data.json | goga tool viewer.
+    Определяет project_root как текущую рабочую директорию.
 
     `graph`: полный граф проекта
 
