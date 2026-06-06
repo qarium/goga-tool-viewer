@@ -31,7 +31,8 @@ Usages:
       показывает все элементы, снимает классы highlight/highlighted/dimmed,
       снимает active с узлов дерева, перерисовывает layout dagre.
     - show_cell_info(cell_name, graph) — показывает панель с информацией о cell
-      в формате markdown-рендеринга. Секции разделены .section div'ами с border-top.
+      в формате markdown-рендеринга. При показе скролл сбрасывается в начало.
+      Секции разделены .section div'ами с border-top.
       Каждый h2 имеет SVG-иконку через data-icon атрибут и ::before pseudo-element.
       Description отображается как blockquote (.description класс).
       Секции: Name, Description, Types, Consumers (если есть), Dependencies (если есть).
@@ -57,7 +58,9 @@ Usages:
       При сетевой ошибке показывает сообщение об ошибке.
       Панель закрывается крестиком.
     - render_tree(container_id, graph, cy_instance) — строит дерево вложенности cells
-      в sidebar из graph.cells с учётом children[]. Корневые cells определяются как те,
+      в sidebar из graph.cells с учётом children[]. Дерево рендерится в скроллируемый
+      контейнер с кастомным скроллбаром.
+      Корневые cells определяются как те,
       чьё имя отсутствует в children других cells. Каждый узел показывает:
       иконку (folder для cells с children, layers для leaf), короткое имя cell
       (последний сегмент пути), бейдж с количеством зависимостей.
@@ -68,6 +71,10 @@ Usages:
       После каждого клика вызывается apply_filter(cy_instance).
       Кнопка «Reset» вызывает reset_filter(cy_instance) — сбрасывает выделение
       и показывает весь граф.
+    - _init_custom_scroll(wrapper) — инициализирует кастомный скроллбар для
+      скроллируемого контейнера. Thumb обновляется при скролле и поддерживает
+      drag для прокрутки перетаскиванием. Если контент не переполняется —
+      thumb скрывается. Вызывается для sidebar и info panel после инициализации графа.
 
 Annotations: |
   Использовать `conventions` для правил написания кода и тестов.
@@ -94,6 +101,10 @@ Annotations: |
     вложенности cells, стилизованный граф справа от sidebar,
     информационную панель как карточку справа,
     JS-скрипт для загрузки данных из `graph_json_url` и инициализации Cytoscape.
+
+    Sidebar и info panel должны иметь кастомный скроллбар: тонкий стилизованный thumb,
+    поддержка drag для прокрутки перетаскиванием, скрытие thumb при отсутствии переполнения.
+    Должен работать fallback для браузеров без нативной поддержки стилизации scrollbar.
 
     В info panel внизу — ссылка «CODEMANIFEST» (аналог «Reset» в sidebar).
     При клике открывается центральная панель между sidebar и info panel.

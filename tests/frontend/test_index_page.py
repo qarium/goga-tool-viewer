@@ -702,3 +702,93 @@ class TestCodemanifestFixedTitlebar:
         html = index_page(graph_json_url="/api/graph")
         assert "cm-scroll-bar" in html
         assert "cm-scroll-thumb" in html
+
+
+class TestSidebarCustomScrollbar:
+    """Tests for custom scrollbar in sidebar tree."""
+
+    def test_sidebar_scroll_content_wrapper_css(self):
+        html = index_page(graph_json_url="/api/graph")
+        assert "#sidebar-tree .scroll-content" in html
+        assert "overflow-y: auto" in html
+
+    def test_sidebar_scrollbar_css_properties(self):
+        html = index_page(graph_json_url="/api/graph")
+        assert "scrollbar-width: thin" in html
+        assert "scrollbar-color" in html
+        assert "#sidebar-tree .scroll-content::-webkit-scrollbar" in html
+        assert "width: 6px" in html
+
+    def test_sidebar_custom_scroll_fallback_css(self):
+        html = index_page(graph_json_url="/api/graph")
+        assert "@supports not (scrollbar-color: auto)" in html
+        assert "#sidebar-tree:hover .scroll-bar" in html
+
+    def test_sidebar_scroll_html_structure(self):
+        html = index_page(graph_json_url="/api/graph")
+        assert '<div id="sidebar-tree"><div class="scroll-content">' in html
+        assert '<div class="scroll-bar"><div class="scroll-thumb"></div></div>' in html
+
+
+class TestInfoCustomScrollbar:
+    """Tests for custom scrollbar in info panel."""
+
+    def test_info_scroll_content_wrapper_css(self):
+        html = index_page(graph_json_url="/api/graph")
+        assert "#info .scroll-content" in html
+
+    def test_info_scrollbar_css_properties(self):
+        html = index_page(graph_json_url="/api/graph")
+        assert "#info .scroll-content::-webkit-scrollbar" in html
+
+    def test_info_scroll_html_structure(self):
+        html = index_page(graph_json_url="/api/graph")
+        assert '<div id="info"><div class="scroll-content">' in html
+
+
+class TestInitCustomScroll:
+    """Tests for _init_custom_scroll JS function."""
+
+    def test_init_custom_scroll_function_exists(self):
+        html = index_page(graph_json_url="/api/graph")
+        assert "function _init_custom_scroll" in html
+
+    def test_init_custom_scroll_called_for_sidebar_and_info(self):
+        html = index_page(graph_json_url="/api/graph")
+        assert "_init_custom_scroll(document.getElementById('sidebar-tree'))" in html
+        assert "_init_custom_scroll(document.getElementById('info'))" in html
+
+    def test_init_custom_scroll_handles_drag(self):
+        html = index_page(graph_json_url="/api/graph")
+        assert "mousedown" in html
+        assert "mousemove" in html
+        assert "mouseup" in html
+
+    def test_init_custom_scroll_hides_thumb_when_no_overflow(self):
+        html = index_page(graph_json_url="/api/graph")
+        assert "ratio >= 1" in html
+        assert "scrollThumb.style.display = 'none'" in html
+
+
+class TestRenderTreeScrollContent:
+    """Tests for render_tree using .scroll-content wrapper."""
+
+    def test_render_tree_uses_scroll_content(self):
+        html = index_page(graph_json_url="/api/graph")
+        assert "wrapper.querySelector('.scroll-content')" in html
+
+    def test_render_tree_gets_wrapper_by_id(self):
+        html = index_page(graph_json_url="/api/graph")
+        assert "const wrapper = document.getElementById(container_id)" in html
+
+
+class TestShowCellInfoScrollContent:
+    """Tests for show_cell_info using .scroll-content."""
+
+    def test_show_cell_info_writes_to_scroll_content(self):
+        html = index_page(graph_json_url="/api/graph")
+        assert "querySelector('.scroll-content').innerHTML" in html
+
+    def test_show_cell_info_resets_scroll_top(self):
+        html = index_page(graph_json_url="/api/graph")
+        assert "querySelector('.scroll-content').scrollTop = 0" in html
