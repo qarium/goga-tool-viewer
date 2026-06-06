@@ -79,6 +79,18 @@ Usages:
       скроллируемого контейнера. Thumb обновляется при скролле и поддерживает
       drag для прокрутки перетаскиванием. Если контент не переполняется —
       thumb скрывается. Вызывается для sidebar и info panel после инициализации графа.
+    - _highlight_yaml(text) — дополнительно распознаёт .md пути в значениях секции Usages.
+      Значения вида "path/to/file.md" оборачиваются в <a class="usage-link" data-path="path">
+      для кликабельной навигации. Ссылки стилизованы синим цветом с подчёркиванием.
+    - _open_usage(mdPath) — загружает содержимое usage .md файла через
+      fetch('/api/usage?path=<path>') и вызывает _show_usage_modal.
+      При 404 показывает «File not found». При сетевой ошибке — сообщение об ошибке.
+    - _show_usage_modal(title, markdownContent) — создаёт модальное окно (#usage-overlay > #usage-modal)
+      с рендеренным Markdown. Использует библиотеку marked.js для парсинга Markdown в HTML.
+      Закрытие: клик на overlay, кнопка ×, клавиша Escape.
+      Titlebar показывает имя файла (последний сегмент пути).
+      Модальное окно центрировано, max-width 80%, max-height 80%.
+      Кастомный скроллбар аналогичен CODEMANIFEST panel.
 
 Annotations: |
   Использовать `conventions` для правил написания кода и тестов.

@@ -341,6 +341,7 @@
     var s = _esc(text);
     var lines = s.split('\n');
     var literalIndent = -1;
+    var inUsages = false;
     for (var i = 0; i < lines.length; i++) {
       var line = lines[i];
       var lineIndent = line.search(/\S/);
@@ -354,6 +355,7 @@
       var commentIdx = line.indexOf('#');
       var delimMatch = line.match(/^(---)(\s*)$/);
       if (delimMatch) {
+        inUsages = false;
         lines[i] = '<span class="yaml-delim">' + delimMatch[1] + '</span>' + delimMatch[2];
         continue;
       }
@@ -368,6 +370,11 @@
         var colon = keyMatch[3];
         var rest = keyMatch[4];
         var keyIndent = indent.length;
+        if (key === 'Usages' && keyIndent === 0) {
+          inUsages = true;
+        } else if (keyIndent === 0) {
+          inUsages = false;
+        }
         var highlighted = indent + '<span class="yaml-key">' + key + '</span>' + colon;
         if (rest) {
           var litMatch = rest.match(/^\s*(\||>)/);
@@ -375,11 +382,19 @@
             rest = '<span class="yaml-literal">' + rest.trim() + '</span>';
             literalIndent = keyIndent;
           } else {
-            rest = rest.replace(/\b(true|false|null)\b/g, '<span class="yaml-bool">$1</span>');
-            rest = rest.replace(/\b(\d+)\b/g, '<span class="yaml-number">$1</span>');
+            if (inUsages && rest.trim().match(/^[\w\/.\-]+\.md$/)) {
+              var mdPath = rest.trim();
+              var leadingSpace = rest.substring(0, rest.length - rest.trimStart().length);
+              rest = leadingSpace + '<a class="usage-link" data-path="' + mdPath + '">' + mdPath + '</a>';
+            } else {
+              rest = rest.replace(/\b(true|false|null)\b/g, '<span class="yaml-bool">$1</span>');
+              rest = rest.replace(/\b(\d+)\b/g, '<span class="yaml-number">$1</span>');
+            }
             if (rest.indexOf('#') !== -1) {
               var ci = rest.indexOf('#');
-              rest = rest.substring(0, ci) + '<span class="yaml-comment">' + rest.substring(ci) + '</span>';
+              if (!rest.substring(ci).match(/<\/span>/)) {
+                rest = rest.substring(0, ci) + '<span class="yaml-comment">' + rest.substring(ci) + '</span>';
+              }
             }
           }
         }
@@ -462,6 +477,95 @@
       var newTop = Math.max(0, Math.min(maxTop, startTop + delta));
       cmThumb.style.top = newTop + 'px';
       cmScroll.scrollTop = (newTop / maxTop) * (cmScroll.scrollHeight - cmScroll.clientHeight);
+    });
+    document.addEventListener('mouseup', function() {
+      dragging = false;
+    });
+    panel.querySelectorAll('.usage-link').forEach(function(link) {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        _open_usage(link.getAttribute('data-path'));
+      });
+    });
+  }
+
+  function _open_usage(mdPath) {
+    fetch('/api/usage?path=' + encodeURIComponent(mdPath), {cache: 'no-store'})
+      .then(function(response) {
+        if (response.status === 404) return 'File not found: ' + mdPath;
+        if (response.ok) return response.text();
+        return 'Failed to load usage file';
+      })
+      .then(function(content) {
+        _show_usage_modal(mdPath, content);
+      })
+      .catch(function() {
+        _show_usage_modal(mdPath, 'Failed to load usage file');
+      });
+  }
+
+  function _show_usage_modal(title, markdownContent) {
+    var existing = document.getElementById('usage-overlay');
+    if (existing) existing.remove();
+    var fileName = title.split('/').pop();
+    var htmlContent = marked.parse(markdownContent);
+    var overlay = document.createElement('div');
+    overlay.id = 'usage-overlay';
+    var modal = document.createElement('div');
+    modal.id = 'usage-modal';
+    modal.innerHTML = '<div class="titlebar"><span class="title">' + _esc(fileName) + '</span>'
+      + '<button class="close">&times;</button></div>'
+      + '<div class="usage-scroll-wrap"><div class="usage-scroll"><div class="usage-content">'
+      + htmlContent + '</div></div>'
+      + '<div class="usage-scroll-bar"><div class="usage-scroll-thumb"></div></div></div>';
+    overlay.appendChild(modal);
+    document.querySelector('main').appendChild(overlay);
+    function closeModal() {
+      document.removeEventListener('keydown', onEscape);
+      overlay.remove();
+    }
+    function onEscape(e) {
+      if (e.key === 'Escape') closeModal();
+    }
+    overlay.addEventListener('click', function(e) {
+      if (e.target === overlay) closeModal();
+    });
+    modal.querySelector('.close').addEventListener('click', closeModal);
+    document.addEventListener('keydown', onEscape);
+    var uScroll = modal.querySelector('.usage-scroll');
+    var uThumb = modal.querySelector('.usage-scroll-thumb');
+    function updateScrollbar() {
+      if (!uScroll || !uThumb) return;
+      var ratio = uScroll.clientHeight / uScroll.scrollHeight;
+      if (ratio >= 1) {
+        uThumb.style.display = 'none';
+        return;
+      }
+      uThumb.style.display = '';
+      var thumbH = Math.max(30, uScroll.clientHeight * ratio);
+      var scrollRatio = uScroll.scrollTop / (uScroll.scrollHeight - uScroll.clientHeight);
+      var thumbTop = scrollRatio * (uScroll.clientHeight - thumbH);
+      uThumb.style.height = thumbH + 'px';
+      uThumb.style.top = thumbTop + 'px';
+    }
+    uScroll.addEventListener('scroll', updateScrollbar);
+    updateScrollbar();
+    var dragging = false, startY = 0, startTop = 0;
+    uThumb.addEventListener('mousedown', function(e) {
+      dragging = true;
+      startY = e.clientY;
+      startTop = parseInt(uThumb.style.top) || 0;
+      e.preventDefault();
+    });
+    document.addEventListener('mousemove', function(e) {
+      if (!dragging) return;
+      var delta = e.clientY - startY;
+      var thumbH = parseInt(uThumb.style.height) || 30;
+      var maxTop = uScroll.clientHeight - thumbH;
+      var newTop = Math.max(0, Math.min(maxTop, startTop + delta));
+      uThumb.style.top = newTop + 'px';
+      uScroll.scrollTop = (newTop / maxTop) * (uScroll.scrollHeight - uScroll.clientHeight);
     });
     document.addEventListener('mouseup', function() {
       dragging = false;

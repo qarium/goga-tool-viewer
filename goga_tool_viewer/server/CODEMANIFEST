@@ -20,6 +20,7 @@ Imports:
     From: goga_tool_viewer/server/port_finder
   - Usages:
       - codemanifest
+      - usage_file
     From: goga_tool_viewer/loader
 
 Usages:
@@ -49,7 +50,8 @@ Annotations: |
     HTTP-сервер, обслуживающий SPA и API.
     Роуты: / — SPA-страница, /static/* — статические файлы (CSS, JS, изображения),
     /api/graph — JSON с данными графа,
-    /api/codemanifest?cell=<path> — содержимое CODEMANIFEST.
+    /api/codemanifest?cell=<path> — содержимое CODEMANIFEST,
+    /api/usage?path=<path> — содержимое usage .md файла.
 
     `graph`: граф проекта для отдачи через API
     `port`: номер порта для запуска
@@ -57,6 +59,8 @@ Annotations: |
 
     Используй `stdlib_http` для реализации.
     Используй `index_page` для генерации SPA-страницы. См. `serving`.
+    Используй `codemanifest` для загрузки CODEMANIFEST.
+    Используй `usage_file` для загрузки usage .md файлов.
   properties:
     "port -> int": |
       Номер TCP-порта сервера.

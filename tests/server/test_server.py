@@ -3,6 +3,7 @@ from __future__ import annotations
 import inspect
 import json
 import urllib.error
+import urllib.parse
 import urllib.request
 
 import pytest
@@ -306,3 +307,106 @@ class TestRunServer:
         assert len(params) == 1
         param = sig.parameters[params[0]]
         assert param.annotation in (str, "str | None", str | None, inspect.Parameter.empty)
+
+
+class TestUsageRoute:
+    """Contract and logical tests for /api/usage route."""
+
+    def test_server_usage_route_returns_content(self, running_server):
+        """GET /api/usage?path=<path> returns 200 text/plain with md content."""
+        server, url, thread = running_server(CellGraph())
+        try:
+            req = urllib.request.Request(url + "/api/usage?path=" + urllib.parse.quote(".goga/usages/conventions.md"))
+            with urllib.request.urlopen(req, timeout=2) as resp:
+                assert resp.status == 200
+                assert "text/plain" in resp.headers.get_content_type()
+                body = resp.read().decode("utf-8")
+                assert isinstance(body, str)
+                assert len(body) > 0
+        finally:
+            server.stop()
+            thread.join(timeout=2)
+
+    def test_server_usage_route_returns_400_without_path_param(self, running_server):
+        """GET /api/usage without path param returns 400."""
+        server, url, thread = running_server(CellGraph())
+        try:
+            with pytest.raises(urllib.error.HTTPError) as exc_info:
+                urllib.request.urlopen(
+                    urllib.request.Request(url + "/api/usage"),
+                    timeout=2,
+                )
+            assert exc_info.value.code == 400
+        finally:
+            server.stop()
+            thread.join(timeout=2)
+
+    def test_server_usage_route_returns_400_empty_path(self, running_server):
+        """GET /api/usage?path= returns 400."""
+        server, url, thread = running_server(CellGraph())
+        try:
+            with pytest.raises(urllib.error.HTTPError) as exc_info:
+                urllib.request.urlopen(
+                    urllib.request.Request(url + "/api/usage?path="),
+                    timeout=2,
+                )
+            assert exc_info.value.code == 400
+        finally:
+            server.stop()
+            thread.join(timeout=2)
+
+    def test_server_usage_route_returns_400_for_traversal(self, running_server):
+        """GET /api/usage?path=../../etc/passwd returns 400."""
+        server, url, thread = running_server(CellGraph())
+        try:
+            with pytest.raises(urllib.error.HTTPError) as exc_info:
+                urllib.request.urlopen(
+                    urllib.request.Request(url + "/api/usage?path=../../etc/passwd"),
+                    timeout=2,
+                )
+            assert exc_info.value.code == 400
+        finally:
+            server.stop()
+            thread.join(timeout=2)
+
+    def test_server_usage_route_returns_404_for_missing(self, running_server):
+        """GET /api/usage?path=nonexistent.md returns 404."""
+        server, url, thread = running_server(CellGraph())
+        try:
+            with pytest.raises(urllib.error.HTTPError) as exc_info:
+                urllib.request.urlopen(
+                    urllib.request.Request(url + "/api/usage?path=nonexistent.md"),
+                    timeout=2,
+                )
+            assert exc_info.value.code == 404
+        finally:
+            server.stop()
+            thread.join(timeout=2)
+
+    def test_server_usage_route_returns_400_for_non_md(self, running_server):
+        """GET /api/usage?path=file.txt returns 400."""
+        server, url, thread = running_server(CellGraph())
+        try:
+            with pytest.raises(urllib.error.HTTPError) as exc_info:
+                urllib.request.urlopen(
+                    urllib.request.Request(url + "/api/usage?path=file.txt"),
+                    timeout=2,
+                )
+            assert exc_info.value.code == 400
+        finally:
+            server.stop()
+            thread.join(timeout=2)
+
+    def test_server_usage_route_rejects_prefix_collision(self, running_server):
+        """GET /api/usage_evil returns 404, not matched."""
+        server, url, thread = running_server(CellGraph())
+        try:
+            with pytest.raises(urllib.error.HTTPError) as exc_info:
+                urllib.request.urlopen(
+                    urllib.request.Request(url + "/api/usage_evil"),
+                    timeout=2,
+                )
+            assert exc_info.value.code == 404
+        finally:
+            server.stop()
+            thread.join(timeout=2)

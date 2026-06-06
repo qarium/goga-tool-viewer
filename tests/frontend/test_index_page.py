@@ -286,7 +286,7 @@ class TestStaticFiles:
         assert "keyMatch" in js
         assert "yaml-key" in js
         idx = js.index("keyMatch")
-        snippet = js[idx:idx + 200]
+        snippet = js[idx : idx + 200]
         assert "&" in snippet
 
     def test_style_css_uses_icon_custom_properties(self):

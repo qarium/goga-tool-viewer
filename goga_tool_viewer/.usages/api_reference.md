@@ -26,3 +26,5 @@ main([])                     # из stdin
 
 - `GET /` — SPA-страница
 - `GET /api/graph` — JSON с данными графа
+- `GET /api/codemanifest?cell=<path>` — содержимое CODEMANIFEST (text/plain)
+- `GET /api/usage?path=<path>` — содержимое usage .md файла (text/plain)

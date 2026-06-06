@@ -166,3 +166,32 @@ YAML-контент подсвечивается синтаксически:
 
 Содержимое многострочных блоков (|, >) не подсвечивается —
 символ # внутри таких блоков считается текстом, а не комментарием.
+
+### Usage-ссылки в YAML
+
+Внутри секции Usages: значения, содержащие путь к .md файлу, отображаются как кликабельные ссылки:
+- Цвет: #3882f6 (var(--color-brand-blue))
+- Подчёркивание: text-decoration: underline
+- Hover: цвет #a5f3fc
+- Обёрнуты в <a class="usage-link" data-path="path">
+
+### Модальное окно Usage (#usage-overlay + #usage-modal)
+
+При клике на usage-ссылку открывается модальное окно:
+- Overlay (#usage-overlay): полупрозрачный тёмный фон rgba(0,0,0,0.6), z-index: 20
+- Модальное окно (#usage-modal): центрировано, max-width 80%, max-height 80%
+  - Фон: #0f172a, border-radius 8px, box-shadow, border teal
+  - Titlebar: аналогично CODEMANIFEST panel
+  - Скроллируемое содержимое с кастомным скроллбаром
+  - Закрытие: клик на overlay, кнопка ×, клавиша Escape
+
+Markdown-контент (.usage-content):
+- Моноширинный шрифт, font-size 13px, line-height 1.6
+- h1-h3: белый цвет, разные размеры
+- p: цвет #c8d0dc
+- code: cyan цвет, полупрозрачный фон
+- pre: тёмный фон #0a0e1a, border-radius 6px
+- a: синий #3882f6, hover cyan
+- ul/ol: стандартные списки
+- blockquote: левый teal border, полупрозрачный teal фон
+- table: тонкие бордеры, th с фоном

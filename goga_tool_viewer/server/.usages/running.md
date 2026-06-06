@@ -17,6 +17,7 @@
 - `GET /static/<filename>` — статические файлы (CSS, JS, изображения)
 - `GET /api/graph` — данные графа (JSON, формат CellGraph)
 - `GET /api/codemanifest?cell=<path>` — содержимое CODEMANIFEST (text/plain, Cache-Control: no-store)
+- `GET /api/usage?path=<path>` — содержимое usage .md файла (text/plain, Cache-Control: no-store). path — относительный путь от корня проекта.
 
 ## Получение URL
 

@@ -73,6 +73,7 @@ def index_page(graph_json_url: str) -> str:
   <script src="/static/cytoscape.min.js"></script>
   <script src="/static/dagre.min.js"></script>
   <script src="/static/cytoscape-dagre.min.js"></script>
+  <script src="/static/marked.min.js"></script>
 </head>
 <body>
   <header>

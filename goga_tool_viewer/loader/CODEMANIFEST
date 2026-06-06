@@ -22,6 +22,23 @@ Annotations: |
     `project_root`: абсолютный путь к корню проекта. Если пустой — используется текущая рабочая директория
     `content`: текстовое содержимое CODEMANIFEST
 
+"load_usage_file(usage_path: str, project_root: str = '') -> content:str":
+  location: codemanifest.py
+  annotations: |
+    Читает usage .md файл по относительному пути от корня проекта.
+    Возвращает содержимое файла как строку.
+    Если файл не найден — выбрасывает FileNotFoundError.
+    Если путь содержит "..", начинается с "/", выходит за корень проекта
+    или не имеет расширение .md — выбрасывает ValueError.
+
+    Защита от path traversal: двухуровневая проверка, аналогично `load_codemanifest`.
+    Дополнительно проверяет, что расширение файла — .md.
+
+    `usage_path`: относительный путь к .md файлу от корня проекта
+      (например ".goga/usages/conventions.md" или "goga_tool_viewer/parser/.usages/loading.md")
+    `project_root`: абсолютный путь к корню проекта. Если пустой — используется текущая рабочая директория
+    `content`: текстовое содержимое usage-файла
+
 ---
 
 Author: Goga

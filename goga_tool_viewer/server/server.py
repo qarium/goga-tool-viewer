@@ -12,7 +12,7 @@ from typing import Any
 from urllib.parse import parse_qs, urlparse
 
 from ..frontend import index_page
-from ..loader import load_codemanifest
+from ..loader import load_codemanifest, load_usage_file
 from ..models import CellGraph
 from ..parser import load_json_file, load_json_stdin
 from .port_finder import find_free_port
@@ -47,6 +47,8 @@ class _GraphHandler(BaseHTTPRequestHandler):
             self._serve_graph()
         elif urlparse(self.path).path == "/api/codemanifest":
             self._serve_codemanifest()
+        elif urlparse(self.path).path == "/api/usage":
+            self._serve_usage()
         else:
             self.send_response(404)
             self.end_headers()
@@ -108,6 +110,33 @@ class _GraphHandler(BaseHTTPRequestHandler):
             return
         except Exception:
             logger.exception("codemanifest read error")
+            self._send_text(500, "Internal server error", "text/plain; charset=utf-8")
+            return
+
+        self.send_response(200)
+        self.send_header("Content-Type", "text/plain; charset=utf-8")
+        self.send_header("Cache-Control", "no-store")
+        self.end_headers()
+        self.wfile.write(content.encode("utf-8"))
+
+    def _serve_usage(self) -> None:
+        params = parse_qs(urlparse(self.path).query)
+        usage_path = params.get("path", [None])[0]
+
+        if usage_path is None or usage_path == "":
+            self._send_text(400, "Missing 'path' parameter", "text/plain; charset=utf-8")
+            return
+
+        try:
+            content = load_usage_file(usage_path, project_root=self.graph.project_root)
+        except FileNotFoundError:
+            self._send_text(404, "Usage file not found", "text/plain; charset=utf-8")
+            return
+        except ValueError:
+            self._send_text(400, "Invalid usage path", "text/plain; charset=utf-8")
+            return
+        except Exception:
+            logger.exception("usage file read error")
             self._send_text(500, "Internal server error", "text/plain; charset=utf-8")
             return
 
