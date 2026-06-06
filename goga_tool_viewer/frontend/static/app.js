@@ -509,7 +509,12 @@
     var existing = document.getElementById('usage-overlay');
     if (existing) existing.remove();
     var fileName = title.split('/').pop();
-    var htmlContent = marked.parse(markdownContent);
+    var htmlContent;
+    try {
+      htmlContent = marked.parse(markdownContent);
+    } catch (e) {
+      htmlContent = '<p>' + _esc(markdownContent) + '</p>';
+    }
     var overlay = document.createElement('div');
     overlay.id = 'usage-overlay';
     var modal = document.createElement('div');
@@ -517,8 +522,9 @@
     modal.innerHTML = '<div class="titlebar"><span class="title">' + _esc(fileName) + '</span>'
       + '<button class="close">&times;</button></div>'
       + '<div class="usage-scroll-wrap"><div class="usage-scroll"><div class="usage-content">'
-      + htmlContent + '</div></div>'
+      + '</div></div>'
       + '<div class="usage-scroll-bar"><div class="usage-scroll-thumb"></div></div></div>';
+    modal.querySelector('.usage-content').innerHTML = htmlContent;
     overlay.appendChild(modal);
     document.querySelector('main').appendChild(overlay);
     function closeModal() {
