@@ -144,18 +144,62 @@ def index_page(graph_json_url: str) -> str:
     }}
     #sidebar-tree {{
       flex: 1;
+      position: relative;
+      overflow: hidden;
+    }}
+    #sidebar-tree .scroll-content {{
+      height: 100%;
       overflow-y: auto;
       padding: 4px 0;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255, 255, 255, 0.25) transparent;
     }}
-    #sidebar-tree::-webkit-scrollbar {{
-      width: 4px;
+    #sidebar-tree .scroll-content::-webkit-scrollbar {{
+      width: 6px;
     }}
-    #sidebar-tree::-webkit-scrollbar-track {{
+    #sidebar-tree .scroll-content::-webkit-scrollbar-track {{
       background: transparent;
     }}
-    #sidebar-tree::-webkit-scrollbar-thumb {{
-      background: rgba(255, 255, 255, 0.1);
-      border-radius: 2px;
+    #sidebar-tree .scroll-content::-webkit-scrollbar-thumb {{
+      background: rgba(255, 255, 255, 0.25);
+      border-radius: 3px;
+    }}
+    #sidebar-tree .scroll-content::-webkit-scrollbar-thumb:hover {{
+      background: rgba(255, 255, 255, 0.4);
+    }}
+    @supports not (scrollbar-color: auto) {{
+      #sidebar-tree .scroll-content {{
+        scrollbar-width: none;
+      }}
+      #sidebar-tree .scroll-content::-webkit-scrollbar {{
+        display: none;
+      }}
+      #sidebar-tree .scroll-bar {{
+        display: block;
+        position: absolute;
+        right: 2px;
+        top: 0;
+        bottom: 0;
+        width: 6px;
+        z-index: 1;
+        border-radius: 3px;
+        opacity: 0;
+        transition: opacity 0.2s;
+      }}
+      #sidebar-tree:hover .scroll-bar {{
+        opacity: 1;
+      }}
+      #sidebar-tree .scroll-bar .scroll-thumb {{
+        position: absolute;
+        left: 0;
+        right: 0;
+        min-height: 30px;
+        background: rgba(255, 255, 255, 0.25);
+        border-radius: 3px;
+      }}
+      #sidebar-tree:hover .scroll-bar .scroll-thumb {{
+        background: rgba(255, 255, 255, 0.4);
+      }}
     }}
     .tree-node {{
       position: relative;
@@ -330,13 +374,67 @@ def index_page(graph_json_url: str) -> str:
     }}
     #info-close:hover {{ color: var(--color-brand-text); }}
     #info {{
+      flex: 1;
+      position: relative;
+      overflow: hidden;
+    }}
+    #info .scroll-content {{
+      height: 100%;
       overflow-y: auto;
       padding: 16px;
       font-family: ui-monospace, SFMono-Regular, monospace;
       font-size: 13px;
       line-height: 1.6;
       color: #94a3b8;
-      flex: 1;
+      scrollbar-width: thin;
+      scrollbar-color: rgba(255, 255, 255, 0.25) transparent;
+    }}
+    #info .scroll-content::-webkit-scrollbar {{
+      width: 6px;
+    }}
+    #info .scroll-content::-webkit-scrollbar-track {{
+      background: transparent;
+    }}
+    #info .scroll-content::-webkit-scrollbar-thumb {{
+      background: rgba(255, 255, 255, 0.25);
+      border-radius: 3px;
+    }}
+    #info .scroll-content::-webkit-scrollbar-thumb:hover {{
+      background: rgba(255, 255, 255, 0.4);
+    }}
+    @supports not (scrollbar-color: auto) {{
+      #info .scroll-content {{
+        scrollbar-width: none;
+      }}
+      #info .scroll-content::-webkit-scrollbar {{
+        display: none;
+      }}
+      #info .scroll-bar {{
+        display: block;
+        position: absolute;
+        right: 2px;
+        top: 0;
+        bottom: 0;
+        width: 6px;
+        z-index: 1;
+        border-radius: 3px;
+        opacity: 0;
+        transition: opacity 0.2s;
+      }}
+      #info:hover .scroll-bar {{
+        opacity: 1;
+      }}
+      #info .scroll-bar .scroll-thumb {{
+        position: absolute;
+        left: 0;
+        right: 0;
+        min-height: 30px;
+        background: rgba(255, 255, 255, 0.25);
+        border-radius: 3px;
+      }}
+      #info:hover .scroll-bar .scroll-thumb {{
+        background: rgba(255, 255, 255, 0.4);
+      }}
     }}
     #info .section {{
       margin-top: 16px;
@@ -601,7 +699,7 @@ def index_page(graph_json_url: str) -> str:
   <main>
     <div id="sidebar">
       <div id="sidebar-title">Cells</div>
-      <div id="sidebar-tree"></div>
+      <div id="sidebar-tree"><div class="scroll-content"></div><div class="scroll-bar"><div class="scroll-thumb"></div></div></div>
       <div id="sidebar-footer"><span class="tree-show-all"><img
         class="link-icon" src="{_ICON_RESET}" alt="">Reset</span></div>
     </div>
@@ -611,7 +709,7 @@ def index_page(graph_json_url: str) -> str:
         <span class="title" id="info-title">cell info</span>
         <button id="info-close">&times;</button>
       </div>
-      <div id="info"></div>
+      <div id="info"><div class="scroll-content"></div><div class="scroll-bar"><div class="scroll-thumb"></div></div></div>
       <div id="info-footer"></div>
     </div>
   </main>
@@ -626,6 +724,8 @@ def index_page(graph_json_url: str) -> str:
         requestAnimationFrame(function() {{
           const cy = render_graph("cy", graph);
           render_tree("sidebar-tree", graph, cy);
+          _init_custom_scroll(document.getElementById('sidebar-tree'));
+          _init_custom_scroll(document.getElementById('info'));
           document.querySelector('.tree-show-all').addEventListener('click', function() {{
             reset_filter(cy);
           }});
@@ -780,6 +880,46 @@ def index_page(graph_json_url: str) -> str:
       cy.layout({{ name: 'dagre', spacingFactor: 1.5, rankDir: 'LR' }}).run();
     }}
 
+    function _init_custom_scroll(wrapper) {{
+      var scrollContent = wrapper.querySelector('.scroll-content');
+      var scrollThumb = wrapper.querySelector('.scroll-thumb');
+      if (!scrollContent || !scrollThumb) return;
+      function updateScrollbar() {{
+        var ratio = scrollContent.clientHeight / scrollContent.scrollHeight;
+        if (ratio >= 1) {{
+          scrollThumb.style.display = 'none';
+          return;
+        }}
+        scrollThumb.style.display = '';
+        var thumbH = Math.max(30, scrollContent.clientHeight * ratio);
+        var scrollRatio = scrollContent.scrollTop / (scrollContent.scrollHeight - scrollContent.clientHeight);
+        var thumbTop = scrollRatio * (scrollContent.clientHeight - thumbH);
+        scrollThumb.style.height = thumbH + 'px';
+        scrollThumb.style.top = thumbTop + 'px';
+      }}
+      scrollContent.addEventListener('scroll', updateScrollbar);
+      updateScrollbar();
+      var dragging = false, startY = 0, startTop = 0;
+      scrollThumb.addEventListener('mousedown', function(e) {{
+        dragging = true;
+        startY = e.clientY;
+        startTop = parseInt(scrollThumb.style.top) || 0;
+        e.preventDefault();
+      }});
+      document.addEventListener('mousemove', function(e) {{
+        if (!dragging) return;
+        var delta = e.clientY - startY;
+        var thumbH = parseInt(scrollThumb.style.height) || 30;
+        var maxTop = scrollContent.clientHeight - thumbH;
+        var newTop = Math.max(0, Math.min(maxTop, startTop + delta));
+        scrollThumb.style.top = newTop + 'px';
+        scrollContent.scrollTop = (newTop / maxTop) * (scrollContent.scrollHeight - scrollContent.clientHeight);
+      }});
+      document.addEventListener('mouseup', function() {{
+        dragging = false;
+      }});
+    }}
+
     function _esc(s) {{
       const d = document.createElement("div");
       d.textContent = s;
@@ -787,7 +927,8 @@ def index_page(graph_json_url: str) -> str:
     }}
 
     function render_tree(container_id, graph, cy_instance) {{
-      const container = document.getElementById(container_id);
+      const wrapper = document.getElementById(container_id);
+      const container = wrapper.querySelector('.scroll-content');
       container.innerHTML = '';
       const allNames = new Set(graph.cells.map(function(c) {{ return c.name; }}));
       const childNames = new Set();
@@ -865,7 +1006,7 @@ def index_page(graph_json_url: str) -> str:
       if (cmPanel) cmPanel.remove();
       const cell = graph.cells.find(c => c.name === cell_name);
       if (!cell) {{
-        document.getElementById("info").innerHTML = "<p>Cell not found</p>";
+        document.getElementById("info").querySelector('.scroll-content').innerHTML = "<p>Cell not found</p>";
         document.getElementById("info-title").textContent = "cell info";
         return;
       }}
@@ -894,7 +1035,8 @@ def index_page(graph_json_url: str) -> str:
         html += '<div class="section"><h2 data-icon="dependencies">Dependencies</h2><ul>' +
           deps.map(d => '<li>' + _esc(d) + '</li>').join('') + '</ul></div>';
       }}
-      document.getElementById("info").innerHTML = html;
+      document.getElementById("info").querySelector('.scroll-content').innerHTML = html;
+      document.getElementById("info").querySelector('.scroll-content').scrollTop = 0;
       var infoFooter = document.getElementById("info-footer");
       infoFooter.innerHTML = '<span class="codemanifest-link">'
         + '<img class="link-icon" src="' + codeIcon + '" alt="">'
