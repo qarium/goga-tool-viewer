@@ -638,7 +638,8 @@ footer .copyright { margin-left: auto; }
 #usage-modal {
   width: 640px;
   max-width: 80%;
-  max-height: 80%;
+  height: 80%;
+  max-height: 80vh;
   background: #0f172a;
   border-radius: 8px;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.6);
