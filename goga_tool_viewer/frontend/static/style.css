@@ -609,6 +609,13 @@ footer .copyright { margin-left: auto; }
 .yaml-bool { color: #f59e0b; }
 .yaml-number { color: #a78bfa; }
 .yaml-code { color: #a5f3fc; }
+.line-highlighted {
+  background: rgba(32, 212, 191, 0.15);
+  display: block;
+  margin: 0 -16px;
+  padding: 0 16px;
+  border-left: 3px solid var(--color-brand-teal);
+}
 .codemanifest-link {
   cursor: pointer;
   color: var(--color-brand-muted);
@@ -624,6 +631,14 @@ footer .copyright { margin-left: auto; }
 .link-icon {
   width: 12px;
   height: 12px;
+}
+.type-link {
+  color: #a5f3fc;
+  text-decoration: none;
+  cursor: pointer;
+}
+.type-link:hover {
+  text-decoration: underline;
 }
 .usage-link {
   color: var(--color-brand-text);

@@ -316,7 +316,7 @@
     html += '</div>';
     html += '<div class="section"><h2 data-icon="types">Types</h2>';
     html += types.length > 0
-      ? '<ul>' + types.map(function(t) { return '<li><span class="label">' + _esc(t) + '</span></li>'; }).join('') + '</ul>'
+      ? '<ul>' + types.map(function(t) { return '<li><a class="type-link" data-type="' + _esc(t) + '">' + _esc(t) + '</a></li>'; }).join('') + '</ul>'
       : '<p class="empty">No types</p>';
     html += '</div>';
     if (usages.length > 0) {
@@ -340,6 +340,12 @@
       link.addEventListener('click', function(e) {
         e.preventDefault();
         _open_usage(link.getAttribute('data-path'));
+      });
+    });
+    document.querySelectorAll('#info .type-link').forEach(function(link) {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        _navigate_to_type(link.getAttribute('data-type'), cell_name, graph);
       });
     });
     var infoFooter = document.getElementById("info-footer");
@@ -424,7 +430,7 @@
     return lines.join('\n').replace(/`([^`]+)`/g, '<span class="yaml-code">`$1`</span>');
   }
 
-  function _show_cm_panel(rawContent) {
+  function _show_cm_panel(rawContent, highlightType) {
     var existing = document.getElementById('codemanifest-panel');
     if (existing) existing.remove();
     var highlighted = _highlight_yaml(rawContent);
@@ -502,6 +508,52 @@
         _open_usage(link.getAttribute('data-path'));
       });
     });
+    if (highlightType) {
+      _highlight_type_line(highlightType);
+    }
+  }
+
+  function _highlight_type_line(typeName) {
+    var codeContent = document.querySelector('#codemanifest-panel .code-content');
+    if (!codeContent) return;
+
+    var prev = codeContent.querySelector('.line-highlighted');
+    if (prev) {
+      prev.outerHTML = prev.innerHTML;
+    }
+
+    var lines = codeContent.innerHTML.split('\n');
+    var escaped = typeName.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    var pattern = new RegExp(escaped + '[^a-zA-Z0-9_]');
+
+    var found = false;
+    for (var i = 0; i < lines.length; i++) {
+      var temp = document.createElement('div');
+      temp.innerHTML = lines[i];
+      var text = temp.textContent || temp.innerText || '';
+      if (pattern.test(text)) {
+        lines[i] = '<span class="line-highlighted">' + lines[i] + '</span>';
+        found = true;
+        break;
+      }
+    }
+
+    if (found) {
+      codeContent.innerHTML = lines.join('\n');
+      var highlighted = codeContent.querySelector('.line-highlighted');
+      if (highlighted) {
+        highlighted.scrollIntoView({ block: 'center', behavior: 'smooth' });
+      }
+    }
+  }
+
+  function _navigate_to_type(typeName, cellName, graph) {
+    var panel = document.getElementById('codemanifest-panel');
+    if (!panel) {
+      show_codemanifest(cellName, graph, typeName);
+      return;
+    }
+    _highlight_type_line(typeName);
   }
 
   function _open_usage(mdPath) {
@@ -592,7 +644,7 @@
     });
   }
 
-  function show_codemanifest(cell_name, graph) {
+  function show_codemanifest(cell_name, graph, highlightType) {
     var cell = graph.cells.find(function(c) { return c.name === cell_name; });
     if (!cell) return;
     fetch('/api/codemanifest?cell=' + encodeURIComponent(cell.name), {cache: 'no-store'})
@@ -602,7 +654,7 @@
         return 'Failed to load CODEMANIFEST';
       })
       .then(function(content) {
-        _show_cm_panel(content);
+        _show_cm_panel(content, highlightType);
       })
       .catch(function() {
         _show_cm_panel('Failed to load CODEMANIFEST');
