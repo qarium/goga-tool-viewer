@@ -611,7 +611,7 @@ footer .copyright { margin-left: auto; }
 .yaml-code { color: #a78bfa; }
 .line-highlighted {
   background: rgba(32, 212, 191, 0.15);
-  display: block;
+  display: inline;
   margin: 0 -16px;
   padding: 0 16px;
   border-left: 3px solid var(--color-brand-teal);
