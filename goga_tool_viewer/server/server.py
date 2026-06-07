@@ -232,6 +232,7 @@ def run_server(json_path: str | None) -> None:
     """Load graph data and start the server.
 
     If json_path is provided, loads from file; otherwise reads from stdin.
+    Handles KeyboardInterrupt (Ctrl+C) for graceful shutdown.
 
     Args:
         json_path: Path to a JSON file, or None to read from stdin.
@@ -242,4 +243,13 @@ def run_server(json_path: str | None) -> None:
     server = GraphServer(graph, port)
 
     print(server.url(), flush=True)
-    server.start()
+
+    try:
+        server.start()
+    except KeyboardInterrupt:
+        logger.info(
+            "server shutting down",
+            extra={"port": port},
+        )
+    finally:
+        server.stop()

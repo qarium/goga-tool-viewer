@@ -86,6 +86,7 @@ Annotations: |
   annotations: |
     Точка входа сервера: загружает JSON, находит порт, запускает `GraphServer`.
     Если `json_path` is None — читает из stdin.
+    При KeyboardInterrupt (Ctrl+C) завершается штатно с освобождением ресурсов.
 
     `json_path`: путь к JSON-файлу или None для чтения из stdin
 

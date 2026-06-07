@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import inspect
 import json
+from unittest import mock
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -307,6 +308,41 @@ class TestRunServer:
         assert len(params) == 1
         param = sig.parameters[params[0]]
         assert param.annotation in (str, "str | None", str | None, inspect.Parameter.empty)
+
+
+class TestRunServerGracefulShutdown:
+    """Tests for KeyboardInterrupt handling in run_server."""
+
+    def test_keyboard_interrupt_calls_stop(self, tmp_path):
+        """Ctrl+C during serve_forever triggers graceful shutdown via stop()."""
+        json_file = tmp_path / "data.json"
+        json_file.write_text('[{"cell":"c","types":[],"usages":[]}]')
+
+        with mock.patch.object(GraphServer, "start", side_effect=KeyboardInterrupt):
+            with mock.patch.object(GraphServer, "stop") as mock_stop:
+                run_server(str(json_file))
+
+        mock_stop.assert_called_once()
+
+    def test_keyboard_interrupt_returns_normally(self, tmp_path):
+        """run_server does not re-raise KeyboardInterrupt."""
+        json_file = tmp_path / "data.json"
+        json_file.write_text('[{"cell":"c","types":[],"usages":[]}]')
+
+        with mock.patch.object(GraphServer, "start", side_effect=KeyboardInterrupt):
+            with mock.patch.object(GraphServer, "stop"):
+                run_server(str(json_file))
+
+    def test_normal_lifecycle_calls_stop(self, tmp_path):
+        """stop() is called even on normal server shutdown via finally."""
+        json_file = tmp_path / "data.json"
+        json_file.write_text('[{"cell":"c","types":[],"usages":[]}]')
+
+        with mock.patch.object(GraphServer, "start"):
+            with mock.patch.object(GraphServer, "stop") as mock_stop:
+                run_server(str(json_file))
+
+        mock_stop.assert_called_once()
 
 
 class TestUsageRoute:
