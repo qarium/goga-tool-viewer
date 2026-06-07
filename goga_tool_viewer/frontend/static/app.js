@@ -321,7 +321,10 @@
     html += '</div>';
     if (usages.length > 0) {
       html += '<div class="section"><h2 data-icon="usages">Usages</h2><ul>' +
-        usages.map(function(u) { return '<li><span class="label">' + _esc(u) + '</span></li>'; }).join('') + '</ul></div>';
+        usages.map(function(u) {
+          var mdPath = cell.name + '/.usages/' + u;
+          return '<li><a class="usage-link" data-path="' + _esc(mdPath) + '">' + _esc(u) + '</a></li>';
+        }).join('') + '</ul></div>';
     }
     if (consumers.length > 0) {
       html += '<div class="section"><h2 data-icon="consumers">Consumers</h2><ul>' +
@@ -333,6 +336,12 @@
     }
     document.getElementById("info").querySelector('.scroll-content').innerHTML = html;
     document.getElementById("info").querySelector('.scroll-content').scrollTop = 0;
+    document.querySelectorAll('#info .usage-link').forEach(function(link) {
+      link.addEventListener('click', function(e) {
+        e.preventDefault();
+        _open_usage(link.getAttribute('data-path'));
+      });
+    });
     var infoFooter = document.getElementById("info-footer");
     infoFooter.innerHTML = '<span class="codemanifest-link">'
       + '<img class="link-icon" src="' + codeIcon + '" alt="">'

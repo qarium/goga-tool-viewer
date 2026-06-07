@@ -448,6 +448,14 @@ main {
 #info li .label {
   color: #a5f3fc;
 }
+#info .usage-link {
+  color: #a5f3fc;
+  text-decoration: none;
+  cursor: pointer;
+}
+#info .usage-link:hover {
+  text-decoration: underline;
+}
 #info .empty { color: var(--color-brand-muted); font-style: italic; }
 #info-footer {
   padding: 8px 16px;

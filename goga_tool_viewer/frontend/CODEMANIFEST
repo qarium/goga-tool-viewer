@@ -40,6 +40,10 @@ Usages:
       Каждый h2 имеет SVG-иконку через data-icon атрибут и ::before pseudo-element.
       Description отображается как blockquote (.description класс).
       Секции: Name, Description, Types, Usages (если есть), Consumers (если есть), Dependencies (если есть).
+      В секции Usages каждый элемент является кликабельной ссылкой — при клике
+      открывается модальное окно с содержимым соответствующего usage-файла.
+      Ссылки визуально согласованы с остальным текстом списка: текущий цвет текста,
+      подчёркивание при наведении.
       Ссылка «CODEMANIFEST» (.codemanifest-link) рендерится в фиксированном footer
       (#info-footer) внизу info-wrapper — аналогично «Reset» в #sidebar-footer.
       Footer не скроллируется, всегда видима.
