@@ -501,12 +501,12 @@
     document.addEventListener('mouseup', function() {
       dragging = false;
     });
-    panel.querySelectorAll('.usage-link').forEach(function(link) {
-      link.addEventListener('click', function(e) {
-        e.preventDefault();
-        e.stopPropagation();
-        _open_usage(link.getAttribute('data-path'));
-      });
+    panel.querySelector('.code-content').addEventListener('click', function(e) {
+      var link = e.target.closest('.usage-link');
+      if (!link) return;
+      e.preventDefault();
+      e.stopPropagation();
+      _open_usage(link.getAttribute('data-path'));
     });
     if (highlightType) {
       _highlight_type_line(highlightType);
