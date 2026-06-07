@@ -9,6 +9,11 @@ goga tool viewer [JSON_PATH]
 ```
 
 - `JSON_PATH` — необязательный путь к JSON-файлу
+
+```
+goga schema | goga tool viewer
+```
+
 - Если не указан — чтение из stdin
 
 ## Фасадная функция main(argv)
