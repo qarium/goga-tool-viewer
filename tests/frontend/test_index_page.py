@@ -119,6 +119,7 @@ class TestIndexPageIntegration:
         assert "--icon-types:" in html
         assert "--icon-consumers:" in html
         assert "--icon-dependencies:" in html
+        assert "--icon-usages:" in html
         assert "--icon-folder:" in html
         assert "--icon-layers:" in html
         assert "--icon-code:" in html
@@ -296,3 +297,4 @@ class TestStaticFiles:
         assert "var(--icon-types)" in css
         assert "var(--icon-consumers)" in css
         assert "var(--icon-dependencies)" in css
+        assert "var(--icon-usages)" in css

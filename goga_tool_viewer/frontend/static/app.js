@@ -307,6 +307,7 @@
       .map(function(e) { return e.from_cell; });
     var deps = (cell.dependencies || []).map(function(d) { return d.to_cell; });
     var types = cell.types || [];
+    var usages = cell.usages || [];
     var html = '<div class="section"><h2 data-icon="name">Name</h2><p>' + _esc(cell.name) + '</p></div>';
     html += '<div class="section"><h2 data-icon="description">Description</h2>';
     html += cell.description
@@ -318,6 +319,10 @@
       ? '<ul>' + types.map(function(t) { return '<li><span class="label">' + _esc(t) + '</span></li>'; }).join('') + '</ul>'
       : '<p class="empty">No types</p>';
     html += '</div>';
+    if (usages.length > 0) {
+      html += '<div class="section"><h2 data-icon="usages">Usages</h2><ul>' +
+        usages.map(function(u) { return '<li><span class="label">' + _esc(u) + '</span></li>'; }).join('') + '</ul></div>';
+    }
     if (consumers.length > 0) {
       html += '<div class="section"><h2 data-icon="consumers">Consumers</h2><ul>' +
         consumers.map(function(c) { return '<li>' + _esc(c) + '</li>'; }).join('') + '</ul></div>';

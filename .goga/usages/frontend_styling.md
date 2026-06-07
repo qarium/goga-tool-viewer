@@ -12,7 +12,7 @@ SPA состоит из HTML-файла со ссылками на внешни�
 - app.js — JS-логика SPA
 - logo.png, favicon.png — брендированные ресурсы. Референс: qarium.ru/goga. Скачать с сайта: логотип из хедера, favicon из вкладки браузера.
 - icon-telegram.svg, icon-github.svg, icon-email.svg — иконки контактов. Inline SVG, соответствующие иконкам из qarium.ru/goga.
-- icon-name.svg, icon-description.svg, icon-types.svg, icon-consumers.svg, icon-dependencies.svg — иконки секций info panel. Передаются через CSS custom properties (--icon-*).
+- icon-name.svg, icon-description.svg, icon-types.svg, icon-usages.svg, icon-consumers.svg, icon-dependencies.svg — иконки секций info panel. Передаются через CSS custom properties (--icon-*).
 - icon-folder.svg, icon-layers.svg — иконки узлов дерева. Передаются через CSS custom properties.
 - icon-code.svg, icon-reset.svg — иконки действий. Передаются через CSS custom properties.
 - cytoscape.min.js — скачать с https://js.cytoscape.org/ (раздел Download)
@@ -57,7 +57,7 @@ SPA состоит из HTML-файла со ссылками на внешни�
   - .empty — placeholder для пустых значений (muted italic)
 - Секции разделены .section div'ами с border-top разделителем
 - Секции: Name (иконка tag), Description (иконка document), Types (иконка cube),
-  Consumers (иконка download, если есть), Dependencies (иконка upload, если есть)
+  Usages (иконка file-text), Consumers (иконка download, если есть), Dependencies (иконка upload, если есть)
 - Footer (#info-footer): фиксированная зона внизу панели, прибит к низу (аналог #sidebar-footer).
   Padding: 8px 16px, border-top разделитель. Содержит ссылку CODEMANIFEST (.codemanifest-link).
   Не скроллируется — всегда видима.

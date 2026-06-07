@@ -414,6 +414,9 @@ main {
 #info h2[data-icon="types"]::before {
   background-image: var(--icon-types);
 }
+#info h2[data-icon="usages"]::before {
+  background-image: var(--icon-usages);
+}
 #info h2[data-icon="consumers"]::before {
   background-image: var(--icon-consumers);
 }

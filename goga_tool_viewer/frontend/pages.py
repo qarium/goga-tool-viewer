@@ -31,6 +31,7 @@ _ICON_DESCRIPTION = _svg_data_uri("icon-description.svg")
 _ICON_TYPES = _svg_data_uri("icon-types.svg")
 _ICON_CONSUMERS = _svg_data_uri("icon-consumers.svg")
 _ICON_DEPENDENCIES = _svg_data_uri("icon-dependencies.svg")
+_ICON_USAGES = _svg_data_uri("icon-usages.svg")
 _ICON_FOLDER = _svg_data_uri("icon-folder.svg")
 _ICON_LAYERS = _svg_data_uri("icon-layers.svg")
 _ICON_CODE = _svg_data_uri("icon-code.svg")
@@ -64,6 +65,7 @@ def index_page(graph_json_url: str) -> str:
       --icon-types: url("{_ICON_TYPES}");
       --icon-consumers: url("{_ICON_CONSUMERS}");
       --icon-dependencies: url("{_ICON_DEPENDENCIES}");
+      --icon-usages: url("{_ICON_USAGES}");
       --icon-folder: url("{_ICON_FOLDER}");
       --icon-layers: url("{_ICON_LAYERS}");
       --icon-code: url("{_ICON_CODE}");

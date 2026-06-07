@@ -39,7 +39,7 @@ Usages:
       Секции разделены .section div'ами с border-top.
       Каждый h2 имеет SVG-иконку через data-icon атрибут и ::before pseudo-element.
       Description отображается как blockquote (.description класс).
-      Секции: Name, Description, Types, Consumers (если есть), Dependencies (если есть).
+      Секции: Name, Description, Types, Usages (если есть), Consumers (если есть), Dependencies (если есть).
       Ссылка «CODEMANIFEST» (.codemanifest-link) рендерится в фиксированном footer
       (#info-footer) внизу info-wrapper — аналогично «Reset» в #sidebar-footer.
       Footer не скроллируется, всегда видима.
