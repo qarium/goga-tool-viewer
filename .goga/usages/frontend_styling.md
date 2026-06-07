@@ -181,9 +181,9 @@ YAML-контент подсвечивается синтаксически:
 ### Usage-ссылки в YAML
 
 Внутри секции Usages: значения, содержащие путь к .md файлу, отображаются как кликабельные ссылки:
-- Цвет: #3882f6 (var(--color-brand-blue))
+- Цвет: #a5f3fc
 - Подчёркивание: text-decoration: underline
-- Hover: цвет #a5f3fc
+- Hover: подчёркивание сохраняется
 - Обёрнуты в <a class="usage-link" data-path="path">
 
 ### Модальное окно Usage (#usage-overlay + #usage-modal)

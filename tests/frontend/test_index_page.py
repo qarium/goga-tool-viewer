@@ -260,6 +260,8 @@ class TestStaticFiles:
         assert "#sidebar" in css
         assert "#codemanifest-panel" in css
         assert ".tree-node" in css
+        assert ".type-link" in css
+        assert ".line-highlighted" in css
 
     def test_app_js_contains_key_functions(self):
         js = (_STATIC / "app.js").read_text(encoding="utf-8")
@@ -271,6 +273,8 @@ class TestStaticFiles:
         assert "function _init_custom_scroll" in js
         assert "function apply_filter" in js
         assert "function reset_filter" in js
+        assert "function _highlight_type_line" in js
+        assert "function _navigate_to_type" in js
 
     def test_app_js_reads_api_url_from_data_attribute(self):
         js = (_STATIC / "app.js").read_text(encoding="utf-8")
