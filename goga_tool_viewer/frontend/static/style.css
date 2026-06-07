@@ -608,7 +608,7 @@ footer .copyright { margin-left: auto; }
 .yaml-literal { color: #94a3b8; }
 .yaml-bool { color: #f59e0b; }
 .yaml-number { color: #a78bfa; }
-.yaml-code { color: #a5f3fc; }
+.yaml-code { color: #a78bfa; }
 .line-highlighted {
   background: rgba(32, 212, 191, 0.15);
   display: block;
@@ -641,7 +641,7 @@ footer .copyright { margin-left: auto; }
   text-decoration: underline;
 }
 .usage-link {
-  color: var(--color-brand-text);
+  color: #a5f3fc;
   text-decoration: none;
   cursor: pointer;
   transition: color 0.15s;
