@@ -4,6 +4,8 @@ Interactive dependency graph viewer for the [goga](https://github.com/qarium/gog
 
 Visualizes cell dependency graphs as a single-page web application with hierarchical layout and click-to-inspect details. Includes a CODEMANIFEST viewer — click the "CODEMANIFEST" link in the info panel to view the raw YAML manifest for any cell.
 
+**Documentation:** [qarium.github.io/goga-tool-viewer](https://qarium.github.io/goga-tool-viewer/)
+
 ## Installation
 
 ```bash

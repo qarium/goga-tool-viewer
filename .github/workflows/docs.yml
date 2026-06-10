@@ -2,7 +2,7 @@ name: Release docs
 on:
   push:
     branches:
-      - 0.0.x
+      - '[0-9]+.[0-9]+.x'
 
 permissions:
   contents: write
@@ -23,5 +23,4 @@ jobs:
           pip install -e ".[docs]"
 
       - name: Build and Deploy
-        # gh-deploy creates the gh-pages branch and pushes static content there
         run: mkdocs gh-deploy --force
