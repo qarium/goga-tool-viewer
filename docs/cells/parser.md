@@ -9,12 +9,13 @@ Depends on: [models](models.md)
 ### parse_json
 
 ```python
-parse_json(json_str: str) -> CellGraph
+parse_json(json_str: str, project_root: str = '') -> CellGraph
 ```
 
 Parses a JSON string into `CellGraph`. JSON is an array of root cells at the top level.
 
 - `json_str` — JSON file contents as a string
+- `project_root` — absolute path to the project root
 - Returns the complete project graph with all cells and dependencies
 
 ### load_json_file

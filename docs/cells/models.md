@@ -36,6 +36,7 @@ Complete project graph — all cells and all dependency edges.
 |----------|------|-------------|
 | `cells` | `list[CellData]` | Flat list of all cells (including nested) |
 | `edges` | `list[DependencyInfo]` | Flat list of all dependency edges |
+| `project_root` | `str` | Absolute path to the project root directory |
 
 ## JSON Format
 

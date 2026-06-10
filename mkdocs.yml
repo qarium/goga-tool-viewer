@@ -41,6 +41,7 @@ nav:
     - Models: cells/models.md
     - Parser: cells/parser.md
     - Frontend: cells/frontend.md
+    - Loader: cells/loader.md
     - Server: cells/server.md
     - Port Finder: cells/port-finder.md
 

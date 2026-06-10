@@ -10,6 +10,7 @@ goga_tool_viewer (CLI)
 │   ├── models
 │   ├── parser → models
 │   ├── frontend
+│   ├── loader
 │   └── port_finder
 ├── parser → models
 └── frontend
@@ -21,18 +22,20 @@ goga_tool_viewer (CLI)
 2. **Server** (`run_server`) loads JSON, finds a free port, starts HTTP server
 3. **Parser** converts JSON into `CellGraph`
 4. **Models** define data structures: `CellData`, `DependencyInfo`, `CellGraph`
-5. **Frontend** generates SPA page with Cytoscape.js
-6. **Port Finder** finds a free TCP port
+5. **Frontend** generates SPA page with Cytoscape.js and dark theme
+6. **Loader** reads CODEMANIFEST and usage files from the filesystem
+7. **Port Finder** finds a free TCP port
 
 ## Cells
 
 | Cell | Purpose | Dependencies |
 |------|---------|-------------|
 | `goga_tool_viewer` | CLI facade, entry point | server, frontend |
-| `server` | HTTP server, routing | models, parser, frontend, port_finder |
+| `server` | HTTP server, routing | models, parser, frontend, loader, port_finder |
 | `parser` | JSON to model parsing | models |
 | `models` | Data structures (dataclasses) | — |
 | `frontend` | SPA generation (HTML+CSS+JS) | — |
+| `loader` | Project file loading | — |
 | `port_finder` | Free TCP port discovery | — |
 
 ## Principles
@@ -40,4 +43,4 @@ goga_tool_viewer (CLI)
 - **Python 3.10+** — no external dependencies, stdlib only
 - **Relative imports** — strictly within the package
 - **Dataclasses** — immutable models with `frozen=True`
-- **SPA without build** — single HTML page with inline CSS and JS
+- **SPA without build** — external CSS and JS files served from static/

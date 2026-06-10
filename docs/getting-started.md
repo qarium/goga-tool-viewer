@@ -31,18 +31,23 @@ main([])                     # from stdin
 
 ## Web API
 
-After launch, an HTTP server is available with two endpoints:
+After launch, an HTTP server is available with the following endpoints:
 
 | Endpoint | Description |
 |-----------|------------|
 | `GET /` | SPA page with interactive graph |
+| `GET /static/*` | Static files (CSS, JS, images) |
 | `GET /api/graph` | JSON with graph data (CellGraph format) |
+| `GET /api/codemanifest?cell=<path>` | CODEMANIFEST content for a cell |
+| `GET /api/usage?path=<path>` | Usage `.md` file content |
 
 ## Interface
 
-A web page opens with an interactive dependency graph:
+A web page opens with an interactive dependency graph in dark theme:
 
-- **Graph** (80% width) — nodes represent cells, edges represent dependencies
-- **Info panel** (20% width) — details of the selected cell: types, consumers, dependencies
+- **Sidebar** (260px left) — fully expanded cell tree with click-to-filter
+- **Graph** (center) — nodes represent cells, edges represent dependencies
+- **Info panel** (right) — details of the selected cell: types, usages, consumers, dependencies
+- **CODEMANIFEST panel** (center overlay) — YAML view with syntax highlighting
 
-Clicking a cell highlights its connections; remaining nodes are dimmed.
+Clicking a cell highlights its connections; remaining nodes are dimmed. Type links navigate to CODEMANIFEST. Usage links open a modal with rendered Markdown.
