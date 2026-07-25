@@ -1,0 +1,1304 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Goga tool. Viewer for goga project visualization.">
+      
+      
+      
+        <link rel="canonical" href="https://qarium.github.io/goga-tool-viewer/plans/completed/view-codemanifest/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>План: view-codemanifest - Goga tool viewer</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  
+  <style>
+    /* Dark navbar — override palette in both themes */
+    [data-md-color-scheme=default][data-md-color-primary=custom],
+    [data-md-color-scheme=slate][data-md-color-primary=custom] {
+      --md-primary-fg-color: #0a0a13;
+      --md-primary-fg-color--light: #0a0a13cc;
+      --md-primary-bg-color: #ffffff;
+    }
+
+    .md-header__button.md-logo img,
+    .md-header__button.md-logo svg {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+    }
+
+    /* Search form — visible on dark header */
+    .md-search__overlay {
+      background-color: transparent !important;
+    }
+    [data-md-toggle=search]:checked~.md-header .md-search__overlay {
+      background-color: #0000008a !important;
+    }
+    .md-search__inner {
+      background-color: transparent !important;
+    }
+    .md-search__form {
+      background-color: #3a3a3a !important;
+      border-radius: 0.5rem;
+    }
+    .md-search__form:hover {
+      background-color: #4a4a4a !important;
+    }
+    .md-search__input {
+      color: #e0e0e0 !important;
+    }
+    .md-search__input::placeholder {
+      color: #999999 !important;
+    }
+    .md-search__icon {
+      color: #999999 !important;
+    }
+    .md-search__form:hover .md-search__icon,
+    .md-search__input:focus-visible ~ .md-search__icon {
+      color: #e0e0e0 !important;
+    }
+
+    /* Links in dark theme — readable on dark background */
+    [data-md-color-scheme=slate] .md-nav__link,
+    [data-md-color-scheme=slate] .md-toc__link,
+    [data-md-color-scheme=slate] article a {
+      color: #cbd5e0 !important;
+    }
+    [data-md-color-scheme=slate] .md-nav__link--passed,
+    [data-md-color-scheme=slate] .md-toc__link--passed {
+      color: #718096 !important;
+    }
+    [data-md-color-scheme=slate] .md-nav__link:hover,
+    [data-md-color-scheme=slate] .md-toc__link:hover,
+    [data-md-color-scheme=slate] article a:hover {
+      color: var(--md-accent-fg-color) !important;
+    }
+  </style>
+
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#view-codemanifest" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../../.." title="Goga tool viewer" class="md-header__button md-logo" aria-label="Goga tool viewer" data-md-component="logo">
+      
+  <img src="https://avatars.githubusercontent.com/u/262344922?s=200&v=4" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Goga tool viewer
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              План: view-codemanifest
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/qarium/goga-tool-viewer" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../getting-started/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Getting Started
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../../architecture/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Architecture
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../../cells/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Cells
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../../.." title="Goga tool viewer" class="md-nav__button md-logo" aria-label="Goga tool viewer" data-md-component="logo">
+      
+  <img src="https://avatars.githubusercontent.com/u/262344922?s=200&v=4" alt="logo">
+
+    </a>
+    Goga tool viewer
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/qarium/goga-tool-viewer" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../../cells/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cells
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Cells
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cells/models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cells/parser/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Parser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cells/frontend/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Frontend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cells/loader/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Loader
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cells/server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../../cells/port-finder/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Port Finder
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Цель
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Контекст
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Контекст">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Поверхность контракта
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Реэкспорты
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#usages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Контекст Usages
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#usages_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Импортированные Usages
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#usages_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Локальные Usages
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Внешние зависимости
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Факты
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Анализ разрывов
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tasks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tasks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#task-1-loader" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 1: Инфраструктура ячейки loader (инфраструктура)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-2-load_codemanifest-tdd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 2: Реализация load_codemanifest (TDD кодирование)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-3-apicodemanifest-graphserver-tdd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 3: Добавление роута /api/codemanifest в GraphServer (TDD кодирование)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-4-frontend-show_codemanifest-tdd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 4: Обновление frontend — show_codemanifest и центральная панель (TDD кодирование)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-5-codemanifest-viewer" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 5: Интеграционные тесты для CODEMANIFEST viewer
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Команды валидации
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Критерии завершения
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="view-codemanifest">План: <code>view-codemanifest</code></h1>
+<h2 id="_1">Цель</h2>
+<p>Реализовать просмотр содержимого CODEMANIFEST в SPA: при клике на ссылку «CODEMANIFEST» в info panel загружается и отображается yaml-содержимое файла в центральной панели. Добавить новую ячейку <code>loader</code> для безопасного чтения CODEMANIFEST из файловой системы, интегрировать её в серверный роутинг и обновить frontend.</p>
+<p>Разрывы: отсутствует реализация ячейки <code>loader</code> (нет <code>codemanifest.py</code>, нет <code>__init__.py</code>), в <code>server.py</code> нет роута <code>/api/codemanifest</code>, в <code>pages.py</code> нет JS-функции <code>show_codemanifest</code>, CSS для центральной панели и ссылки «CODEMANIFEST» в info panel.</p>
+<h2 id="_2">Контекст</h2>
+<h3 id="_3">Поверхность контракта</h3>
+<p><strong>Сущность: <code>load_codemanifest</code></strong>
+- Тип: <code>function</code> (Routine)
+- Объявленный <code>location</code>: <code>codemanifest.py</code> (в <code>goga_tool_viewer/loader/</code>)
+- Обязанность фасада: должна быть импортируема из <code>goga_tool_viewer.loader</code>
+- Мутации: нет
+- Свойства: нет
+- Методы: нет
+- Сигнатура: <code>load_codemanifest(cell_path: str) -&gt; content:str</code>
+- Семантические требования: безопасное чтение CODEMANIFEST — path traversal защита (два уровня: строковая проверка <code>".."</code> и <code>/</code> prefix + resolve/verify под base), FileNotFoundError при отсутствии файла, ValueError при невалидном пути
+- Импортированные зависимости: нет
+- Контекст аннотаций: «Читает файл CODEMANIFEST по пути cell. Возвращает содержимое как строку. Защита от path traversal: путь не должен содержать ".." и не должен начинаться с "/"»</p>
+<p><strong>Сущность: <code>GraphServer.get_codemanifest</code></strong>
+- Тип: <code>method</code> (Entity <code>GraphServer</code>)
+- Объявленный <code>location</code>: <code>server.py</code> (в <code>goga_tool_viewer/server/</code>)
+- Обязанность фасада: метод экземпляра GraphServer
+- Мутации: нет
+- Сигнатура: <code>get_codemanifest(cell_path: str) -&gt; content:str</code>
+- Семантические требования: HTTP-эндпоинт GET <code>/api/codemanifest?cell=&lt;path&gt;</code>, парсинг query-параметра <code>cell</code>, делегирование <code>load_codemanifest</code>, возврат 200 text/plain при успехе, 404 при FileNotFoundError, 400 при ValueError или отсутствии параметра <code>cell</code>
+- Импортированные зависимости: <code>load_codemanifest</code> из <code>goga_tool_viewer.loader</code>
+- Контекст аннотаций: «Возвращает содержимое CODEMANIFEST для указанного cell. Используй <code>codemanifest</code> для чтения файла»</p>
+<p><strong>Сущность: <code>index_page</code> (изменённая)</strong>
+- Тип: <code>function</code> (Routine)
+- Объявленный <code>location</code>: <code>pages.py</code> (в <code>goga_tool_viewer/frontend/</code>)
+- Обязанность фасада: функция уровня модуля
+- Сигнатура: <code>index_page(graph_json_url: str) -&gt; html:str</code>
+- Семантические требования: добавлена центральная панель <code>#codemanifest-panel</code> между sidebar и info panel, ссылка «CODEMANIFEST» в info panel (в <code>show_cell_info</code>), JS-функция <code>show_codemanifest(cell_name, graph)</code> — fetch без кеширования, отображение в <code>&lt;pre&gt;&lt;code&gt;</code>, закрытие крестиком, обработка 404 и сетевых ошибок
+- Контекст аннотаций: «При клике открывается центральная панель между sidebar и info panel. Содержимое загружается без кеширования. Панель закрывается крестиком. При 404 — "CODEMANIFEST not found"»</p>
+<h3 id="_4">Реэкспорты</h3>
+<p>Нет блоков реэкспорта в данном плане.</p>
+<h3 id="usages">Контекст Usages</h3>
+<ul>
+<li><strong><code>conventions</code></strong> (<code>goga/usages/conventions.md</code>): правила Python-кода, Google-style docstrings, pytest, relative imports, pydantic, logging. Обязательная практика для всего проекта.</li>
+<li><strong><code>stdlib_http</code></strong> (inline в server/CODEMANIFEST): паттерн http.server из stdlib — BaseHTTPRequestHandler, MIME-типы, do_GET.</li>
+<li><strong><code>js_rendering</code></strong> (inline в frontend/CODEMANIFEST): спецификации inline JS-функций для SPA — включает <code>show_codemanifest(cell_name, graph)</code>.</li>
+<li><strong><code>frontend_styling</code></strong> (<code>goga/usages/frontend_styling.md</code>): дизайн-токены, layout, стили.</li>
+</ul>
+<h3 id="usages_1">Импортированные Usages</h3>
+<ul>
+<li><strong><code>codemanifest</code></strong> из <code>goga_tool_viewer/loader</code></li>
+<li>Путь источника: <code>goga_tool_viewer/loader/.usages/codemanifest.md</code></li>
+<li>Описание: инструкция по использованию API загрузчика CODEMANIFEST</li>
+<li>Релевантность: используется сервером для вызова <code>load_codemanifest(cell_path)</code>, возвращает str, выбрасывает FileNotFoundError</li>
+</ul>
+<h3 id="usages_2">Локальные Usages</h3>
+<p>Нет новых файлов <code>.usages/</code> для создания — <code>codemanifest.md</code> в <code>goga_tool_viewer/loader/.usages/</code> создаётся вместе с ячейкой loader.</p>
+<h3 id="_5">Внешние зависимости</h3>
+<ul>
+<li><code>http.server</code> (stdlib) — HTTP-сервер</li>
+<li><code>pathlib</code> (stdlib) — работа с путями</li>
+<li><code>urllib.parse</code> (stdlib) — парсинг URL</li>
+<li>Cytoscape.js (inline в HTML) — визуализация графа</li>
+<li>pytest (тестирование)</li>
+</ul>
+<h2 id="_6">Факты</h2>
+<ul>
+<li>Проект использует Python, язык конфигурации — <code>python</code></li>
+<li>Сервер однопоточный (http.server.BaseHTTPRequestHandler)</li>
+<li>Frontend — SPA в одном HTML-файле с inline CSS и JS</li>
+<li>Темная тема qarium.ru/goga, дизайн-токены в <code>frontend_styling</code></li>
+<li>Все новые файлы Python должны содержать Google-style docstrings</li>
+<li>Защита от path traversal — двухуровневая: строковая проверка + resolve/verify</li>
+<li>CSS центральной панели соответствует стилю info panel (#0f172a фон, #1e293b titlebar)</li>
+<li>Только stdlib — без внешних зависимостей</li>
+</ul>
+<h2 id="_7">Анализ разрывов</h2>
+<ul>
+<li><strong>Отсутствующие сущности контракта:</strong></li>
+<li><code>load_codemanifest</code> — нет файла <code>goga_tool_viewer/loader/codemanifest.py</code></li>
+<li><code>goga_tool_viewer/loader/__init__.py</code> — нет фасада ячейки loader</li>
+<li><strong>Отсутствующее раскрытие фасада:</strong></li>
+<li><code>goga_tool_viewer.loader</code> не экспортирует <code>load_codemanifest</code> (нет <code>__init__.py</code>)</li>
+<li><strong>Несоответствия API:</strong></li>
+<li><code>GraphServer</code> не имеет метода <code>get_codemanifest</code></li>
+<li><code>do_GET</code> не обрабатывает роут <code>/api/codemanifest</code></li>
+<li><code>show_cell_info</code> не содержит ссылку «CODEMANIFEST»</li>
+<li>Нет JS-функции <code>show_codemanifest</code> в HTML</li>
+<li>Нет CSS для <code>#codemanifest-panel</code></li>
+<li><strong>Разрывы в тестовом покрытии:</strong></li>
+<li>Нет <code>tests/loader/</code> — тесты для loader отсутствуют</li>
+<li>Нет тестов для роута <code>/api/codemanifest</code> в <code>tests/server/test_server.py</code></li>
+<li>Нет тестов для обновлённого <code>index_page</code> в <code>tests/frontend/test_index_page.py</code></li>
+<li><strong>Существующий код для переиспользования:</strong></li>
+<li><code>goga_tool_viewer/server/server.py</code> — добавить роут к существующему <code>do_GET</code></li>
+<li><code>goga_tool_viewer/frontend/pages.py</code> — обновить существующую <code>index_page</code></li>
+<li><code>goga_tool_viewer/loader/CODEMANIFEST</code> — уже существует</li>
+</ul>
+<hr />
+<h2 id="tasks">Tasks</h2>
+<blockquote>
+<p><strong>Правило упорядочивания по пакетам</strong>: задачи кодирования каждого пакета завершаются перед началом следующего. Порядок: loader (листовая ячейка) → server → frontend. Внутри каждой задачи кодирования контрактные тесты пишутся первыми (рабочий процесс TDD).</p>
+</blockquote>
+<h3 id="task-1-loader">Task 1: Инфраструктура ячейки loader (инфраструктура)</h3>
+<p>Создать структуру ячейки <code>goga_tool_viewer/loader/</code>: фасад <code>__init__.py</code> с экспортом <code>load_codemanifest</code>. Ячейка loader — новая, является листовой (нет зависимостей от других ячеек). Контракт определяет одну Routine <code>load_codemanifest</code> в <code>location: codemanifest.py</code>.</p>
+<p><strong>Usages, релевантные для этой задачи:</strong>
+- <code>conventions</code>: Google-style docstrings, relative imports, правила форматирования</p>
+<p><strong>КРИТИЧЕСКИ: файлы <code>CODEMANIFEST</code> — определения контракта только для чтения. НЕ изменяйте их. Если реализация не соответствует контракту, исправляйте реализацию — никогда не исправляйте контракт.</strong></p>
+<ul>
+<li>[x] Создать файл <code>goga_tool_viewer/loader/__init__.py</code> с <code>__all__ = ["load_codemanifest"]</code> и импортом <code>from .codemanifest import load_codemanifest</code></li>
+<li>[x] Создать пустой файл <code>goga_tool_viewer/loader/codemanifest.py</code> (заполнится в Task 2)</li>
+<li>[x] Создать директорию <code>tests/loader/</code> и файл <code>tests/loader/__init__.py</code></li>
+<li>[x] Проверить доступность фасада: <code>python -c "from goga_tool_viewer.loader import load_codemanifest; print('OK')"</code> (провалится до Task 2 — это ожидаемо; проверить структуру: <code>ls goga_tool_viewer/loader/__init__.py</code>)</li>
+</ul>
+<h3 id="task-2-load_codemanifest-tdd">Task 2: Реализация <code>load_codemanifest</code> (TDD кодирование)</h3>
+<p>Реализовать Routine <code>load_codemanifest(cell_path: str) -&gt; content:str</code> в <code>goga_tool_viewer/loader/codemanifest.py</code>. Функция безопасно читает CODEMANIFEST по относительному пути cell. Защита от path traversal: строковая проверка (нет <code>".."</code>, не начинается с <code>"/"</code>) + resolve/verify что путь находится под корнем проекта.</p>
+<p><strong>Сущности контракта:</strong> <code>load_codemanifest</code> (Routine, location: <code>codemanifest.py</code>)</p>
+<p><strong>Usages, релевантные для этой задачи:</strong>
+- <code>conventions</code>: Google-style docstrings, pytest, logging</p>
+<p><strong>КРИТИЧЕСКИ: файлы <code>CODEMANIFEST</code> — определения контракта только для чтения. НЕ изменяйте их. Если реализация не соответствует контракту, исправляйте реализацию — никогда не исправляйте контракт.</strong></p>
+<ul>
+<li>[x] <strong>ШАГ 0 (ОБЪЯВЛЕНИЕ)</strong>: Объявить, что работа ведётся над Task 2 — реализация <code>load_codemanifest</code></li>
+<li>[x] <strong>Контрактные тесты</strong>: создать файл <code>tests/loader/test_codemanifest.py</code></li>
+<li><code>test_load_codemanifest_callable</code> — функция доступна из фасада <code>goga_tool_viewer.loader</code>, callable, принимает один позиционный аргумент</li>
+<li><code>test_load_codemanifest_signature</code> — возвращает str при корректном пути (создать tmp CODEMANIFEST, вызвать, проверить isinstance(result, str))</li>
+<li>Все контрактные тесты ожидаемо падают (файл codemanifest.py пуст)</li>
+<li>[x] <strong>Код</strong>: реализовать <code>load_codemanifest(cell_path: str) -&gt; str</code> в <code>goga_tool_viewer/loader/codemanifest.py</code>:</li>
+<li>Валидация: если <code>".."</code> в <code>cell_path</code> → raise ValueError("path traversal detected")</li>
+<li>Валидация: если <code>cell_path.startswith("/")</code> → raise ValueError("absolute path not allowed")</li>
+<li>Построение пути: <code>Path(__file__).resolve().parent.parent.parent / cell_path / "CODEMANIFEST"</code>, затем <code>resolve()</code></li>
+<li>Верификация: проверить что <code>target.is_relative_to(base)</code> — если нет → raise ValueError</li>
+<li>Чтение: <code>target.read_text(encoding="utf-8")</code></li>
+<li>FileNotFoundError пробрасывается естественно при отсутствии файла</li>
+<li>Google-style docstring</li>
+<li>[x] <strong>Верификация интерфейсов</strong>: запустить <code>python -m pytest tests/loader/test_codemanifest.py -k "test_load_codemanifest_callable or test_load_codemanifest_signature" -x</code> — контрактные тесты должны пройти</li>
+<li>[x] <strong>Логические тесты</strong> (добавить в <code>tests/loader/test_codemanifest.py</code>):</li>
+<li>Общий подход: использовать <code>monkeypatch</code> для подмены <code>Path(__file__)</code> в <code>codemanifest.py</code> на <code>tmp_path / "fake_cell" / "codemanifest.py"</code> — это позволяет <code>load_codemanifest</code> вычислять корень проекта относительно <code>tmp_path</code></li>
+<li><code>test_load_codemanifest_reads_existing_file</code> — monkeypatch <code>__file__</code> на <code>tmp_path / "fake_cell" / "codemanifest.py"</code>, создать директорию <code>goga_tool_viewer/parser/</code> в <code>tmp_path</code>, поместить CODEMANIFEST с содержимым <code>"Usages:\n  test: value\n"</code>, вызвать <code>load_codemanifest("goga_tool_viewer/parser")</code>, проверить <code>result == "Usages:\n  test: value\n"</code></li>
+<li><code>test_load_codemanifest_rejects_path_traversal</code> — <code>load_codemanifest("../../etc/passwd")</code> → pytest.raises(ValueError) (без monkeypatch — строковая валидация не зависит от filesystem)</li>
+<li><code>test_load_codemanifest_rejects_absolute_path</code> — <code>load_codemanifest("/etc/passwd")</code> → pytest.raises(ValueError) (без monkeypatch — строковая валидация не зависит от filesystem)</li>
+<li><code>test_load_codemanifest_raises_on_missing_file</code> — monkeypatch <code>__file__</code> на <code>tmp_path / "fake_cell" / "codemanifest.py"</code>, <code>load_codemanifest("nonexistent/cell")</code> с пустым tmp_path → pytest.raises(FileNotFoundError)</li>
+<li><code>test_load_codemanifest_empty_path</code> — monkeypatch <code>__file__</code> на <code>tmp_path / "fake_cell" / "codemanifest.py"</code>, <code>load_codemanifest("")</code> → pytest.raises(FileNotFoundError)</li>
+<li><code>test_load_codemanifest_path_traversal_encoded</code> — monkeypatch <code>__file__</code> на <code>tmp_path / "fake_cell" / "codemanifest.py"</code>, <code>load_codemanifest("cell/..%2F..%2Fsecret")</code> → pytest.raises((ValueError, FileNotFoundError))</li>
+<li>[x] <strong>Отладка</strong>: запустить <code>python -m pytest tests/loader/test_codemanifest.py -x</code> — исправлять код реализации, пока все тесты не пройдут (НЕ исправлять тесты)</li>
+<li>[x] <strong>Перепроверка контракта</strong>: проверить что <code>load_codemanifest</code> доступна из <code>goga_tool_viewer.loader</code>, сигнатура <code>(cell_path: str) -&gt; str</code>, выбрасывает ValueError и FileNotFoundError</li>
+<li>[x] <strong>Линт</strong>: запустить <code>python -m ruff check goga_tool_viewer/loader/codemanifest.py tests/loader/test_codemanifest.py</code> — исправить форматирование</li>
+<li>[x] <strong>ЗАВЕРШЕНИЕ</strong>: отметить чекбоксы как выполненные</li>
+</ul>
+<h3 id="task-3-apicodemanifest-graphserver-tdd">Task 3: Добавление роута <code>/api/codemanifest</code> в GraphServer (TDD кодирование)</h3>
+<p>Добавить обработку GET <code>/api/codemanifest?cell=&lt;path&gt;</code> в <code>GraphServer.do_GET</code>. Роут парсит query-параметр <code>cell</code>, делегирует <code>load_codemanifest</code> из loader, возвращает 200 text/plain при успехе, 400 при отсутствии/пустом параметре или path traversal, 404 при FileNotFoundError.</p>
+<p><strong>Сущности контракта:</strong> <code>GraphServer.get_codemanifest(cell_path: str) -&gt; content:str</code> (метод GraphServer, location: <code>server.py</code>)</p>
+<p><strong>Usages, релевантные для этой задачи:</strong>
+- <code>conventions</code>: Google-style docstrings, pytest
+- <code>stdlib_http</code>: BaseHTTPRequestHandler, MIME-типы, do_GET
+- <code>codemanifest</code> (из Imports, путь: <code>goga_tool_viewer/loader/.usages/codemanifest.md</code>): Вызвать <code>load_codemanifest(cell_path)</code> — вернёт содержимое CODEMANIFEST как строку. cell_path — относительный путь к cell (например "goga_tool_viewer/parser"). Если файл не найден — выбрасывает FileNotFoundError</p>
+<p><strong>КРИТИЧЕСКИ: файлы <code>CODEMANIFEST</code> — определения контракта только для чтения. НЕ изменяйте их. Если реализация не соответствует контракту, исправляйте реализацию — никогда не исправляйте контракт.</strong></p>
+<ul>
+<li>[x] <strong>ШАГ 0 (ОБЪЯВЛЕНИЕ)</strong>: Объявить, что работа ведётся над Task 3 — добавление роута <code>/api/codemanifest</code> в GraphServer</li>
+<li>[x] <strong>Контрактные тесты</strong>: добавить тесты в <code>tests/server/test_server.py</code></li>
+<li><code>test_graphserver_has_get_codemanifest</code> — проверить что экземпляр GraphServer имеет метод <code>get_codemanifest</code>, callable</li>
+<li><code>test_server_codemanifest_route_returns_content</code> — GET <code>/api/codemanifest?cell=goga_tool_viewer/models</code> → 200, Content-Type text/plain, body содержит yaml</li>
+<li>Все контрактные тесты ожидаемо падают (роут ещё не реализован)</li>
+<li>[x] <strong>Код</strong>: обновить <code>goga_tool_viewer/server/server.py</code>:</li>
+<li>Добавить импорт: <code>from goga_tool_viewer.loader import load_codemanifest</code></li>
+<li>Добавить метод <code>get_codemanifest(self, cell_path: str) -&gt; str</code> — делегирует <code>load_codemanifest(cell_path)</code>, возвращает content</li>
+<li>В <code>do_GET</code>: добавить ветку для <code>self.path.startswith("/api/codemanifest")</code>:<ul>
+<li>Парсинг URL: <code>urlparse(self.path)</code>, <code>parse_qs(parsed.query)</code></li>
+<li>Извлечение <code>cell_path = params.get("cell", [None])[0]</code></li>
+<li>Если <code>cell_path is None or cell_path == ""</code> → send_response(400), <code>"Missing 'cell' parameter"</code></li>
+<li>Обёртка в try/except: вызов <code>self.get_codemanifest(cell_path)</code> → 200 text/plain; <code>FileNotFoundError</code> → 404; <code>ValueError</code> → 400 <code>"Invalid cell path"</code></li>
+</ul>
+</li>
+<li>Google-style docstring для нового метода</li>
+<li>[x] <strong>Верификация интерфейсов</strong>: запустить <code>python -m pytest tests/server/test_server.py -k "test_graphserver_has_get_codemanifest or test_server_codemanifest_route_returns_content" -x</code> — контрактные тесты должны пройти</li>
+<li>[x] <strong>Логические тесты</strong> (добавить в <code>tests/server/test_server.py</code>):</li>
+<li><code>test_server_get_codemanifest_returns_404_for_missing</code> — GET <code>/api/codemanifest?cell=nonexistent/cell</code> → assert status == 404</li>
+<li><code>test_server_get_codemanifest_returns_400_without_cell_param</code> — GET <code>/api/codemanifest</code> → assert status == 400</li>
+<li><code>test_server_get_codemanifest_empty_cell_param</code> — GET <code>/api/codemanifest?cell=</code> → assert status == 400</li>
+<li>[x] <strong>Отладка</strong>: запустить <code>python -m pytest tests/server/test_server.py -x</code> — исправлять код реализации, пока все тесты не пройдут</li>
+<li>[x] <strong>Перепроверка контракта</strong>: проверить что <code>GraphServer</code> имеет метод <code>get_codemanifest</code>, роут <code>/api/codemanifest</code> обрабатывается, возвращаемые статусы корректны (200/400/404)</li>
+<li>[x] <strong>Линт</strong>: запустить <code>python -m ruff check goga_tool_viewer/server/server.py tests/server/test_server.py</code> — исправить форматирование</li>
+<li>[x] <strong>ЗАВЕРШЕНИЕ</strong>: отметить чекбоксы как выполненные</li>
+</ul>
+<h3 id="task-4-frontend-show_codemanifest-tdd">Task 4: Обновление frontend — <code>show_codemanifest</code> и центральная панель (TDD кодирование)</h3>
+<p>Обновить <code>goga_tool_viewer/frontend/pages.py</code> — добавить JS-функцию <code>show_codemanifest(cell_name, graph)</code>, обновить <code>show_cell_info</code> ссылкой «CODEMANIFEST», добавить CSS для <code>#codemanifest-panel</code>. Функция выполняет fetch к <code>/api/codemanifest?cell=&lt;path&gt;</code>, отображает результат в центральной панели как <code>&lt;pre&gt;&lt;code&gt;</code>, обрабатывает 404 и ошибки сети.</p>
+<p><strong>Сущности контракта:</strong> <code>index_page</code> (Routine, location: <code>pages.py</code>) — обновлённая аннотация с центральной панелью и ссылкой CODEMANIFEST</p>
+<p><strong>Usages, релевантные для этой задачи:</strong>
+- <code>conventions</code>: Google-style docstrings, pytest
+- <code>js_rendering</code>: спецификации <code>show_codemanifest</code> и обновлённый <code>show_cell_info</code> — fetch без кеширования, панель между sidebar и info panel, <code>&lt;pre&gt;&lt;code&gt;</code>, крестик для закрытия
+- <code>frontend_styling</code>: дизайн-токены, стили info panel для согласованности</p>
+<p><strong>КРИТИЧЕСКИ: файлы <code>CODEMANIFEST</code> — определения контракта только для чтения. НЕ изменяйте их. Если реализация не соответствует контракту, исправляйте реализацию — никогда не исправляйте контракт.</strong></p>
+<ul>
+<li>[x] <strong>ШАГ 0 (ОБЪЯВЛЕНИЕ)</strong>: Объявить, что работа ведётся над Task 4 — обновление frontend для CODEMANIFEST viewer</li>
+<li>[x] <strong>Контрактные тесты</strong>: добавить тесты в <code>tests/frontend/test_index_page.py</code></li>
+<li><code>test_index_page_contains_show_codemanifest_function</code> — проверить что HTML содержит <code>"function show_codemanifest"</code> и <code>"/api/codemanifest"</code></li>
+<li><code>test_index_page_contains_codemanifest_panel_css</code> — проверить что HTML содержит <code>"#codemanifest-panel"</code> и стили для панели</li>
+<li>Все контрактные тесты ожидаемо падают (функция и CSS ещё не добавлены)</li>
+<li>[x] <strong>Код</strong>: обновить <code>goga_tool_viewer/frontend/pages.py</code>:</li>
+<li>Добавить CSS для <code>#codemanifest-panel</code>: position absolute, top/bottom 8px, left от sidebar (276px + 8px gap), background #0f172a, border-radius 8px, box-shadow, z-index 8, overflow-y auto, max-width ~50%</li>
+<li>Добавить CSS для <code>.titlebar</code> в панели: стиль как info-titlebar (#1e293b фон, моноширинный)</li>
+<li>Добавить CSS для <code>#codemanifest-panel pre code</code>: font-family monospace, font-size 12px, color var(--color-brand-text), white-space pre-wrap, padding 16px</li>
+<li>Добавить CSS для <code>.codemanifest-link</code>: cursor pointer, color var(--color-brand-muted), font-size 11px, hover color var(--color-brand-teal)</li>
+<li>Добавить JS-функцию <code>show_codemanifest(cell_name, graph)</code>:<ol>
+<li>Найти cell: <code>graph.cells.find(c =&gt; c.name === cell_name)</code> → если не найдена, return</li>
+<li>Fetch: <code>fetch('/api/codemanifest?cell=' + encodeURIComponent(cell.name))</code></li>
+<li>Обработка: 404 → "CODEMANIFEST not found"; ok → response.text(); иначе → "Failed to load CODEMANIFEST"</li>
+<li>Создание панели: удалить существующую <code>#codemanifest-panel</code>, создать div с titlebar (заголовок "CODEMANIFEST" + крестик ×) и body (<code>&lt;pre&gt;&lt;code&gt;content&lt;/code&gt;&lt;/pre&gt;</code>), append to main</li>
+<li>Привязка закрытия: крестик → remove panel</li>
+</ol>
+</li>
+<li>Обновить <code>show_cell_info</code>: после всех секций (Name, Description, Types, Consumers, Dependencies) добавить <code>&lt;span class="codemanifest-link" data-cell="cell_name"&gt;CODEMANIFEST&lt;/span&gt;</code> с addEventListener('click', () =&gt; show_codemanifest(cell_name, graph))</li>
+<li>[x] <strong>Верификация интерфейсов</strong>: запустить <code>python -m pytest tests/frontend/test_index_page.py -k "test_index_page_contains_show_codemanifest or test_index_page_contains_codemanifest_panel_css" -x</code> — контрактные тесты должны пройти</li>
+<li>[x] <strong>Логические тесты</strong> (добавить в <code>tests/frontend/test_index_page.py</code>):</li>
+<li><code>test_index_page_contains_codemanifest_link_in_info_panel</code> — <code>"codemanifest-link"</code> in html, <code>"show_codemanifest"</code> in html (привязка обработчика)</li>
+<li><code>test_index_page_codemanifest_error_messages</code> — <code>"CODEMANIFEST not found"</code> in html, <code>"Failed to load CODEMANIFEST"</code> in html</li>
+<li><code>test_show_codemanifest_no_cache_per_click</code> — проверить что HTML содержит <code>show_codemanifest</code> (каждый клик инициирует новый fetch)</li>
+<li>[x] <strong>Отладка</strong>: запустить <code>python -m pytest tests/frontend/test_index_page.py -x</code> — исправлять код реализации, пока все тесты не пройдут</li>
+<li>[x] <strong>Перепроверка контракта</strong>: проверить что <code>index_page</code> генерирует HTML с функцией <code>show_codemanifest</code>, CSS для <code>#codemanifest-panel</code>, ссылкой «CODEMANIFEST» в info panel</li>
+<li>[x] <strong>Линт</strong>: запустить <code>python -m ruff check goga_tool_viewer/frontend/pages.py tests/frontend/test_index_page.py</code> — исправить форматирование</li>
+<li>[x] <strong>ЗАВЕРШЕНИЕ</strong>: отметить чекбоксы как выполненные</li>
+</ul>
+<h3 id="task-5-codemanifest-viewer">Task 5: Интеграционные тесты для CODEMANIFEST viewer</h3>
+<p>Протестировать сквозной сценарий: browser → server → loader → filesystem. Проверить корректность HTTP-ответов при разных состояниях файловой системы и корректность генерации HTML с компонентами CODEMANIFEST viewer.</p>
+<p><strong>Usages, релевантные для этой задачи:</strong>
+- <code>conventions</code>: pytest, фикстуры
+- <code>stdlib_http</code>: тестирование HTTP-эндпоинтов</p>
+<ul>
+<li>[x] Создать/обновить файл <code>tests/loader/test_codemanifest.py</code> — интеграционный тест с реальной файловой системой</li>
+<li><code>test_load_codemanifest_real_project_file</code> — вызвать <code>load_codemanifest("goga_tool_viewer/models")</code> (реальный CODEMANIFEST проекта) → проверить что возвращает непустую строку, содержащую <code>"Usages:"</code> или <code>"Annotations:"</code></li>
+<li>[x] Обновить файл <code>tests/server/test_server.py</code> — интеграционный тест через HTTP</li>
+<li><code>test_server_codemanifest_full_flow</code> — запустить сервер, GET <code>/api/codemanifest?cell=goga_tool_viewer/models</code> → проверить 200, Content-Type text/plain, body начинается с реального содержимого CODEMANIFEST</li>
+<li>[x] Обновить файл <code>tests/frontend/test_index_page.py</code> — интеграционный тест HTML</li>
+<li><code>test_index_page_codemanifest_full_markup</code> — вызвать <code>index_page("/api/graph")</code>, проверить: наличие <code>show_codemanifest</code> + <code>codemanifest-panel</code> + <code>codemanifest-link</code> + <code>/api/codemanifest</code> + закрытие панели — единый сценарий</li>
+<li>[x] Запустить валидацию: <code>python -m pytest tests/ -x</code></li>
+</ul>
+<hr />
+<h2 id="_8">Команды валидации</h2>
+<ul>
+<li><code>python -m pytest tests/ -x</code>: Запустить все тесты</li>
+<li><code>python -m ruff check goga_tool_viewer/</code>: Проверка линта</li>
+<li><code>python -c "from goga_tool_viewer.loader import load_codemanifest; print('loader OK')"</code>: Проверить фасад loader</li>
+<li><code>python -c "from goga_tool_viewer.server import GraphServer; print(hasattr(GraphServer, 'get_codemanifest'))"</code>: Проверить метод сервера</li>
+</ul>
+<hr />
+<h2 id="_9">Критерии завершения</h2>
+<ul>
+<li>[x] Каждая сущность контракта реализована в правильном <code>location</code></li>
+<li>[x] Каждая сущность контракта доступна из фасада</li>
+<li>[x] Свойства и методы соответствуют объявленному API</li>
+<li>[x] Описания отражены в поведении</li>
+<li>[x] Зависимости контракта соблюдены</li>
+<li>[x] Реэкспорты доступны из фасада</li>
+<li>[x] Каждая задача кодирования следовала рабочему процессу TDD (контрактные тесты → код → верификация → логические тесты → отладка → перепроверка → линт)</li>
+<li>[x] Контрактные тесты и логические тесты покрывают фасад, API и поведение в рамках каждой задачи кодирования</li>
+<li>[x] Интеграционные тесты существуют там, где межсущностные сценарии их требуют</li>
+<li>[x] Ни одна граница пакета не была расширена</li>
+<li>[x] Файлы <code>CODEMANIFEST</code> не были изменены (контракт только для чтения)</li>
+<li>[x] Все команды валидации проходят</li>
+<li>[x] Каждая запись Usages упомянута как минимум в одной задаче</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../../..", "features": ["navigation.tabs", "navigation.indexes", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>

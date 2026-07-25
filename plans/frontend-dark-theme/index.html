@@ -1,0 +1,1263 @@
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width,initial-scale=1">
+      
+        <meta name="description" content="Goga tool. Viewer for goga project visualization.">
+      
+      
+      
+        <link rel="canonical" href="https://qarium.github.io/goga-tool-viewer/plans/frontend-dark-theme/">
+      
+      
+      
+      
+        
+      
+      
+      <link rel="icon" href="../../assets/images/favicon.png">
+      <meta name="generator" content="mkdocs-1.6.1, mkdocs-material-9.7.7">
+    
+    
+      
+        <title>План: frontend-dark-theme - Goga tool viewer</title>
+      
+    
+    
+      <link rel="stylesheet" href="../../assets/stylesheets/main.ec1eaa64.min.css">
+      
+        
+        <link rel="stylesheet" href="../../assets/stylesheets/palette.ab4e12ef.min.css">
+      
+      
+
+
+    
+    
+      
+    
+    
+      
+        
+        
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,300i,400,400i,700,700i%7CRoboto+Mono:400,400i,700,700i&display=fallback">
+        <style>:root{--md-text-font:"Roboto";--md-code-font:"Roboto Mono"}</style>
+      
+    
+    
+    <script>__md_scope=new URL("../..",location),__md_hash=e=>[...e].reduce(((e,_)=>(e<<5)-e+_.charCodeAt(0)),0),__md_get=(e,_=localStorage,t=__md_scope)=>JSON.parse(_.getItem(t.pathname+"."+e)),__md_set=(e,_,t=localStorage,a=__md_scope)=>{try{t.setItem(a.pathname+"."+e,JSON.stringify(_))}catch(e){}}</script>
+    
+      
+
+    
+    
+  
+  <style>
+    /* Dark navbar — override palette in both themes */
+    [data-md-color-scheme=default][data-md-color-primary=custom],
+    [data-md-color-scheme=slate][data-md-color-primary=custom] {
+      --md-primary-fg-color: #0a0a13;
+      --md-primary-fg-color--light: #0a0a13cc;
+      --md-primary-bg-color: #ffffff;
+    }
+
+    .md-header__button.md-logo img,
+    .md-header__button.md-logo svg {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+    }
+
+    /* Search form — visible on dark header */
+    .md-search__overlay {
+      background-color: transparent !important;
+    }
+    [data-md-toggle=search]:checked~.md-header .md-search__overlay {
+      background-color: #0000008a !important;
+    }
+    .md-search__inner {
+      background-color: transparent !important;
+    }
+    .md-search__form {
+      background-color: #3a3a3a !important;
+      border-radius: 0.5rem;
+    }
+    .md-search__form:hover {
+      background-color: #4a4a4a !important;
+    }
+    .md-search__input {
+      color: #e0e0e0 !important;
+    }
+    .md-search__input::placeholder {
+      color: #999999 !important;
+    }
+    .md-search__icon {
+      color: #999999 !important;
+    }
+    .md-search__form:hover .md-search__icon,
+    .md-search__input:focus-visible ~ .md-search__icon {
+      color: #e0e0e0 !important;
+    }
+
+    /* Links in dark theme — readable on dark background */
+    [data-md-color-scheme=slate] .md-nav__link,
+    [data-md-color-scheme=slate] .md-toc__link,
+    [data-md-color-scheme=slate] article a {
+      color: #cbd5e0 !important;
+    }
+    [data-md-color-scheme=slate] .md-nav__link--passed,
+    [data-md-color-scheme=slate] .md-toc__link--passed {
+      color: #718096 !important;
+    }
+    [data-md-color-scheme=slate] .md-nav__link:hover,
+    [data-md-color-scheme=slate] .md-toc__link:hover,
+    [data-md-color-scheme=slate] article a:hover {
+      color: var(--md-accent-fg-color) !important;
+    }
+  </style>
+
+  </head>
+  
+  
+    
+    
+      
+    
+    
+    
+    
+    <body dir="ltr" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="indigo">
+  
+    
+    <input class="md-toggle" data-md-toggle="drawer" type="checkbox" id="__drawer" autocomplete="off">
+    <input class="md-toggle" data-md-toggle="search" type="checkbox" id="__search" autocomplete="off">
+    <label class="md-overlay" for="__drawer"></label>
+    <div data-md-component="skip">
+      
+        
+        <a href="#frontend-dark-theme" class="md-skip">
+          Skip to content
+        </a>
+      
+    </div>
+    <div data-md-component="announce">
+      
+    </div>
+    
+    
+      
+
+<header class="md-header" data-md-component="header">
+  <nav class="md-header__inner md-grid" aria-label="Header">
+    <a href="../.." title="Goga tool viewer" class="md-header__button md-logo" aria-label="Goga tool viewer" data-md-component="logo">
+      
+  <img src="https://avatars.githubusercontent.com/u/262344922?s=200&v=4" alt="logo">
+
+    </a>
+    <label class="md-header__button md-icon" for="__drawer">
+      
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg>
+    </label>
+    <div class="md-header__title" data-md-component="header-title">
+      <div class="md-header__ellipsis">
+        <div class="md-header__topic">
+          <span class="md-ellipsis">
+            Goga tool viewer
+          </span>
+        </div>
+        <div class="md-header__topic" data-md-component="header-topic">
+          <span class="md-ellipsis">
+            
+              План: frontend-dark-theme
+            
+          </span>
+        </div>
+      </div>
+    </div>
+    
+      
+        <form class="md-header__option" data-md-component="palette">
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="default" data-md-color-primary="custom" data-md-color-accent="indigo"  aria-label="Switch to dark mode"  type="radio" name="__palette" id="__palette_0">
+    
+      <label class="md-header__button md-icon" title="Switch to dark mode" for="__palette_1" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 8a4 4 0 0 0-4 4 4 4 0 0 0 4 4 4 4 0 0 0 4-4 4 4 0 0 0-4-4m0 10a6 6 0 0 1-6-6 6 6 0 0 1 6-6 6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+    
+    
+    
+    <input class="md-option" data-md-color-media="" data-md-color-scheme="slate" data-md-color-primary="custom" data-md-color-accent="indigo"  aria-label="Switch to light mode"  type="radio" name="__palette" id="__palette_1">
+    
+      <label class="md-header__button md-icon" title="Switch to light mode" for="__palette_0" hidden>
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M12 18c-.89 0-1.74-.2-2.5-.55C11.56 16.5 13 14.42 13 12s-1.44-4.5-3.5-5.45C10.26 6.2 11.11 6 12 6a6 6 0 0 1 6 6 6 6 0 0 1-6 6m8-9.31V4h-4.69L12 .69 8.69 4H4v4.69L.69 12 4 15.31V20h4.69L12 23.31 15.31 20H20v-4.69L23.31 12z"/></svg>
+      </label>
+    
+  
+</form>
+      
+    
+    
+      <script>var palette=__md_get("__palette");if(palette&&palette.color){if("(prefers-color-scheme)"===palette.color.media){var media=matchMedia("(prefers-color-scheme: light)"),input=document.querySelector(media.matches?"[data-md-color-media='(prefers-color-scheme: light)']":"[data-md-color-media='(prefers-color-scheme: dark)']");palette.color.media=input.getAttribute("data-md-color-media"),palette.color.scheme=input.getAttribute("data-md-color-scheme"),palette.color.primary=input.getAttribute("data-md-color-primary"),palette.color.accent=input.getAttribute("data-md-color-accent")}for(var[key,value]of Object.entries(palette.color))document.body.setAttribute("data-md-color-"+key,value)}</script>
+    
+    
+    
+      
+      
+        <label class="md-header__button md-icon" for="__search">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        </label>
+        <div class="md-search" data-md-component="search" role="dialog">
+  <label class="md-search__overlay" for="__search"></label>
+  <div class="md-search__inner" role="search">
+    <form class="md-search__form" name="search">
+      <input type="text" class="md-search__input" name="query" aria-label="Search" placeholder="Search" autocapitalize="off" autocorrect="off" autocomplete="off" spellcheck="false" data-md-component="search-query" required>
+      <label class="md-search__icon md-icon" for="__search">
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M9.5 3A6.5 6.5 0 0 1 16 9.5c0 1.61-.59 3.09-1.56 4.23l.27.27h.79l5 5-1.5 1.5-5-5v-.79l-.27-.27A6.52 6.52 0 0 1 9.5 16 6.5 6.5 0 0 1 3 9.5 6.5 6.5 0 0 1 9.5 3m0 2C7 5 5 7 5 9.5S7 14 9.5 14 14 12 14 9.5 12 5 9.5 5"/></svg>
+        
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M20 11v2H8l5.5 5.5-1.42 1.42L4.16 12l7.92-7.92L13.5 5.5 8 11z"/></svg>
+      </label>
+      <nav class="md-search__options" aria-label="Search">
+        
+        <button type="reset" class="md-search__icon md-icon" title="Clear" aria-label="Clear" tabindex="-1">
+          
+          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg>
+        </button>
+      </nav>
+      
+        <div class="md-search__suggest" data-md-component="search-suggest"></div>
+      
+    </form>
+    <div class="md-search__output">
+      <div class="md-search__scrollwrap" tabindex="0" data-md-scrollfix>
+        <div class="md-search-result" data-md-component="search-result">
+          <div class="md-search-result__meta">
+            Initializing search
+          </div>
+          <ol class="md-search-result__list" role="presentation"></ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+      
+    
+    
+      <div class="md-header__source">
+        <a href="https://github.com/qarium/goga-tool-viewer" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+      </div>
+    
+  </nav>
+  
+</header>
+    
+    <div class="md-container" data-md-component="container">
+      
+      
+        
+          
+            
+<nav class="md-tabs" aria-label="Tabs" data-md-component="tabs">
+  <div class="md-grid">
+    <ul class="md-tabs__list">
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../.." class="md-tabs__link">
+        
+  
+  
+    
+  
+  Home
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../getting-started/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Getting Started
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    <li class="md-tabs__item">
+      <a href="../../architecture/" class="md-tabs__link">
+        
+  
+  
+    
+  
+  Architecture
+
+      </a>
+    </li>
+  
+
+      
+        
+  
+  
+  
+  
+    
+    
+      <li class="md-tabs__item">
+        <a href="../../cells/" class="md-tabs__link">
+          
+  
+  
+    
+  
+  Cells
+
+        </a>
+      </li>
+    
+  
+
+      
+    </ul>
+  </div>
+</nav>
+          
+        
+      
+      <main class="md-main" data-md-component="main">
+        <div class="md-main__inner md-grid">
+          
+            
+              
+              <div class="md-sidebar md-sidebar--primary" data-md-component="sidebar" data-md-type="navigation" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+
+  
+
+
+<nav class="md-nav md-nav--primary md-nav--lifted" aria-label="Navigation" data-md-level="0">
+  <label class="md-nav__title" for="__drawer">
+    <a href="../.." title="Goga tool viewer" class="md-nav__button md-logo" aria-label="Goga tool viewer" data-md-component="logo">
+      
+  <img src="https://avatars.githubusercontent.com/u/262344922?s=200&v=4" alt="logo">
+
+    </a>
+    Goga tool viewer
+  </label>
+  
+    <div class="md-nav__source">
+      <a href="https://github.com/qarium/goga-tool-viewer" title="Go to repository" class="md-source" data-md-component="source">
+  <div class="md-source__icon md-icon">
+    
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512"><!--! Font Awesome Free 7.1.0 by @fontawesome - https://fontawesome.com License - https://fontawesome.com/license/free (Icons: CC BY 4.0, Fonts: SIL OFL 1.1, Code: MIT License) Copyright 2025 Fonticons, Inc.--><path d="M439.6 236.1 244 40.5c-5.4-5.5-12.8-8.5-20.4-8.5s-15 3-20.4 8.4L162.5 81l51.5 51.5c27.1-9.1 52.7 16.8 43.4 43.7l49.7 49.7c34.2-11.8 61.2 31 35.5 56.7-26.5 26.5-70.2-2.9-56-37.3L240.3 199v121.9c25.3 12.5 22.3 41.8 9.1 55-6.4 6.4-15.2 10.1-24.3 10.1s-17.8-3.6-24.3-10.1c-17.6-17.6-11.1-46.9 11.2-56v-123c-20.8-8.5-24.6-30.7-18.6-45L142.6 101 8.5 235.1C3 240.6 0 247.9 0 255.5s3 15 8.5 20.4l195.6 195.7c5.4 5.4 12.7 8.4 20.4 8.4s15-3 20.4-8.4l194.7-194.7c5.4-5.4 8.4-12.8 8.4-20.4s-3-15-8.4-20.4"/></svg>
+  </div>
+  <div class="md-source__repository">
+    GitHub
+  </div>
+</a>
+    </div>
+  
+  <ul class="md-nav__list" data-md-scrollfix>
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../.." class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Home
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../getting-started/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Getting Started
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../architecture/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Architecture
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+    
+      
+      
+  
+  
+  
+  
+    
+    
+      
+        
+          
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+        
+      
+    
+    
+    
+      
+      
+    
+    
+    <li class="md-nav__item md-nav__item--nested">
+      
+        
+        
+        <input class="md-nav__toggle md-toggle " type="checkbox" id="__nav_4" >
+        
+          
+          <div class="md-nav__link md-nav__container">
+            <a href="../../cells/" class="md-nav__link ">
+              
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Cells
+  
+
+    
+  </span>
+  
+  
+
+            </a>
+            
+              
+              <label class="md-nav__link " for="__nav_4" id="__nav_4_label" tabindex="0">
+                <span class="md-nav__icon md-icon"></span>
+              </label>
+            
+          </div>
+        
+        <nav class="md-nav" data-md-level="1" aria-labelledby="__nav_4_label" aria-expanded="false">
+          <label class="md-nav__title" for="__nav_4">
+            <span class="md-nav__icon md-icon"></span>
+            
+  
+    Cells
+  
+
+          </label>
+          <ul class="md-nav__list" data-md-scrollfix>
+            
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cells/models/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Models
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cells/parser/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Parser
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cells/frontend/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Frontend
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cells/loader/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Loader
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cells/server/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Server
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+              
+                
+  
+  
+  
+  
+    <li class="md-nav__item">
+      <a href="../../cells/port-finder/" class="md-nav__link">
+        
+  
+  
+  <span class="md-ellipsis">
+    
+  
+    Port Finder
+  
+
+    
+  </span>
+  
+  
+
+      </a>
+    </li>
+  
+
+              
+            
+          </ul>
+        </nav>
+      
+    </li>
+  
+
+    
+  </ul>
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+            
+              
+              <div class="md-sidebar md-sidebar--secondary" data-md-component="sidebar" data-md-type="toc" >
+                <div class="md-sidebar__scrollwrap">
+                  <div class="md-sidebar__inner">
+                    
+
+<nav class="md-nav md-nav--secondary" aria-label="Table of contents">
+  
+  
+  
+    
+  
+  
+    <label class="md-nav__title" for="__toc">
+      <span class="md-nav__icon md-icon"></span>
+      Table of contents
+    </label>
+    <ul class="md-nav__list" data-md-component="toc" data-md-scrollfix>
+      
+        <li class="md-nav__item">
+  <a href="#_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Цель
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Контекст
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Контекст">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#_3" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Поверхность контракта
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_4" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Реэкспорты
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#usages" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Контекст Usages
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#usages_1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Импортированные Usages
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#usages_2" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Локальные Usages
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#_5" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Внешние зависимости
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_6" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Факты
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_7" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Анализ разрывов
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#tasks" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Tasks
+      
+    </span>
+  </a>
+  
+    <nav class="md-nav" aria-label="Tasks">
+      <ul class="md-nav__list">
+        
+          <li class="md-nav__item">
+  <a href="#task-1" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 1: Скачать статические ассеты (инфраструктура)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-2-index_page-tdd" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 2: Реализовать тёмную тему в index_page (TDD кодирование)
+      
+    </span>
+  </a>
+  
+</li>
+        
+          <li class="md-nav__item">
+  <a href="#task-3-frontend-cell" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Task 3: Интеграционные тесты для frontend cell
+      
+    </span>
+  </a>
+  
+</li>
+        
+      </ul>
+    </nav>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_8" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Команды валидации
+      
+    </span>
+  </a>
+  
+</li>
+      
+        <li class="md-nav__item">
+  <a href="#_9" class="md-nav__link">
+    <span class="md-ellipsis">
+      
+        Критерии завершения
+      
+    </span>
+  </a>
+  
+</li>
+      
+    </ul>
+  
+</nav>
+                  </div>
+                </div>
+              </div>
+            
+          
+          
+            <div class="md-content" data-md-component="content">
+              
+              <article class="md-content__inner md-typeset">
+                
+                  
+
+
+  
+  
+
+
+<h1 id="frontend-dark-theme">План: <code>frontend-dark-theme</code></h1>
+<h2 id="_1">Цель</h2>
+<p>Доработать существующую функцию <code>index_page</code> в cell <code>frontend</code> до полноценного SPA с тёмной темой qarium.ru/goga: добавить дизайн-токены, хедер с логотипом, футер, favicon, информационную панель в виде карточки и тёмные стили Cytoscape. Реализация — исключительно изменение <code>pages.py</code>; структура контракта не меняется.</p>
+<p>Основные разрывы между контрактом и текущей реализацией:
+- Отсутствуют CSS-переменные и тёмная тема (сейчас минимальные стили без дизайн-токенов)
+- Отсутствуют хедер, футер, favicon, логотип
+- Отсутствует helper <code>_read_static_bytes</code> для бинарных ассетов
+- Отсутствуют ассеты <code>logo.png</code>, <code>favicon.png</code>, <code>goga.svg</code> в <code>static/</code>
+- Отсутствуют тёмные стили узлов и рёбер Cytoscape
+- Информационная панель не стилизована как карточка</p>
+<h2 id="_2">Контекст</h2>
+<h3 id="_3">Поверхность контракта</h3>
+<p><strong>Сущность: <code>index_page</code></strong>
+- Тип: <code>function</code> (Routine)
+- Объявленный <code>location</code>: <code>pages.py</code>
+- Обязанность фасада: должна быть импортируема из <code>goga_tool_viewer.frontend</code>
+- Сигнатура: <code>index_page(graph_json_url: str) -&gt; html: str</code>
+- Семантические требования из описаний:
+  - Генерирует HTML-страницу SPA с тёмной темой qarium.ru/goga
+  - Включает стили с дизайн-токенами, хедер с логотипом и backdrop-blur
+  - Футер с копирайтом, стилизованный граф и информационную панель как карточку
+  - JS-скрипт для загрузки данных из <code>graph_json_url</code> и инициализации Cytoscape
+  - Все CSS стили inline (в теге <code>&lt;style&gt;</code>), favicon через <code>&lt;link&gt;</code>
+  - Экранирование фигурных скобок для Python format: <code>{{</code> и <code>}}</code>
+- Импортированные зависимости: нет (cell не содержит Imports)
+- Контекст аннотаций:
+  - Файл: использовать <code>conventions</code> для кода и тестов; <code>spa_structure</code> для структуры и дизайн-токенов; <code>cytoscape</code> для графа; <code>js_rendering</code> для inline JS
+  - Сущность: генерирует HTML с тёмной темой, использует <code>spa_structure</code>, <code>cytoscape</code>, <code>js_rendering</code></p>
+<h3 id="_4">Реэкспорты</h3>
+<p>Нет.</p>
+<h3 id="usages">Контекст Usages</h3>
+<ul>
+<li><strong><code>conventions</code></strong>: правила Python-кода (pydantic, docstrings, imports) и тестирования (pytest, ruff, <code>test_&lt;what&gt;_&lt;scenario&gt;</code> naming, Google-style docstrings)</li>
+<li><strong><code>spa_structure</code></strong>: структура SPA-страницы и 6 CSS-переменных дизайн-токенов тёмной темы qarium.ru/goga. Хедер: фиксированный, backdrop-blur, логотип QArium. Основная область: граф (80%) + панель информации (20%). Футер: копирайт. Информационная панель: карточка с бордером white/5%. Статические ассеты: logo.png, favicon.png, goga.svg</li>
+<li><strong><code>cytoscape</code></strong>: Cytoscape.js inline. Layout dagre. Стили узлов: round-rectangle, фон #121830, бордер #20d4bf, текст #fff. Рёбра: #20d4bf, направленные стрелки. Подсветка: teal для выбранного, затемнение остальных</li>
+<li><strong><code>js_rendering</code></strong>: структура данных graph (cells[], edges[]). Функции: render_graph, highlight_cell, show_cell_info — вход/выход каждой</li>
+</ul>
+<h3 id="usages_1">Импортированные Usages</h3>
+<p>Нет — cell <code>frontend</code> не содержит Imports.</p>
+<h3 id="usages_2">Локальные Usages</h3>
+<ul>
+<li><strong>Путь к файлу</strong>: <code>.usages/styling.md</code></li>
+<li>Функциональная категория: визуальные характеристики SPA</li>
+<li>Статус: расширяет существующий (обновлён пользователем вместе с CODEMANIFEST)</li>
+<li>Связанные сущности: <code>index_page</code></li>
+<li>Описание: дизайн-токены, layout, стили Cytoscape для потребителей frontend</li>
+</ul>
+<h3 id="_5">Внешние зависимости</h3>
+<ul>
+<li>Cytoscape.js — библиотека визуализации графов, встроена inline из <code>static/</code></li>
+<li>dagre — layout-движок, встроен inline из <code>static/</code></li>
+<li>base64 — stdlib, для кодирования ассетов в data URI</li>
+</ul>
+<h2 id="_6">Факты</h2>
+<ul>
+<li>Cell <code>frontend</code> — один файл реализации <code>pages.py</code>, один фасад <code>__init__.py</code></li>
+<li><code>__init__.py</code> уже экспортирует <code>index_page</code> через <code>__all__</code></li>
+<li>В <code>static/</code> уже есть: <code>cytoscape.min.js</code>, <code>dagre.min.js</code>, <code>cytoscape-dagre.min.js</code></li>
+<li>В <code>static/</code> отсутствуют: <code>logo.png</code>, <code>favicon.png</code>, <code>goga.svg</code></li>
+<li>Существующая реализация уже имеет <code>_read_static</code> для текстовых файлов и базовый HTML с Cytoscape</li>
+<li>Тесты уже существуют в <code>tests/frontend/test_index_page.py</code> с базовыми контрактными проверками</li>
+<li>Функция <code>_read_static_bytes</code> не существует — нужно создать</li>
+</ul>
+<h2 id="_7">Анализ разрывов</h2>
+<ul>
+<li>Отсутствующие сущности контракта: нет (сущность <code>index_page</code> существует)</li>
+<li>Отсутствующее раскрытие фасада: нет (фасад корректен)</li>
+<li>Неверное размещение в <code>location</code>: нет</li>
+<li>Несоответствия API: нет (сигнатура <code>index_page(graph_json_url: str) -&gt; str</code> корректна)</li>
+<li>Поведенческие несоответствия:</li>
+<li>CSS-переменные тёмной темы отсутствуют</li>
+<li>Хедер с логотипом и backdrop-blur отсутствует</li>
+<li>Футер с копирайтом отсутствует</li>
+<li>Favicon не подключается</li>
+<li>Тёмные стили Cytoscape отсутствуют (узлы и рёбра без цветов)</li>
+<li>Информационная панель не стилизована как карточка</li>
+<li>Helper <code>_read_static_bytes</code> для бинарных ассетов не существует</li>
+<li>Ассеты logo.png, favicon.png, goga.svg не скачаны</li>
+<li>Существующий код, который можно переиспользовать:</li>
+<li><code>_read_static</code> — полностью</li>
+<li>JS-логика render_graph, highlight_cell, show_cell_info — с добавлением тёмных стилей</li>
+<li>Существующие тесты — расширить и дополнить</li>
+<li>Разрывы в тестовом покрытии:</li>
+<li>Нет тестов на тёмную тему, хедер, футер, favicon, стили Cytoscape</li>
+<li>Нет тестов на <code>_read_static_bytes</code></li>
+<li>Нет негативных тестов на отсутствующие файлы</li>
+<li>Нет краевых тестов на спецсимволы и экранирование</li>
+</ul>
+<hr />
+<h2 id="tasks">Tasks</h2>
+<h3 id="task-1">Task 1: Скачать статические ассеты (инфраструктура)</h3>
+<p>Скачать брендированные ассеты с qarium.ru и поместить их в <code>goga_tool_viewer/frontend/static/</code>. Эти файлы необходимы для генерации HTML с логотипом и favicon.</p>
+<p><strong>КРИТИЧЕСКИ: файлы <code>CODEMANIFEST</code> — определения контракта только для чтения. НЕ изменяйте их.</strong></p>
+<ul>
+<li>[x] Скачать <code>https://qarium.ru/images/logo.png</code> → <code>goga_tool_viewer/frontend/static/logo.png</code></li>
+<li>[x] Скачать <code>https://qarium.ru/favicon.png</code> → <code>goga_tool_viewer/frontend/static/favicon.png</code></li>
+<li>[x] Скачать <code>https://qarium.ru/images/goga.svg</code> → <code>goga_tool_viewer/frontend/static/goga.svg</code></li>
+<li>[x] Проверить: <code>ls goga_tool_viewer/frontend/static/</code> — должны быть logo.png, favicon.png, goga.svg</li>
+</ul>
+<h3 id="task-2-index_page-tdd">Task 2: Реализовать тёмную тему в <code>index_page</code> (TDD кодирование)</h3>
+<p>Расширить функцию <code>index_page</code> в <code>pages.py</code> для генерации HTML-страницы с тёмной темой qarium.ru/goga. Добавить CSS-переменные, хедер с логотипом, футер, favicon, тёмные стили Cytoscape, информационную панель-карточку и helper <code>_read_static_bytes</code>.</p>
+<p><strong>Сущности контракта:</strong> <code>index_page</code> (изменённая)
+<strong>location:</strong> <code>pages.py</code>
+<strong>Фасад:</strong> <code>__init__.py</code> — уже экспортирует <code>index_page</code></p>
+<p><strong>Usages, релевантные для этой задачи:</strong>
+- <code>conventions</code>: Google-style docstrings, relative imports, <code>test_&lt;what&gt;_&lt;scenario&gt;</code> naming, pytest с <code>tmp_path</code> для файлового I/O
+- <code>spa_structure</code>: 6 CSS-переменных (<code>--color-brand-bg</code>, <code>--color-brand-card</code>, <code>--color-brand-teal</code>, <code>--color-brand-blue</code>, <code>--color-brand-text</code>, <code>--color-brand-muted</code>). Структура: хедер с backdrop-blur + логотип, основная область 80%/20%, футер с копирайтом, информационная панель как карточка с бордером white/5%. Шрифты: ui-sans-serif, system-ui, sans-serif; antialiased
+- <code>cytoscape</code>: dagre layout (<code>spacingFactor: 1.5</code>, <code>rankDir: 'LR'</code>). Стили узлов: round-rectangle, фон #121830, бордер #20d4bf, текст #fff. Стили рёбер: bezier, направленные стрелки, цвет #20d4bf. Подсветка: teal для выбранного, затемнение остальных
+- <code>js_rendering</code>: структура graph (cells[], edges[]). Функции render_graph, highlight_cell, show_cell_info</p>
+<p><strong>Контекст из дизайн-документа — Алгоритм <code>index_page</code>:</strong></p>
+<pre><code>1. Прочитать static/cytoscape.min.js → cytoscape_js: str   (через _read_static)
+2. Прочитать static/dagre.min.js → dagre_js: str            (через _read_static)
+3. Прочитать static/cytoscape-dagre.min.js → cytoscape_dagre_js: str  (через _read_static)
+4. Прочитать static/logo.png → logo_data: bytes             (через _read_static_bytes)
+5. Прочитать static/favicon.png → favicon_data: bytes       (через _read_static_bytes)
+6. base64_encode(logo_data) → logo_b64: str
+7. base64_encode(favicon_data) → favicon_b64: str
+8. Сформировать HTML через f-string:
+   a. &lt;!DOCTYPE html&gt;&lt;html&gt;
+   b. &lt;head&gt;:
+      - &lt;meta charset=&quot;utf-8&quot;&gt;
+      - &lt;link rel=&quot;icon&quot; href=&quot;data:image/png;base64,{favicon_b64}&quot;&gt;
+      - &lt;style&gt;: CSS-переменные :root, стили body/header/main/#cy/#info/footer
+      - &lt;script&gt;{cytoscape_js}&lt;/script&gt;
+      - &lt;script&gt;{dagre_js}&lt;/script&gt;
+      - &lt;script&gt;{cytoscape_dagre_js}&lt;/script&gt;
+   c. &lt;body&gt;:
+      - &lt;header&gt;: &lt;img src=&quot;data:image/png;base64,{logo_b64}&quot;&gt; + текст &quot;QArium&quot;
+      - &lt;main&gt;: &lt;div id=&quot;cy&quot;&gt; + &lt;div id=&quot;info&quot;&gt;
+      - &lt;footer&gt;: © 2026 QArium. All rights reserved.
+      - &lt;script&gt;: inline JS с fetch/render_graph/highlight_cell/show_cell_info
+   d. &lt;/body&gt;&lt;/html&gt;
+9. Вернуть html: str
+</code></pre>
+<p><strong>Контекст из дизайн-документа — Контрольные точки трассировки:</strong>
+- Чтение статических файлов (JS): файлы существуют
+- Чтение статических файлов (ассеты): logo.png, favicon.png читаются через <code>_read_static_bytes</code> с <code>Path.read_bytes()</code>
+- Экранирование f-string: <code>{{</code>/<code>}}</code> корректны для JS-объектов
+- Экранирование URL через <code>json.dumps</code>: корректно
+- CSS-переменные в <code>&lt;style&gt;</code>: должны быть добавлены
+- Тёмные стили Cytoscape в JS: должны быть добавлены</p>
+<p><strong>КРИТИЧЕСКИ: файлы <code>CODEMANIFEST</code> — определения контракта только для чтения. НЕ изменяйте их. Если реализация не соответствует контракту, исправляйте реализацию — никогда не исправляйте контракт.</strong></p>
+<ul>
+<li>[x] <strong>ШАГ 0 (ОБЪЯВЛЕНИЕ)</strong>: Объявить работу над Task 2 — реализация тёмной темы в <code>index_page</code></li>
+<li>[x] <strong>ШАГ 1 (КОНТРАКТНЫЕ ТЕСТЫ)</strong>: Написать контрактные тесты в <code>tests/frontend/test_index_page.py</code> для проверки:</li>
+<li><code>test_index_page_contains_dark_theme_css_variables</code>: 6 CSS-переменных в HTML (<code>--color-brand-bg: #0a0e1a</code>, <code>--color-brand-card: #121830</code>, <code>--color-brand-teal: #20d4bf</code>, <code>--color-brand-blue: #3882f6</code>, <code>--color-brand-text: #fff</code>, <code>--color-brand-muted: #a0aec0</code>)</li>
+<li><code>test_index_page_contains_header_with_logo</code>: <code>&lt;header</code>, <code>"QArium"</code>, <code>"data:image/png;base64"</code>, <code>"backdrop-filter"</code> в HTML</li>
+<li><code>test_index_page_contains_footer_with_copyright</code>: <code>&lt;footer</code>, <code>"© 2026 QArium. All rights reserved."</code> в HTML</li>
+<li><code>test_index_page_contains_favicon_link</code>: <code>&lt;link rel="icon"</code> и <code>"data:image/png;base64"</code> в HTML</li>
+<li><code>test_index_page_cytoscape_dark_styles</code>: <code>"#121830"</code>, <code>"#20d4bf"</code>, <code>"round-rectangle"</code>, <code>"target-arrow-shape"</code> в HTML</li>
+<li><code>test_index_page_info_panel_card_style</code>: <code>"#info"</code>, <code>"rgba(255, 255, 255, 0.05)"</code> в HTML</li>
+<li><code>test_index_page_curly_brace_escaping</code>: JS-блоки не содержат <code>"{{"</code> в контексте JS (f-string корректно экранирован)</li>
+<li>Использовать фикстуру <code>static_with_assets</code> из дизайн-документа для подготовки тестовых файлов</li>
+<li>(Ожидаемо падают на этом этапе — реализация ещё не обновлена)</li>
+<li>[x] <strong>ШАГ 2 (РЕАЛИЗАЦИЯ)</strong>: Обновить <code>goga_tool_viewer/frontend/pages.py</code>:</li>
+<li>Добавить <code>import base64</code> в imports модуля</li>
+<li>Создать helper <code>_read_static_bytes(filename: str) -&gt; bytes</code> — использует <code>Path.read_bytes()</code></li>
+<li>Обновить <code>index_page</code>:<ul>
+<li>Добавить чтение <code>logo.png</code> и <code>favicon.png</code> через <code>_read_static_bytes</code></li>
+<li>Добавить <code>base64.b64encode()</code> для обоих ассетов</li>
+<li>Обновить CSS: добавить <code>:root</code> с 6 CSS-переменными, стили для <code>body</code> (тёмный фон, шрифты), <code>header</code> (fixed, backdrop-blur, logo), <code>main</code> (flex, 80%/20%), <code>#info</code> (карточка с rgba бордером), <code>footer</code> (фиксированный, копирайт), <code>.dimmed</code>, <code>.highlighted</code></li>
+<li>Добавить <code>&lt;link rel="icon" href="data:image/png;base64,{favicon_b64}"&gt;</code> в <code>&lt;head&gt;</code></li>
+<li>Добавить <code>&lt;header&gt;</code> с <code>&lt;img&gt;</code> логотипа и текстом "QArium"</li>
+<li>Добавить <code>&lt;footer&gt;</code> с <code>"© 2026 QArium. All rights reserved."</code></li>
+<li>Обернуть <code>#cy</code> и <code>#info</code> в <code>&lt;main&gt;</code></li>
+<li>Обновить стили Cytoscape в JS: node background-color <code>#121830</code>, border-color <code>#20d4bf</code>, color <code>#fff</code>; edge line-color <code>#20d4bf</code></li>
+<li>Сохранить существующую JS-логику render_graph, highlight_cell, show_cell_info</li>
+</ul>
+</li>
+<li>Все <code>{</code> и <code>}</code> в JS-коде внутри f-string удвоены (<code>{{</code>, <code>}}</code>)</li>
+<li>[x] <strong>ШАГ 3 (ВЕРИФИКАЦИЯ ИНТЕРФЕЙСОВ)</strong>: Запустить контрактные тесты: <code>pytest tests/frontend/test_index_page.py -v</code> — все должны пройти</li>
+<li>[x] <strong>ШАГ 4 (ЛОГИЧЕСКИЕ ТЕСТЫ)</strong>: Написать логические тесты в <code>tests/frontend/test_index_page.py</code>:</li>
+<li><code>test_index_page_missing_static_file_raises</code>: пустой <code>static/</code> → <code>pytest.raises(FileNotFoundError)</code></li>
+<li><code>test_index_page_special_chars_in_url</code>: <code>"/api/graph?param=value&amp;other=test"</code> → HTML генерируется без ошибок, URL встроен в <code>fetch()</code></li>
+<li><code>test_index_page_empty_graph_url</code>: <code>""</code> → HTML генерируется, начинается с <code>"&lt;!DOCTYPE html&gt;"</code></li>
+<li><code>test_read_static_bytes_returns_bytes_for_png</code>: <code>_read_static_bytes("logo.png")</code> возвращает <code>bytes</code>, начинается с <code>b'\x89PNG'</code></li>
+<li><code>test_read_static_bytes_missing_file_raises</code>: <code>_read_static_bytes("logo.png")</code> в пустом static → <code>pytest.raises(FileNotFoundError)</code></li>
+<li>[x] <strong>ШАГ 5 (ОТЛАДКА)</strong>: Запустить все тесты: <code>pytest tests/ -x</code> — исправлять код реализации, пока все тесты не пройдут (НЕ исправлять тестовый код)</li>
+<li>[x] <strong>ШАГ 6 (ПЕРЕПРОВЕРКА КОНТРАКТА)</strong>: Проверить все обязательства контракта:</li>
+<li><code>index_page</code> доступна из фасада: <code>python -c "from goga_tool_viewer.frontend import index_page"</code></li>
+<li>Сигнатура: <code>(graph_json_url: str) -&gt; str</code></li>
+<li>HTML содержит все элементы тёмной темы</li>
+<li>[x] <strong>ШАГ 7 (ЛИНТ)</strong>: <code>ruff check goga_tool_viewer/frontend/</code> — исправить форматирование, при необходимости декомпозировать</li>
+<li>[x] <strong>ШАГ 8 (ЗАВЕРШЕНИЕ)</strong>: Отметить чекбоксы как выполненные</li>
+<li>[x] <strong>→ РЕВЬЮ → ОДОБРЕНИЕ → СЛЕДУЮЩАЯ ЗАДАЧА</strong></li>
+</ul>
+<h3 id="task-3-frontend-cell">Task 3: Интеграционные тесты для <code>frontend</code> cell</h3>
+<p>Проверить сквозные сценарии генерации HTML: корректность всей страницы как единого целого, взаимосвязь CSS-переменных и стилей, полноту встроенных JS-библиотек.</p>
+<p><strong>Сущности контракта:</strong> <code>index_page</code> (верификация через сквозные тесты)
+<strong>Целевой файл тестов:</strong> <code>tests/frontend/test_index_page.py</code></p>
+<p><strong>КРИТИЧЕСКИ: файлы <code>CODEMANIFEST</code> — определения контракта только для чтения. НЕ изменяйте их.</strong></p>
+<p><strong>Usages, релевантные для этой задачи:</strong>
+- <code>conventions</code>: <code>test_&lt;what&gt;_&lt;scenario&gt;</code> naming, pytest с <code>tmp_path</code>
+- <code>spa_structure</code>: 6 дизайн-токенов, структура хедер/футер/панель
+- <code>cytoscape</code>: dagre layout, тёмные стили
+- <code>js_rendering</code>: структура данных graph, функции render_graph/highlight_cell/show_cell_info</p>
+<ul>
+<li>[x] <strong>ШАГ 0 (ОБЪЯВЛЕНИЕ)</strong>: Объявить работу над Task 3 — интеграционные тесты для <code>index_page</code></li>
+<li>[x] <strong>ШАГ 1 (ТЕСТЫ)</strong>: Создать/обновить файл тестов <code>tests/frontend/test_index_page.py</code> — добавить класс <code>TestIndexPageIntegration</code>:</li>
+<li><code>test_index_page_full_html_structure</code> — <code>&lt;!DOCTYPE html&gt;</code>, <code>&lt;html&gt;</code>, <code>&lt;head&gt;</code>, <code>&lt;body&gt;</code>, <code>&lt;header&gt;</code>, <code>&lt;main&gt;</code>, <code>&lt;footer&gt;</code> — все секции присутствуют в правильном порядке</li>
+<li><code>test_index_page_css_variables_used_in_inline_styles</code> — CSS-переменные объявлены в <code>:root</code> и используются через <code>var()</code> в стилях body/header/main/info/footer</li>
+<li><code>test_index_page_embeds_all_js_libraries</code> — содержимое файлов cytoscape.min.js, dagre.min.js, cytoscape-dagre.min.js встроено в <code>&lt;script&gt;</code> теги</li>
+<li>[x] <strong>ШАГ 2 (ОТЛАДКА)</strong>: Запустить тесты: <code>pytest tests/frontend/test_index_page.py -v</code> — исправлять тесты и/или код реализации, пока все не пройдут</li>
+<li>[x] <strong>ШАГ 3 (ЛИНТ)</strong>: <code>ruff check tests/frontend/</code> — исправить форматирование</li>
+<li>[x] <strong>ШАГ 4 (ЗАВЕРШЕНИЕ)</strong>: Отметить чекбоксы как выполненные</li>
+<li>[x] <strong>→ РЕВЬЮ → ОДОБРЕНИЕ → СЛЕДУЮЩАЯ ЗАДАЧА</strong></li>
+</ul>
+<hr />
+<h2 id="_8">Команды валидации</h2>
+<ul>
+<li><code>pytest tests/ -x</code>: Запустить все тесты</li>
+<li><code>ruff check goga_tool_viewer/frontend/</code>: Проверка линта</li>
+<li><code>python -c "from goga_tool_viewer.frontend import index_page"</code>: Проверить, что <code>index_page</code> импортируема из фасада</li>
+<li><code>pytest tests/frontend/test_index_page.py -v</code>: Запустить тесты frontend</li>
+</ul>
+<hr />
+<h2 id="_9">Критерии завершения</h2>
+<ul>
+<li>[x] Сущность контракта <code>index_page</code> реализована в <code>pages.py</code></li>
+<li>[x] <code>index_page</code> доступна из фасада <code>goga_tool_viewer.frontend</code></li>
+<li>[x] Сигнатура <code>(graph_json_url: str) -&gt; str</code> сохранена</li>
+<li>[x] HTML содержит CSS-переменные тёмной темы (6 дизайн-токенов)</li>
+<li>[x] HTML содержит хедер с логотипом и backdrop-blur</li>
+<li>[x] HTML содержит футер с копирайтом</li>
+<li>[x] HTML содержит favicon через <code>&lt;link&gt;</code></li>
+<li>[x] HTML содержит тёмные стили Cytoscape</li>
+<li>[x] Информационная панель стилизована как карточка</li>
+<li>[x] Helper <code>_read_static_bytes</code> реализован для бинарных ассетов</li>
+<li>[x] Ассеты logo.png, favicon.png, goga.svg присутствуют в static/</li>
+<li>[x] Каждая задача кодирования следовала рабочему процессу TDD</li>
+<li>[x] Контрактные и логические тесты покрывают фасад, API и поведение</li>
+<li>[x] Интеграционные тесты покрывают сквозные сценарии</li>
+<li>[x] Файлы <code>CODEMANIFEST</code> не были изменены</li>
+<li>[x] Все команды валидации проходят</li>
+</ul>
+
+
+
+
+
+
+
+
+
+
+
+
+                
+              </article>
+            </div>
+          
+          
+<script>var target=document.getElementById(location.hash.slice(1));target&&target.name&&(target.checked=target.name.startsWith("__tabbed_"))</script>
+        </div>
+        
+      </main>
+      
+        <footer class="md-footer">
+  
+  <div class="md-footer-meta md-typeset">
+    <div class="md-footer-meta__inner md-grid">
+      <div class="md-copyright">
+  
+  
+    Made with
+    <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">
+      Material for MkDocs
+    </a>
+  
+</div>
+      
+    </div>
+  </div>
+</footer>
+      
+    </div>
+    <div class="md-dialog" data-md-component="dialog">
+      <div class="md-dialog__inner md-typeset"></div>
+    </div>
+    
+    
+    
+      
+      
+      <script id="__config" type="application/json">{"annotate": null, "base": "../..", "features": ["navigation.tabs", "navigation.indexes", "search.suggest", "search.highlight", "content.code.copy"], "search": "../../assets/javascripts/workers/search.2c215733.min.js", "tags": null, "translations": {"clipboard.copied": "Copied to clipboard", "clipboard.copy": "Copy to clipboard", "search.result.more.one": "1 more on this page", "search.result.more.other": "# more on this page", "search.result.none": "No matching documents", "search.result.one": "1 matching document", "search.result.other": "# matching documents", "search.result.placeholder": "Type to start searching", "search.result.term.missing": "Missing", "select.version": "Select version"}, "version": null}</script>
+    
+    
+      <script src="../../assets/javascripts/bundle.d7400e89.min.js"></script>
+      
+    
+  </body>
+</html>
