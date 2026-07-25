@@ -36,11 +36,14 @@ docs = [
 
 [tool.setuptools_scm]
 
+[tool.setuptools]
+include-package-data = false
+
 [tool.setuptools.packages.find]
 include = ["goga_tool_viewer*"]
 
 [tool.setuptools.package-data]
-goga_tool_viewer = [".usages/**/*", "frontend/static/**/*"]
+goga_tool_viewer = ["frontend/static/**/*"]
 
 [tool.ruff]
 target-version = "py310"

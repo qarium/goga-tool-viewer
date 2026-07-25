@@ -1,0 +1,2 @@
+global-exclude CODEMANIFEST
+global-exclude */.usages/*
